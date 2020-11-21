@@ -146,11 +146,13 @@ curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import 
 sudo pacman -Rs nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem # removes gnome bloat
 
 #import configs
-rm ~/.config/fish && cp ~/KAI/configs/fish ~/.config
-rm ~/.config/nvim && cp ~/KAI/configs/nvim ~/.config
-rm ~/.config/straw-viewer && cp ~/KAI/configs/straw-viewer ~/.config
-rm ~/.config/spacefm && cp ~/KAI/configs/spacefm ~/.config
-sudo rm /usr/share/gamemode/gamemode.ini && cp ~/KAI/gamemode.ini /usr/share/gamemode # my config is the default except Overwatch is whitelisted (gamemode will only run for Overwatch)
+git clone https://github.com/koalagang/configs
+rm -r ~/.config/fish && cp -r ~/configs/fish ~/.config
+rm -r ~/.config/nvim && cp -r ~configs/nvim ~/.config
+rm -r ~/.config/straw-viewer && cp -r ~/configs/straw-viewer ~/.config
+rm -r ~/.config/spacefm && cp -r ~/configs/spacefm ~/.config
+rm -r ~/.newsboat && mv ~/configs/newsboat ~/.newsboat
+sudo rm -r /usr/share/gamemode/gamemode.ini && cp -r ~/KAI/gamemode.ini /usr/share/gamemode # my config is the default except Overwatch is whitelisted (gamemode will only run for Overwatch)
 
 #import Firefox profiles
 cp ~/kai/firefox-profiles/008szetu.netflix ~/.mozilla/firefox
@@ -169,7 +171,7 @@ cp ~/kai/nvidia-force-full-compositon.desktop /etc/xdg/autostart/ # enables 'for
 
 cp ~/KAI/doas.conf /etc/ #enable doas
 
-gsettings set org.gnome.desktop.background picture-uri ~/kai/nord.jpg # sets wallpaper
+gsettings set org.gnome.desktop.background picture-uri ~/KAI/nord.jpg # sets wallpaper
 gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark && papirus-folders -C pink --theme Papirus-Dark # sets icon theme to Paprius Dark Pink
 
 #install gnome extensions
