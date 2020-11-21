@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/bash
 
 #enable multilib repository
-sudo cp ~/kai/pacman.conf /etc/
+sudo cp ~/KAI/pacman.conf /etc/
 sudo pacman -Syy
 
 pacman_packages=(
@@ -136,7 +136,7 @@ git clone https://github.com/FeralInteractive/gamemode.git
 cd gamemode
 git checkout 1.6
 ./bootstrap.sh
-sudo cp ~/kai/gamemode.ini /usr/share/gamemode
+sudo cp ~/KAI/gamemode.ini /usr/share/gamemode
 rm ~/gamemode
 
 sudo pacman -S  --noconfirm --needed "${pacman_packages[@]}" # install pacman packages
@@ -146,18 +146,18 @@ curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import 
 sudo pacman -Rs nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem # removes gnome bloat
 
 #import configs
-rm ~/.config/fish && cp ~/kai/configs/fish ~/.config
-rm ~/.config/nvim && cp ~/kai/configs/nvim ~/.config
-rm ~/.config/straw-viewer && cp ~/kai/configs/straw-viewer ~/.config
-rm ~/.config/spacefm && cp ~/kai/configs/spacefm ~/.config
-sudo rm /usr/share/gamemode/gamemode.ini && cp ~/kai/gamemode.ini /usr/share/gamemode # my config is the default except Overwatch is whitelisted (gamemode will only run for Overwatch)
+rm ~/.config/fish && cp ~/KAI/configs/fish ~/.config
+rm ~/.config/nvim && cp ~/KAI/configs/nvim ~/.config
+rm ~/.config/straw-viewer && cp ~/KAI/configs/straw-viewer ~/.config
+rm ~/.config/spacefm && cp ~/KAI/configs/spacefm ~/.config
+sudo rm /usr/share/gamemode/gamemode.ini && cp ~/KAI/gamemode.ini /usr/share/gamemode # my config is the default except Overwatch is whitelisted (gamemode will only run for Overwatch)
 
 #import Firefox profiles
 cp ~/kai/firefox-profiles/008szetu.netflix ~/.mozilla/firefox
-cp ~kai/firefox-profiles/4qdlxavn.strongkoala ~/.mozilla/firefox
-cp ~kai/firefox-profiles/92rdblzp.strongestkoala ~/.mozilla/firefox
-cp ~kai/firefox-profiles/installs.ini ~/.mozilla/firefox
-cp ~kai/firefox-profiles/profiles.ini ~/.mozilla/firefox
+cp ~/KAI/firefox-profiles/4qdlxavn.strongkoala ~/.mozilla/firefox
+cp ~/KAI/firefox-profiles/92rdblzp.strongestkoala ~/.mozilla/firefox
+cp ~/KAI/firefox-profiles/installs.ini ~/.mozilla/firefox
+cp ~/KAI/firefox-profiles/profiles.ini ~/.mozilla/firefox
 
 #install Vim Plug
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -167,24 +167,24 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 cp /usr/share/applications/guake.desktop /etc/xdg/autostart/ # guake
 cp ~/kai/nvidia-force-full-compositon.desktop /etc/xdg/autostart/ # enables 'force full composition pipeline' setting automatically if Nvidia Settings is installed
 
-cp ~/kai/doas.conf /etc/ #enable doas
+cp ~/KAI/doas.conf /etc/ #enable doas
 
 gsettings set org.gnome.desktop.background picture-uri ~/kai/nord.jpg # sets wallpaper
 gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark && papirus-folders -C pink --theme Papirus-Dark # sets icon theme to Paprius Dark Pink
 
 #install gnome extensions
-cp -r ~/kai/gnome-shell-extensions/activities-config@nls1729 /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/alwayszoomworkspaces@jamie.thenicols.net /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/BringOutSubmenuOfPowerOffLogoutButton@pratap.fastmail.fm /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/dash-to-dock@micxgx.gmail.com /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/gamemode@christian.kellner.me /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/impatience@gfxmonk.net /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/scroll-panel@mreditor.github.com /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/transparent-window-moving@noobsai.github.com /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/tray-icons@zhangkaizhao.com /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/tweaks-system-menu@extensions.gnome-shell.fifi.org /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/kai/gnome-shell-extensions/windowoverlay-icons@sustmidown.centrum.cz /home/admin/.local/share/gnome-shell/extensions
-killall -SIGQUIT gnome-shell
+cp -r ~/KAI/gnome-shell-extensions/activities-config@nls1729 /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/alwayszoomworkspaces@jamie.thenicols.net /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/BringOutSubmenuOfPowerOffLogoutButton@pratap.fastmail.fm /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAi/gnome-shell-extensions/dash-to-dock@micxgx.gmail.com /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/gamemode@christian.kellner.me /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/impatience@gfxmonk.net /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/scroll-panel@mreditor.github.com /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/transparent-window-moving@noobsai.github.com /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/tray-icons@zhangkaizhao.com /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/tweaks-system-menu@extensions.gnome-shell.fifi.org /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/windowoverlay-icons@sustmidown.centrum.cz /home/admin/.local/share/gnome-shell/extensions
+killall -SIGQUIT gnome-shell # restarts the gnome shell, do not worry if your computer stops responding for a few seconds
 sudo pacman -Syu
 
 #security improvements
