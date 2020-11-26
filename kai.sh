@@ -152,7 +152,7 @@ rm -r ~/.config/fish && cp -r ~/configs/fish ~/.config
 rm -r ~/.config/nvim && cp -r ~configs/nvim ~/.config
 rm -r ~/.config/straw-viewer && cp -r ~/configs/straw-viewer ~/.config
 rm -r ~/.config/spacefm && cp -r ~/configs/spacefm ~/.config
-rm -r ~/.newsboat && mv ~/configs/newsboat ~/.newsboat
+rm -r ~/.newsboat && mv ~/dotfiles/newsboat ~/.newsboat
 sudo rm -r /usr/share/gamemode/gamemode.ini && cp -r ~/KAI/gamemode.ini /usr/share/gamemode # my config is the default except Overwatch is whitelisted (gamemode will only run for Overwatch)
 
 #import Firefox profiles
