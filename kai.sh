@@ -108,11 +108,13 @@ pacman_packages=(
 	"lib32-vulkan-icd-loader"
 	"lutris"
 	"meson"
-	"systemd"
-	"git"
-	"dbus" "libinih"
+#	"systemd" # As you can see here, systemd is required for gamemode
+#	"git" # Git should already be installed if you cloned this repository.
+	"dbus"
+	"libinih"
 	"steam"
-	"github-cli"
+	"vifm"
+
 )
 
 aur_packages=(
@@ -121,7 +123,6 @@ aur_packages=(
     #"thefuck"
     #"absolutely-proprietary"
     "discord"
-	"lf"
 	"papirus-folders-git"
 	"spotifyd"
 	"spotify-tui"
