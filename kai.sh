@@ -114,6 +114,7 @@ pacman_packages=(
 	"libinih"
 	"steam"
 	"vifm"
+	"flameshot"
 
 )
 
@@ -130,6 +131,8 @@ aur_packages=(
 	"legendary"
 	"itch"
 	"multimc5"
+	"straw-viewer"
+	"freetube-bin"
 )
 
 #installing gamemode
@@ -145,7 +148,7 @@ sudo pacman -S  --noconfirm --needed "${pacman_packages[@]}" # install pacman pa
 yay -S --batchinstall --noconfirm --needed "${aur_packages[@]}" # install AUR packages
 
 curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - && yay -S --noconfirm spotify # official proprietary Spotify electron client
-sudo pacman -Rs nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem # removes gnome bloat
+sudo pacman -Rs nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem gnome-screenshot # removes gnome bloat
 
 #import configs
 git clone https://github.com/koalagang/configs
