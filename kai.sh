@@ -115,6 +115,10 @@ pacman_packages=(
 	"steam"
 	"vifm"
 	"flameshot"
+	"xorg-xmodmap"
+	"xorg-xorg-xev"
+	"xorg-setxkbmap"
+	"xorg-xset"
 
 )
 
@@ -136,7 +140,7 @@ aur_packages=(
 )
 
 #installing gamemode
-sudo pacman -S meson systemd git dbus libinih #NOTE: as you can see, Systemd is required so this will not work for OpenRC, Runit, etc
+sudo pacman -S meson systemd git dbus libinih #NOTE: as you can see, Systemd is required so this will not work for OpenRC, Runit, etc. If you are not using Systemd, I suggest you remove this section or comment it out.
 git clone https://github.com/FeralInteractive/gamemode.git
 cd gamemode
 git checkout 1.6
@@ -259,6 +263,8 @@ sudo systemctl disable geoclue.service && sudo systemctl mask geoclue.service # 
 
 chsh -s /bin/fish # sets fish as the default shell
 yay -c
+xmodmap -e 'keycode 66 = F3' # remaps capslock to F3
+xmodmap -e 'keycode 62 = F11' # remaps right shift to F11
 sudo timeshift --create --comments "Fresh install" && echo "created timeshift backup"
 sudo timeshift --create --comments "Daily backup" --tags D && echo "timeshift backups set do daily"
 ulimit -Hn
