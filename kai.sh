@@ -263,8 +263,9 @@ sudo systemctl disable geoclue.service && sudo systemctl mask geoclue.service # 
 
 chsh -s /bin/fish # sets fish as the default shell
 yay -c
-xmodmap -e 'keycode 66 = F3' # remaps capslock to F3
-xmodmap -e 'keycode 62 = F11' # remaps right shift to F11
+xmodmap -e 'keycode 66 = F3' # remaps Capslock to F3
+xmodmap -e 'keycode 62 = F11' # remaps Right Shift to F11
+xmodmap -e 'keycode 108 = Delete' # remaps Right Alt to Delete
 sudo timeshift --create --comments "Fresh install" && echo "created timeshift backup"
 sudo timeshift --create --comments "Daily backup" --tags D && echo "timeshift backups set do daily"
 ulimit -Hn
