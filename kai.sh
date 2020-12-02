@@ -108,8 +108,7 @@ pacman_packages=(
 	"lib32-vulkan-icd-loader"
 	"lutris"
 	"meson"
-#	"systemd" # As you can see here, systemd is required for gamemode
-#	"git" # Git should already be installed if you cloned this repository.
+	"git"
 	"dbus"
 	"libinih"
 	"steam"
@@ -119,12 +118,13 @@ pacman_packages=(
 	"xorg-xorg-xev"
 	"xorg-setxkbmap"
 	"xorg-xset"
+	"pacman-contrib"
 
 )
 
 aur_packages=(
     "newsboat"
-    "protonvpn-cli-ng"
+    "protonvpn-cli-ng-git"
     #"thefuck"
     #"absolutely-proprietary"
     "discord"
@@ -148,7 +148,7 @@ git checkout 1.6
 sudo cp ~/KAI/gamemode.ini /usr/share/gamemode
 rm ~/gamemode
 
-sudo pacman -S  --noconfirm --needed "${pacman_packages[@]}" # install pacman packages
+sudo pacman -S --noconfirm --needed "${pacman_packages[@]}" # install pacman packages
 yay -S --batchinstall --noconfirm --needed "${aur_packages[@]}" # install AUR packages
 
 curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - && yay -S --noconfirm spotify # official proprietary Spotify electron client
