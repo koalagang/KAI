@@ -124,7 +124,7 @@ pacman_packages=(
 
 aur_packages=(
     "newsboat"
-    "protonvpn-cli-ng-git"
+    "protonvpn-cli-ng"
     #"thefuck"
     #"absolutely-proprietary"
     "discord"
