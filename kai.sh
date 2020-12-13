@@ -25,7 +25,6 @@ pacman_packages=(
 	"adobe-source-han-serif-otc-fonts"
 	"gnu-free-fonts"
 	"noto-fonts-emoji"
-	"ttf-hack"
 	"opendoas"
 	"pulseaudio"
 	"nvim"
@@ -112,13 +111,18 @@ pacman_packages=(
 	"dbus"
 	"libinih"
 	"steam"
-	"vifm"
+	#"vifm"
 	"flameshot"
 	"xorg-xmodmap"
 	"xorg-xorg-xev"
 	"xorg-setxkbmap"
 	"xorg-xset"
 	"pacman-contrib"
+	"unclutter"
+	"neovim"
+	"alacritty"
+	"nitrogen"
+	"ttf-ubuntu-font-family"
 
 )
 
@@ -127,7 +131,7 @@ aur_packages=(
     "protonvpn-cli-ng"
     #"thefuck"
     #"absolutely-proprietary"
-    "discord"
+    #"discord"
 	"papirus-folders-git"
 	"spotifyd"
 	"spotify-tui"
@@ -136,7 +140,8 @@ aur_packages=(
 	"itch"
 	"multimc5"
 	"straw-viewer"
-	"freetube-bin"
+	#"freetube-bin"
+	"sc-im"
 )
 
 #installing gamemode
@@ -268,6 +273,11 @@ xmodmap -e 'keycode 62 = F11' # remaps Right Shift to F11
 xmodmap -e 'keycode 108 = Delete' # remaps Right Alt to Delete
 sudo timeshift --create --comments "Fresh install" && echo "created timeshift backup"
 sudo timeshift --create --comments "Daily backup" --tags D && echo "timeshift backups set do daily"
+
+#Lutris installers - this part requires mostly manual clicking
+lutris lutris:overwatch # opens Lutris installer for Overwatch: close Lutris after this so that the script can continue
+lutris luris:hearthstone # opens Lutris installer for Hearthstone: once again, close Lutris once this installation has completed
+
 ulimit -Hn
-echo "If more than 500,000 was returned then ESYNC IS ENABLED! If not - proceed with the instructions on CTTs guide. https://christitus.com/ultimate-linux-gaming-guide/"
-echo "kai.sh script complete"
+echo If more than 500,000 was returned then ESYNC IS ENABLED! If not - proceed with the instructions on CTTs guide: https://christitus.com/ultimate-linux-gaming-guide/
+echo kai.sh script complete
