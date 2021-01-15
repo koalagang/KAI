@@ -24,10 +24,10 @@ pacman_packages=(
 	"adobe-source-han-sans-otc-fonts"
 	"adobe-source-han-serif-otc-fonts"
 	"gnu-free-fonts"
+	"ttf-liberation"
 	"noto-fonts-emoji"
 	"opendoas"
 	"pulseaudio"
-	"nvim"
 	"youtube-dl"
 	"calcurse"
 	"htop"
@@ -36,12 +36,11 @@ pacman_packages=(
    	"mpv"
   	"zathura"
   	"zathura-pdf-poppler"
-	#"zathura-cb"
 	"sxiv"
    	"firefox"
    	"keepassxc"
  	"anki"
-   	"libreoffice-still"
+   	#"libreoffice-still"
    	"gnome-tweaks"
    	"gimp"
    	"bleachbit"
@@ -114,15 +113,12 @@ pacman_packages=(
 	#"vifm"
 	"flameshot"
 	"xorg-xmodmap"
-	"xorg-xorg-xev"
-	"xorg-setxkbmap"
-	"xorg-xset"
 	"pacman-contrib"
 	"unclutter"
 	"neovim"
 	"alacritty"
 	"nitrogen"
-	"ttf-ubuntu-font-family"
+	"libvirt"
 
 )
 
@@ -140,9 +136,18 @@ aur_packages=(
 	"itch"
 	"multimc5"
 	"straw-viewer"
-	#"freetube-bin"
 	"sc-im"
+	"sent"
+	"farbfeld"
+	"kvm"
+	"qemu"
+	"ebtables"
+	"lxsessions"
+	"dnsmasq"
+	"virt-manager"
 )
+
+sudo systemctl enable libvirtd
 
 #installing gamemode
 sudo pacman -S meson systemd git dbus libinih #NOTE: as you can see, Systemd is required so this will not work for OpenRC, Runit, etc. If you are not using Systemd, I suggest you remove this section or comment it out.
@@ -157,7 +162,7 @@ sudo pacman -S --noconfirm --needed "${pacman_packages[@]}" # install pacman pac
 yay -S --batchinstall --noconfirm --needed "${aur_packages[@]}" # install AUR packages
 
 curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - && yay -S --noconfirm spotify # official proprietary Spotify electron client
-sudo pacman -Rs nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem gnome-screenshot # removes gnome bloat
+sudo pacman -Rs nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem gnome-screenshot gnome-boxes # removes gnome bloat
 
 #import configs
 git clone https://github.com/koalagang/configs
@@ -167,13 +172,6 @@ rm -r ~/.config/straw-viewer && cp -r ~/configs/straw-viewer ~/.config
 rm -r ~/.config/spacefm && cp -r ~/configs/spacefm ~/.config
 rm -r ~/.newsboat && mv ~/dotfiles/newsboat ~/.newsboat
 sudo rm -r /usr/share/gamemode/gamemode.ini && cp -r ~/KAI/gamemode.ini /usr/share/gamemode # my config is the default except Overwatch is whitelisted (gamemode will only run for Overwatch)
-
-#import Firefox profiles
-cp ~/kai/firefox-profiles/008szetu.netflix ~/.mozilla/firefox
-cp ~/KAI/firefox-profiles/4qdlxavn.strongkoala ~/.mozilla/firefox
-cp ~/KAI/firefox-profiles/92rdblzp.strongestkoala ~/.mozilla/firefox
-cp ~/KAI/firefox-profiles/installs.ini ~/.mozilla/firefox
-cp ~/KAI/firefox-profiles/profiles.ini ~/.mozilla/firefox
 
 #install Vim Plug
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -267,10 +265,7 @@ harden_security
 sudo systemctl disable geoclue.service && sudo systemctl mask geoclue.service # breaks location services
 
 chsh -s /bin/fish # sets fish as the default shell
-yay -c
-xmodmap -e 'keycode 66 = F3' # remaps Capslock to F3
-xmodmap -e 'keycode 62 = F11' # remaps Right Shift to F11
-xmodmap -e 'keycode 108 = Delete' # remaps Right Alt to Delete
+xmodmap -e 'keycode 62 = Escape'
 sudo timeshift --create --comments "Fresh install" && echo "created timeshift backup"
 sudo timeshift --create --comments "Daily backup" --tags D && echo "timeshift backups set do daily"
 
