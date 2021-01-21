@@ -119,6 +119,9 @@ pacman_packages=(
 	"nitrogen"
 	"libvirt"
 	"lollypop"
+	"sxhkd"
+	"xdo"
+	"xdotools"
 
 )
 
