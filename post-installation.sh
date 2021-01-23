@@ -110,7 +110,7 @@ pacman_packages=(
 	#"libinih"
 	#"steam"
 	#"vifm"
-	"flameshot"
+	"maim"
 	"xorg-xmodmap"
 	"pacman-contrib"
 	"unclutter"
@@ -122,6 +122,7 @@ pacman_packages=(
 	"sxhkd"
 	"xdo"
 	"xdotools"
+	"xclip"
 
 )
 
@@ -159,15 +160,23 @@ curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import 
 sudo pacman -Rs nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem gnome-screenshot gnome-boxes gnome-characters # removes unwanted gnome applications
 
 #import configs
-git clone https://github.com/koalagang/dotfiles
-#put more stuff here
-
-#setup autostart
-cp ~/KAI/nvidia-force-full-compositon.desktop /etc/xdg/autostart/ # enables 'force full composition pipeline' setting automatically if Nvidia Settings is installed
+git clone https://github.com/koalagang/dotfiles.git
+cp ~/dotfiles/autostart ~/.config
+cp ~/dotfiles/alacritty ~/.config
+cp ~/dotfiles/albert ~/.config
+cp ~/dotfiles/fish ~/.config
+cp ~/dotfiles/keepassxc ~/.config
+cp ~/dotfiles/neofetch ~/.config
+cp ~/dotfiles/nvim ~/.config
+cp ~/dotfiles/spacefm ~/.config
+cp ~/dotfiles/sxhkd ~/.config
+cp ~/dotfiles/ytmdl ~/.config
+cp ~/dotfiles/zathura ~/.config
+mv ~/dotfiles/newsboat ~/.newsboat
 
 sudo cp ~/KAI/doas.conf /etc/ #enable doas
 
-gsettings set org.gnome.desktop.background picture-uri ~/KAI/nord.jpg # sets wallpaper
+nitrogen --set-auto --save ~/KAI/flamingoright.png # sets wallpaper
 gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark && papirus-folders -C pink --theme Papirus-Dark # sets icon theme to Paprius Dark Pink
 
 #install gnome extensions
