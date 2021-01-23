@@ -145,7 +145,7 @@ aur_packages=(
 	"dnsmasq"
 	"virt-manager"
 	"buku"
-	"librewolf-bin"
+	#"librewolf-bin"
 	"brave-bin"
 	"neovim-plug-git"
 	"starship-bin"
@@ -176,21 +176,21 @@ mv ~/dotfiles/newsboat ~/.newsboat
 
 sudo cp ~/KAI/doas.conf /etc/ #enable doas
 
-nitrogen --set-auto --save ~/KAI/flamingoright.png # sets wallpaper
+cp ~/KAI/flamingoright.png ~/Pictures && nitrogen --set-auto --save ~/Pictures/flamingoright.png # sets wallpaper
 gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark && papirus-folders -C pink --theme Papirus-Dark # sets icon theme to Paprius Dark Pink
 
 #install gnome extensions
-cp -r ~/KAI/gnome-shell-extensions/activities-config@nls1729 /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/alwayszoomworkspaces@jamie.thenicols.net /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/BringOutSubmenuOfPowerOffLogoutButton@pratap.fastmail.fm /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAi/gnome-shell-extensions/dash-to-dock@micxgx.gmail.com /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/gamemode@christian.kellner.me /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/impatience@gfxmonk.net /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/scroll-panel@mreditor.github.com /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/transparent-window-moving@noobsai.github.com /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/tray-icons@zhangkaizhao.com /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/tweaks-system-menu@extensions.gnome-shell.fifi.org /home/admin/.local/share/gnome-shell/extensions
-cp -r ~/KAI/gnome-shell-extensions/windowoverlay-icons@sustmidown.centrum.cz /home/admin/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/activities-config@nls1729 ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/alwayszoomworkspaces@jamie.thenicols.net ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/BringOutSubmenuOfPowerOffLogoutButton@pratap.fastmail.fm ~/.local/share/gnome-shell/extensions
+cp -r ~/KAi/gnome-shell-extensions/dash-to-dock@micxgx.gmail.com ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/gamemode@christian.kellner.me ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/impatience@gfxmonk.net ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/scroll-panel@mreditor.github.com ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/transparent-window-moving@noobsai.github.com ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/tray-icons@zhangkaizhao.com ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/tweaks-system-menu@extensions.gnome-shell.fifi.org ~/.local/share/gnome-shell/extensions
+cp -r ~/KAI/gnome-shell-extensions/windowoverlay-icons@sustmidown.centrum.cz ~/.local/share/gnome-shell/extensions
 killall -SIGQUIT gnome-shell # restarts the gnome shell, do not worry if your computer stops responding for a few seconds
 sudo pacman -Syu
 
@@ -263,5 +263,4 @@ sudo timeshift --create --comments "Fresh install" && echo "created timeshift ba
 sudo timeshift --create --comments "Daily backup" --tags D && echo "timeshift backups set do daily"
 
 ulimit -Hn
-echo If more than 500,000 was returned then ESYNC IS ENABLED! If not - proceed with the instructions on CTTs guide: https://christitus.com/ultimate-linux-gaming-guide/
-echo "post-installation script complete"
+printf "If more than 500,000 was returned then ESYNC IS ENABLED! If not - proceed with the instructions on CTTs guide: https://christitus.com/ultimate-linux-gaming-guide/\npost-installation script is complete!\nYou may now delete ~/KAI if you wish."
