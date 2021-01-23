@@ -7,11 +7,12 @@ If you still wish to use KAI, proceed with the instructions.
 ### Instructions
 
 1. Install an Arch iso from the [official Arch Linux website](https://archlinux.org/download/).
-2. Flash it to a memory stick or CD drive and boot into it.
-3. Run 'fdisk' or 'cfdisk' to partition your disk with fdisk or cfdisk respectively (Arch's guide recommends fdisk but I have found cfdisk to be much easier to use).
-4. Format your partitions (visit the [Arch Wiki](https://wiki.archlinux.org/index.php/Installation_guide#Format_the_partitions) to see how if you do not know how to).
-3. Run 'pacman -Syy && pacman -S git'.
-4. Run 'git clone https://github.com/koalagang/KAI.git'.
-5. Run 'cd KAI && bash installation.sh'. Give it some time to install Arch.
+2. [Verify its signature](https://wiki.archlinux.org/index.php/Installation_guide#Verify_signature).
+3. Flash it to a memory stick or CD drive and boot into it.
+4. Run 'fdisk' or 'cfdisk' to partition your disk with fdisk or cfdisk respectively (Arch's guide recommends fdisk but I have found cfdisk to be much easier to use).
+5. Format your partitions (visit the [Arch Wiki](https://wiki.archlinux.org/index.php/Installation_guide#Format_the_partitions) to see how if you do not know how to).
+6. Run 'pacman -Syy && pacman -S git'.
+7. Run 'git clone https://github.com/koalagang/KAI.git'.
+8. Run 'cd KAI && bash installation.sh'. Give it some time to install Arch.
 
 As of right now, it does not install any desktop environment or tiling window manager(neither does the post-installation script) so you will need to install that. If you wish to use my post-installation script (which I do not recommend because it is extremely tailored to me and, unless you use very similar software to me, it would install a lot of (what to you is) bloat), run 'cd KAI && bash post-installation.sh'. NOTE: the only user created is called 'admin'. The password to 'admin' and to root is "admin" - you should change this. You may also wish to switch to a different language and keyboard layout if you don't use the American keyboard layout or British English localisation.
