@@ -123,6 +123,11 @@ pacman_packages=(
 	"xdo"
 	"xdotools"
 	"xclip"
+	"plocate"
+    "bat"
+    "ripgrep"
+    "exa"
+	"gnu-netcat"
 
 )
 
@@ -147,17 +152,20 @@ aur_packages=(
 	"buku"
 	#"librewolf-bin"
 	"brave-bin"
-	"neovim-plug-git"
 	"starship-bin"
 )
 
 sudo systemctl enable libvirtd
 
 sudo pacman -S --noconfirm --needed "${pacman_packages[@]}" # install pacman packages
-yay -S --batchinstall --noconfirm --needed "${aur_packages[@]}" # install AUR packages
+sudo paru -S --batchinstall --noconfirm --needed "${aur_packages[@]}" # install AUR packages
 
 curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - && yay -S --noconfirm spotify # official proprietary Spotify electron client
-sudo pacman -Rs nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem gnome-screenshot gnome-boxes gnome-characters # removes unwanted gnome applications
+sudo pacman -Rs gnome-books sushi evince nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem gnome-screenshot gnome-boxes gnome-characters # removes unwanted gnome applications
+
+# install vim-plug
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 #import configs
 git clone https://github.com/koalagang/dotfiles.git
@@ -195,14 +203,14 @@ killall -SIGQUIT gnome-shell # restarts the gnome shell, do not worry if your co
 sudo pacman -Syu
 
 #security improvements
-restrict_kernel_log_access() { 
-    echo "kernel.dmesg_restrict = 1" >> /etc/sysctl.d/51-dmesg-restrict.conf 
+restrict_kernel_log_access() {
+    echo "kernel.dmesg_restrict = 1" >> /etc/sysctl.d/51-dmesg-restrict.conf
 }
-increase_user_login_timeout() { 
-    echo "auth optional pam_faildelay.so delay=4000000" >> /etc/pam.d/system-login 
+increase_user_login_timeout() {
+    echo "auth optional pam_faildelay.so delay=4000000" >> /etc/pam.d/system-login
 }
-deny_ip_spoofs(){ 
-    printf "order bind, hosts\n multi on" >> /etc/host.conf 
+deny_ip_spoofs(){
+    printf "order bind, hosts\n multi on" >> /etc/host.conf
 }
 
 configure_apparmor_and_firejail(){
@@ -212,12 +220,12 @@ configure_apparmor_and_firejail(){
 
 configure_firewall(){
     if command -v ufw > /dev/null; then
-        sudo ufw limit 22/tcp  
+        sudo ufw limit 22/tcp
         sudo ufw limit ssh
-        sudo ufw allow 80/tcp  
-        sudo ufw allow 443/tcp  
+        sudo ufw allow 80/tcp
+        sudo ufw allow 443/tcp
         sudo ufw default deny
-        sudo ufw default deny incoming  
+        sudo ufw default deny incoming
         sudo ufw default allow outgoing
         sudo ufw allow from 192.168.0.0/24
         sudo ufw allow Deluge
