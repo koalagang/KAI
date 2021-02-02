@@ -13,8 +13,10 @@ If you still wish to use KAI, proceed with the instructions.
 5. Run 'mdkir /mnt/boot' and then mount your boot partition (usually /dev/sda1, so run 'mount /dev/sda1 /mnt/boot').
 6. Run 'pacman -Syy && pacman -S git'.
 7. Run 'git clone https://github.com/koalagang/KAI.git' (the capitals in 'KAI' are important).
-8. Change directory into KAI and then run installer-1.sh 'cd KAI && bash installer-1.sh'.
-9. Run installer-2.sh 'bash installer-2.sh'.
-10. Reboot your computer 'reboot'. Depending on your BIOS settings, you may need to shutdown 'shutdown now' and remove your live boot before you turn it back on.
+8. Run installer-1.sh with 'bash KAI/installer-1.sh'.
+9. Repeat step 7 and then run installer-2.sh with 'bash home/KAI/installer-2.sh'.
+10. Unmount everyting with 'umount -a'
+11. Reboot your computer with 'reboot'. Depending on your BIOS settings, you may need to shutdown 'shutdown now' and remove your live boot before you turn it back on.
+12. Sign in (user: admin & password: admin)
 
 As of right now, it does not install any desktop environment or tiling window manager(neither does the post-installation script) so you will need to install that. If you wish to use my post-installation script (which I do not recommend because it is extremely tailored to me and, unless you use very similar software to me, it would install a lot of (what to you is) bloat), run 'cd KAI && bash post-installation.sh'. NOTE: the only user created is called 'admin'. The password to 'admin' and to root is "admin" - you should change this. You may also wish to switch to a different language and keyboard layout if you don't use the American keyboard layout or British English localisation.
