@@ -12,7 +12,7 @@ echo "LANG=en_GB.UTF-8" > /etc/locale.conf
 #export "LANG=en_GB.UTF-8"
 printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t arch" > /etc/hostname
 pacman -S networkmanager efibootmgr grub --noconfirm
-grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 systemctl enable NetworkManager
 
