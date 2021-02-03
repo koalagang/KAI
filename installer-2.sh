@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/sh
 
 pacman -Syy
 timedatectl set-ntp true
