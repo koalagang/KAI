@@ -1,12 +1,14 @@
 ﻿#!/usr/bin/bash
 
 #enable multilib repository
-#sudo cp ~/KAI/pacman.conf /etc/
+sudo cp /etc/pacman.conf /etc/pacman.conf.bak
+sudo cp ~/KAI/pacman.conf /etc/
 sudo pacman -Syy
 
 git clone https://aur.archlinux.org/paru-bin.git
 cd paru-bin
 makepkg -si PKGBUILD
+cd
 rm -r paru-bin
 
 pacman_packages=(
@@ -158,7 +160,7 @@ curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import 
 sudo pacman -S --noconfirm --needed "${pacman_packages[@]}" # install pacman packages
 sudo paru -S --batchinstall --noconfirm --needed "${aur_packages[@]}" # install AUR packages
 
-sudo pacman -Rs gnome-books sushi evince nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem gnome-screenshot gnome-boxes gnome-characters # removes unwanted gnome applications
+sudo pacman -Rs gnome-calendar gnome-maps gnome-weather gnome-books sushi evince nautilus gnome-documents epiphany gnome-contacts gnome-font-viewer gnome-music gnome-photos totem gnome-screenshot gnome-boxes gnome-characters # removes unwanted gnome applications
 
 nativefier --widevine netflix.com ~/Desktop # Creates a Netflix client
 nativefier crunchyroll.com ~/Desktop # Creates a Crunchyroll client
@@ -170,9 +172,9 @@ mv ~/Desktop/APP-linux-x64 ~/Desktop/.crunchyroll
 mv ~/Desktop/.crunchyroll/APP ~/Desktop/.crunchyroll/crunchyroll
 mv ~/Desktop/Discord* ~/Desktop/.discord
 mv ~/Desktop/.discord/Discord* ~/Desktop/.discord/discord
-sudo pacman -Rs nodejs-nativefier --noconfirm # Deleting nativefier which I no longer need
+sudo pacman -Rs nodejs-nativefier --noconfirm # Uninstalling nativefier which I no longer need
 # NOTE: these electron clients are not technically installed onto your computer - They are simply executables (kind of like appimages).
-# To remove them, you do not run the usual 'pacman -Rs', instead, just delete the folder and all of its contents.
+# To remove them, you do not run the usual 'pacman -Rs', instead, just delete their folder and all of their contents.
 
 # install vim-plug
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \

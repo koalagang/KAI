@@ -1,21 +1,18 @@
 #!/usr/bin/bash
 
 pacman -Syy
-pacman -S networkmanager efibootmgr grub
-grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
-grub-mkconfig -o /boot/grub/grub.cfg
 timedatectl set-ntp true
 ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
 hwclock --systohc
 cp /etc/locale.gen /etc/locale.gen.bak
 sed -i "s/#en_GB.UTF-8\ UTF-8/en_GB.UTF-8\ UTF-8/g" /etc/locale.gen
-#sed -i "s/#en_GB ISO-8859-1/en_GB ISO-8859-1/g" /etc/locale.gen
+sed -i "s/#en_GB ISO-8859-1/en_GB ISO-8859-1/g" /etc/locale.gen
 locale-gen
 echo "LANG=en_GB.UTF-8" > /etc/locale.conf
 #export "LANG=en_GB.UTF-8"
 printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t arch" > /etc/hostname
-grub-install --target=x87_64-efi --efi-directory=/boot --bootloader-id=GRUB
-#grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
+pacman -S networkmanager efibootmgr grub --noconfirm
+grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
 grub-mkconfig -o /boot/grub/grub.cfg
 systemctl enable NetworkManager
 

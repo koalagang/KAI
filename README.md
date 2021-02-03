@@ -14,7 +14,7 @@ If you still wish to use KAI, proceed with the instructions.
 6. Run 'pacman -Syy && pacman -S git'.
 7. Run 'git clone https://github.com/koalagang/KAI.git' (the capitals in 'KAI' are important).
 8. Change into KAI and run installer-1.sh with 'cd KAI && bash installer-1.sh'.
-9. Repeat step 7 and then run installer-2.sh with 'cd home/KAI && bash installer-2.sh'.
+9. Change into home, repeat step 6 and 7, change into KAI, and then run installer-2.sh with 'bash installer-2.sh'.
 10. Unmount everyting with 'umount -a'
 11. Reboot your computer with 'reboot'. Depending on your BIOS settings, you may need to shutdown 'shutdown now' and remove your live boot before you turn it back on.
 12. Sign in (user: admin & password: admin)
