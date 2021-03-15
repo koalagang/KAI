@@ -129,7 +129,6 @@ pacman_packages=(
     "lm-sensors"
     "alsa-utils"
     "lxsession"
-
 )
 
 aur_packages=(
@@ -152,6 +151,9 @@ aur_packages=(
     "betterlockscreen"
     "redshift-minimal"
     "simple-mtpfs"
+    "devour"
+    "tuxi-git"
+    "archiver"
 )
 
 sudo pacman -S --noconfirm --needed "${pacman_packages[@]}" # install pacman packages
