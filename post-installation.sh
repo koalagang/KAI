@@ -128,7 +128,7 @@ official=(
     "exa"
     "virtualbox"
     "python-psutil"
-    #"lm-sensors"
+    "lm_sensors"
     "alsa-utils"
     "lxsession"
     "newsboat"

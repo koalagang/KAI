@@ -1,3 +1,5 @@
+THIS REPO WILL PROBABLY BE MIGRATED LATER. THE BELOW DETAILS MAY OR MAY NOT APPLY BECAUSE I AM NOT MAINTAINING IT AS OF RIGHT NOW.
+
 ### DISCLAIMER
 
 This installer has been developed for MY OWN use. You are free to fork it or use it but it has been designed for my system and my preferences; I will not tailor this software to anyone's but my own needs. I AM NOT RESPONSIBLE FOR ANY DAMAGES YOU MAY ENDURE THROUGH THE USE OF THESE SCRIPTS. I personally recommend that you learn how to install Arch Linux the manual way, if you haven't already, but if you want an easy Arch installation, check out [archfi](https://github.com/MatMoul/archfi), [LARBS](https://github.com/LukeSmithxyz/LARBS) or [james-d12's arch installer](https://github.com/james-d12/arch-installer).

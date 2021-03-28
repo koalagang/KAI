@@ -18,11 +18,11 @@ touch /etc/hostname
 echo "Alfheim" > /etc/hostname
 printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t Alfheim" > /etc/hosts
 ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
-xdg-user-dirs-update
 useradd -m -G wheel admin
 ( echo "admin"; echo "admin" ) | passwd
 cp /etc/sudoers /etc/sudoers.bak
 echo "admin ALL=(ALL) ALL" >> /etc/sudoers
+xdg-user-dirs-update
 mkdir /home/admin/.config/X11
 touch /home/admin/.config/X11/xinitrc
 echo "exec qtile" > /home/admin/.config/X11/xinitrc
