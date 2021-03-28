@@ -17,7 +17,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 touch /etc/hostname
 echo "Alfheim" > /etc/hostname
 printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t Alfheim" > /etc/hosts
-ln -s /etc/runit/sv/NetworkManager /etc/runit/sdvir/default
+ln -s /etc/runit/sv/NetworkManager /etc/runit/runsdvir/default
 xdg-user-dirs-update
 useradd -m -G wheel admin
 ( echo "admin"; echo "admin" ) | passwd
