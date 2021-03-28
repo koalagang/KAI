@@ -9,14 +9,24 @@ sed -i "s/#en_US\ ISO-8859-1/en_US\ ISO-8859-1/g" /etc/locale.gen
 sed -i "s/#nb_NO.UTF-8\ UTF-8/nb_NO.UTF-8\ UTF-8/g" /etc/locale.gen
 sed -i "s/#nb_NO\ ISO-8859-1/nb_NO\ ISO-8859-1/g" /etc/locale.gen
 locale-gen
+touch /etc/locale.conf
 echo "LANG=en_GB.UTF-8" > /etc/locale.conf
-pacman -S networkmanager networkmanager-runit
-ln -s /etc/runit/sv/NetworkManager /etc/runit/sdvir/current
-echo "Alfheim" > /etc/hostname
-printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t arch" > /etc/hostname
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+pacman -S networkmanager networkmanager-runit grub os-prober efibootmgr nvidia-lts xdg-user-dirs xorg xorg-xinit qtile --noconfirm
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 grub-mkconfig -o /boot/grub/grub.cfg
+touch /etc/hostname
+echo "Alfheim" > /etc/hostname
+printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t Alfheim" > /etc/hosts
+ln -s /etc/runit/sv/NetworkManager /etc/runit/sdvir/default
+xdg-user-dirs-update
 useradd -m -G wheel admin
 ( echo "admin"; echo "admin" ) | passwd
 cp /etc/sudoers /etc/sudoers.bak
 echo "admin ALL=(ALL) ALL" >> /etc/sudoers
+mkdir /home/admin/.config/X11
+touch /home/admin/.config/X11/xinitrc
+echo "exec qtile" > /home/admin/.config/X11/xinitrc
+echo "" > /etc/profile
+echo "startx /home/admin/.config/X11/xinitrc" > /etc/profile
+
+printf "Please enter the folowing:\nexit\numount -R /mnt\nreboot"
