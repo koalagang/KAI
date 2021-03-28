@@ -18,5 +18,9 @@ touch /etc/hostname
 echo "Alfheim" > /etc/hostname
 printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t Alfheim" > /etc/hosts
 ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
-passwd "passwd"
-printf "Please enter the folowing:\nexit\numount -R /mnt\nreboot\n"
+useradd -m -G wheel admin
+( echo "admin"; echo "admin" ) | passwd
+cp /etc/sudoers /etc/sudoers.bak
+echo "admin ALL=(ALL) ALL" >> /etc/sudoers
+echo "Set a root password by entering: passwd"
+printf "After, please enter the folowing:\nexit\numount -R /mnt\nreboot\n"
