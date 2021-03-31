@@ -1,3 +1,4 @@
+#!/bin/sh
 # test
 sudo pacman -S xdg-user-dirs qtile --noconfirm
 xdg-user-dirs-update
