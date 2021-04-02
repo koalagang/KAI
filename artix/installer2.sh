@@ -24,21 +24,21 @@ echo ""
 echo "Your username is $USERNAME"
 echo ""
 PASSWORD="PASSWORD"
-CONFIRMUSERNAME="CONFIRMPASSWORD"
+CONFIRMPASSWORD="CONFIRMPASSWORD"
 read -p "Enter your password: " PASSWORD
-read -p "Retype password: " CONFIRMUSERNAME
+read -p "Retype password: " CONFIRMPASSWORD
 until [ "$PASSWORD" = "$CONFIRMPASSWORD" ]; do
     echo "Passwords did not match!"
     read -p "Enter your password: " PASSWORD
     read -p "Retype password: " CONFIRMPASSWORD
 done
 echo""
-echo"Your password is..."
+echo "Your password is..."
 echo""
 ROOTPASSWORD="PASSWORD"
-ROOTCONFIRMUSERNAME="CONFIRMPASSWORD"
+ROOTCONFIRMPASSWORD="CONFIRMPASSWORD"
 read -p "Enter your root password: " ROOTPASSWORD
-read -p "Retype root password: " ROOTCONFIRMUSERNAME
+read -p "Retype root password: " ROOTCONFIRMPASSWORD
 until [ "$ROOTPASSWORD" = "$ROOTCONFIRMPASSWORD" ]; do
     echo "Root passwords did not match!"
     read -p "Enter your root password: " ROOTPASSWORD

@@ -162,7 +162,6 @@ official=(
 )
 
 aur=(
-    #"paru-bin"
     "timeshift-bin"
     "so"
     "mpdris2"
@@ -248,11 +247,14 @@ rm .bash_history
 sudo pkgfile --update
 sudo chsh -s /bin/zsh # sets zsh as the login shell
 mkdir $HOME/.cache/zsh
+mkdir $HOME/.local/share/virtualbox # change the default machine folder to this
+rm -r $HOME/.cargo
+sudo rm -r /kai || sudo rm -r /KAI
 cd /usr/share/doc/arch-wiki/html
 shopt -s extglob
 sudo rm -r /usr/share/doc/arch-wiki/html/!("en"|"ArchWikiOffline.css")
 paru -c
 sudo paccache -r -q && sudo paccache -ruk0 -q
 sudo timeshift --create --comments "Fresh install" && echo "created timeshift backup"
-#ulimit -Hn
-#printf "If more than 500,000 was returned then ESYNC IS ENABLED! If not - proceed with the instructions on CTTs guide: https://christitus.com/ultimate-linux-gaming-guide/\npost-installation script is complete!\nYou may now delete ~/KAI if you wish."
+echo "post-installation script complete!"
+printf "\nTo switch to a binary version of paru, you must manually enter:\n`paru -S paru-bin`\n"
