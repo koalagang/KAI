@@ -1,4 +1,50 @@
 #!/bin/sh
+HOST="HOST"
+CONFIRMHOST="CONFIRMHOST"
+read -p "Enter your host name: " HOST
+read -p "Retype host name: " CONFIRMHOST
+until [ "$HOST" = "$CONFIRMHOST" ]; do
+    echo "Host names did not match!"
+    read -p "Enter your host name: " HOST
+    read -p "Retype host name: " CONFIRMHOST
+done
+echo ""
+echo "Your host name is $HOST"
+echo ""
+USERNAME="USERNAME"
+CONFIRMUSERNAME="CONFIRMUSERNAME"
+read -p "Enter your username: " USERNAME
+read -p "Retype username: " CONFIRMUSERNAME
+until [ "$USERNAME" = "$CONFIRMUSERNAME" ]; do
+    echo "Usernames did not match!"
+    read -p "Enter your username: " USERNAME
+    read -p "Retype username: " CONFIRMUSERNAME
+done
+echo ""
+echo "Your username is $USERNAME"
+echo ""
+PASSWORD="PASSWORD"
+CONFIRMUSERNAME="CONFIRMPASSWORD"
+read -p "Enter your password: " PASSWORD
+read -p "Retype password: " CONFIRMUSERNAME
+until [ "$PASSWORD" = "$CONFIRMPASSWORD" ]; do
+    echo "Passwords did not match!"
+    read -p "Enter your password: " PASSWORD
+    read -p "Retype password: " CONFIRMPASSWORD
+done
+echo""
+echo"Your password is..."
+echo""
+ROOTPASSWORD="PASSWORD"
+ROOTCONFIRMUSERNAME="CONFIRMPASSWORD"
+read -p "Enter your root password: " ROOTPASSWORD
+read -p "Retype root password: " ROOTCONFIRMUSERNAME
+until [ "$ROOTPASSWORD" = "$ROOTCONFIRMPASSWORD" ]; do
+    echo "Root passwords did not match!"
+    read -p "Enter your root password: " ROOTPASSWORD
+    read -p "Retype root password: " ROOTCONFIRMPASSWORD
+done
+echo""
 
 ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
 hwclock --systohc
@@ -15,13 +61,13 @@ pacman -S networkmanager networkmanager-runit grub os-prober efibootmgr nvidia-l
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 grub-mkconfig -o /boot/grub/grub.cfg
 touch /etc/hostname
-echo "Alfheim" > /etc/hostname
-printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t Alfheim" > /etc/hosts
+echo "$HOST" > /etc/hostname
+printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t $HOST.localdomain \t $HOST" > /etc/hosts
 ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
 xdg-user-dirs-update
-useradd -m -G wheel admin
-( echo "admin"; echo "admin" ) | passwd admin
+useradd -m -G wheel $USERNAME
+( echo "$PASSWORD"; echo "$PASSWORD" ) | passwd $USERNAME
 cp /etc/sudoers /etc/sudoers.bak
-echo "admin ALL=(ALL) ALL" >> /etc/sudoers
-echo "Set a root password by entering: passwd"
+echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers
+( echo "$ROOTPASSWORD"; echo "$ROOTPASSWORD" ) | passwd
 printf "After, please enter the folowing:\nexit\numount -R /mnt\nreboot\n"

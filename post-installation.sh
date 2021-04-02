@@ -1,6 +1,8 @@
 ﻿#!/bin/env bash
 # This has script bashisms so do not run it with another shell
 
+xdg-user-dirs-update
+
 git clone https://aur.archlinux.org/paru.git
 cd paru
 makepkg -si --noconfirm
