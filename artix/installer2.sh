@@ -11,15 +11,16 @@ sed -i "s/#nb_NO\ ISO-8859-1/nb_NO\ ISO-8859-1/g" /etc/locale.gen
 locale-gen
 touch /etc/locale.conf
 echo "LANG=en_GB.UTF-8" > /etc/locale.conf
-pacman -S networkmanager networkmanager-runit grub os-prober efibootmgr nvidia-lts xorg xorg-xinit --noconfirm
+pacman -S networkmanager networkmanager-runit grub os-prober efibootmgr nvidia-lts xorg xorg-xinit xdg-user-dirs --noconfirm
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 grub-mkconfig -o /boot/grub/grub.cfg
 touch /etc/hostname
 echo "Alfheim" > /etc/hostname
 printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t Alfheim.localdomain \t Alfheim" > /etc/hosts
 ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
+xdg-user-dirs-update
 useradd -m -G wheel admin
-( echo "admin"; echo "admin" ) | passwd
+( echo "admin"; echo "admin" ) | passwd admin
 cp /etc/sudoers /etc/sudoers.bak
 echo "admin ALL=(ALL) ALL" >> /etc/sudoers
 echo "Set a root password by entering: passwd"

@@ -1,18 +1,6 @@
 ﻿#!/bin/env bash
 # This has script bashisms so do not run it with another shell
 
-#sudo pacman -S xdg-user-dirs
-#xdg-user-dirs-update
-#useradd -m -G wheel admin
-#( echo "admin"; echo "admin" ) | passwd
-#cp /etc/sudoers /etc/sudoers.bak
-#echo "admin ALL=(ALL) ALL" >> /etc/sudoers
-#mkdir /home/admin/.config/X11
-#touch /home/admin/.config/X11/xinitrc
-#echo "exec qtile" > /home/admin/.config/X11/xinitrc
-#echo "" > /etc/profile
-#echo "startx /home/admin/.config/X11/xinitrc" > /etc/profile
-
 git clone https://aur.archlinux.org/paru.git
 cd paru
 makepkg -si --noconfirm
@@ -26,7 +14,6 @@ sudo pacman -Syu
 official=(
 	"neofetch"
     "ueberzug"
-	"man.db"
 	"cronie"
 	"ntfs-3g"
 	"wget"
@@ -43,6 +30,7 @@ official=(
     "ttf-linux-libertine"
 	"ttf-ubuntu-font-family"
 	"noto-fonts-emoji"
+    "python-fontawesome"
 	"opendoas"
 	"pulseaudio"
 	"youtube-dl"
@@ -174,7 +162,7 @@ official=(
 aur=(
     #"paru-bin"
     "timeshift-bin"
-    #"so"
+    "so"
     "mpdris2"
     "zsh-abbr"
     "zsh-you-should-use"
@@ -195,12 +183,14 @@ aur=(
     "tuxi-git"
     "spotify"
     "librewolf-bin"
-    #"sc-im"
+    "sc-im"
     "id3"
     "protonvpn-cli-ng"
     "pipe-viewer-git"
     "papirus-folders-git"
     "glow"
+    "dragon-drag-and-drop"
+    #"zsh-abbr"
 )
 
 sudo pacman -S --noconfirm --needed "${offical[@]}"
@@ -246,6 +236,8 @@ sudo cp dotfiles/hosts /etc/
 sudo cp dotfiles/lynx.cfg /etc/
 #cp dotfiles/macros ~/Documents/Groff
 cp dotfiles/starship.toml ~/.config
+cp dotfiles/zsh ~/.config
+cp dotfiles/.zprofile ~
 sudo touch /etc/doas.conf
 sudo echo "permit admin as root" > /etc/doas.conf
 rm .bash_logout
@@ -256,7 +248,7 @@ sudo chsh -s /bin/zsh # sets zsh as the login shell
 mkdir $HOME/.cache/zsh
 cd /usr/share/doc/arch-wiki/html
 shopt -s extglob
-sudo rm -r /ysr/share/doc/arch-wiki/html/!("en"|"ArchWikiOffline.css")
+sudo rm -r /usr/share/doc/arch-wiki/html/!("en"|"ArchWikiOffline.css")
 paru -c
 sudo paccache -r -q && sudo paccache -ruk0 -q
 sudo timeshift --create --comments "Fresh install" && echo "created timeshift backup"
