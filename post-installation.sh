@@ -53,6 +53,7 @@ official=(
    	"libreoffice-still"
    	"gimp"
    	"bleachbit"
+   	"dash"
    	"zsh"
     "zsh-syntax-highlighting"
     "zsh-autosuggestions"
@@ -246,11 +247,14 @@ rm .bash_logout
 rm .bash_history
 
 sudo pkgfile --update
-sudo chsh -s /bin/zsh # sets zsh as the login shell
+sudo chsh -s /bin/zsh # sets zsh as the login shell (interactive shell)
+sudo ln -sfT /bin/dash /bin/sh # sets dash as the default shell (the shell used by '#!/bin/sh' scripts)
+mv dotfiles/bash2dash.hook /usr/share/libalpm/hooks
 mkdir $HOME/.cache/zsh
 mkdir $HOME/.local/share/virtualbox # change the default machine folder to this
 rm -r $HOME/.cargo
 sudo rm -r /kai || sudo rm -r /KAI
+rm -r dotfiles
 cd /usr/share/doc/arch-wiki/html
 shopt -s extglob
 sudo rm -r /usr/share/doc/arch-wiki/html/!("en"|"ArchWikiOffline.css")
