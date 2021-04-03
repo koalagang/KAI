@@ -72,4 +72,5 @@ useradd -m -G wheel $USERNAME
 cp /etc/sudoers /etc/sudoers.bak
 echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers
 ( echo "$ROOTPASSWORD"; echo "$ROOTPASSWORD" ) | passwd
-printf "After, please enter the folowing:\nexit\numount -R /mnt\nreboot\n"
+umount -R /mnt
+echo "Please reboot your system with `sudo reboot` or `sudo shutdown -h now`."
