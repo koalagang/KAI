@@ -1,7 +1,8 @@
 ﻿#!/bin/env bash
 # This has script bashisms so do not run it with another shell
 
-xdg-user-dirs-update
+USERNAME=""
+read -p "Enter your username: " USERNAME
 
 git clone https://aur.archlinux.org/paru.git
 cd paru
@@ -10,6 +11,8 @@ cd ..
 sudo rm -r paru
 
 git clone https://github.com/koalagang/dotfiles.git
+cp dotfiles/user-dirs.dirs $HOME/.config
+xdg-user-dirs-update
 sudo cp dotfiles/pacman.conf /etc/
 sudo pacman -Syu
 
@@ -210,37 +213,35 @@ mv ~/Desktop/.discord/Discord* ~/Desktop/.discord/discord
 sudo pacman -R nodejs-nativefier --noconfirm # Uninstalling nativefier which I no longer need
 rm -r ~/.npm
 # NOTE: these electron clients are not technically installed onto your computer - They are simply executables (kind of like appimages).
-# To remove them, you do not run the usual 'pacman -Rs', instead, just delete their folder and all of the contents.
+# To remove them, you do not run the usual 'pacman -R', instead, just delete their folder and all of the contents.
 
 #import dotfiles
-cp dotfiles/alacritty ~/.config
-cp dotfiles/dunst ~/.config
-cp dotfiles/gtk-3.0 ~/.config
-cp dotfiles/gtk-4.0 ~/.config
-cp dotfiles/mpd ~/.config
-cp dotfiles/mpv ~/.config
-cp dotfiles/ncmpcpp ~/.config
-cp dotfiles/neofetch ~/.config
-mv -r dotfiles/newsboat ~/.newsboat
-cp dotfiles/nvim ~/.config
-cp dotfiles/paru ~/.config
-cp dotfiles/qtile ~/.config
-cp dotfiles/qutebrowser ~/.config
-cp dotfiles/spacefm ~/.config
-#cp dotfiles/keepassxc ~/.config
-cp dotfiles/sxhkd ~/.config
-cp dotfiles/vifm ~/.config
-cp dotfiles/xmenu ~/.config
-cp dotfiles/zathura ~/.config
-cp dotfiles/.bashrc ~
-sudo cp dotfiles/hosts /etc/
-sudo cp dotfiles/lynx.cfg /etc/
-#cp dotfiles/macros ~/Documents/Groff
-cp dotfiles/starship.toml ~/.config
-cp dotfiles/zsh ~/.config
-cp dotfiles/.zprofile ~
+mv -r dotfiles/alacritty ~/.config
+mv -r dotfiles/dunst ~/.config
+mv -r dotfiles/gtk-3.0 ~/.config
+mv -r dotfiles/gtk-4.0 ~/.config
+mv -r dotfiles/mpd ~/.config
+mv -r dotfiles/mpv ~/.config
+mv -r dotfiles/ncmpcpp ~/.config
+mv -r dotfiles/neofetch ~/.config
+mv -r dotfiles/newsboat ~/.config
+mv -r dotfiles/nvim ~/.config
+mv -r dotfiles/paru ~/.config
+mv -r dotfiles/qtile ~/.config
+mv -r dotfiles/qutebrowser ~/.config
+mv -r dotfiles/spacefm ~/.config
+mv -r dotfiles/sxhkd ~/.config
+mv -r dotfiles/vifm ~/.config
+mv -r dotfiles/zathura ~/.config
+mv -r dotfiles/zsh ~/.config
+mv dotfiles/.zprofile ~
+mv dotfiles/.bashrc ~
+mv dotfiles/macros ~/Documents/Groff
+mv dotfiles/starship.toml ~/.config
+sudo mv dotfiles/hosts /etc/
+sudo mv dotfiles/lynx.cfg /etc/
 sudo touch /etc/doas.conf
-sudo echo "permit admin as root" > /etc/doas.conf
+sudo echo "permit $USER as root" > /etc/doas.conf
 rm .bash_logout
 rm .bash_history
 
@@ -257,4 +258,4 @@ paru -c
 sudo paccache -r -q && sudo paccache -ruk0 -q
 sudo timeshift --create --comments "Fresh install" && echo "created timeshift backup"
 echo "post-installation script complete!"
-printf "\nTo switch to a binary version of paru, you must manually enter:\n`paru -S paru-bin`\n"
+printf "\nTo switch to a binary version of paru, you must manually enter:\n`paru -S paru-bin`\nYou may also wish to logout or restart for certain changes to take affect.\n"
