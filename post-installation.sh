@@ -11,8 +11,6 @@ cd ..
 sudo rm -r paru
 
 git clone https://github.com/koalagang/dotfiles.git
-cp dotfiles/user-dirs.dirs $HOME/.config
-xdg-user-dirs-update
 sudo cp dotfiles/pacman.conf /etc/
 sudo pacman -Syu
 
@@ -52,7 +50,6 @@ official=(
     "anki"
     "libreoffice-still"
     "gimp"
-    "bleachbit"
     "dash"
     "zsh"
     "zsh-syntax-highlighting"
@@ -149,8 +146,8 @@ official=(
     "picom"
     "dunst"
     "trash-cli"
-    "xorg"
     "xorg-xinit"
+    "xdg-user-dirs"
     "mpd"
     "ncmpcpp-git"
     "playerctl"
@@ -200,6 +197,9 @@ aur=(
 
 sudo pacman -S --noconfirm --needed "${offical[@]}"
 paru -S --noconfirm --needed "${aur[@]}"
+
+cp dotfiles/user-dirs.dirs $HOME/.config
+xdg-user-dirs-update
 
 nativefier --widevine netflix.com ~/Desktop # Creates a Netflix client
 nativefier crunchyroll.com ~/Desktop # Creates a Crunchyroll client
