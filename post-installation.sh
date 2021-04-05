@@ -1,6 +1,4 @@
-﻿#!/bin/env bash
-# This has script bashisms so do not run it with another shell
-
+﻿#!/bin/bash
 
 read -p "Enter your username: " USER
 
@@ -200,7 +198,7 @@ aur=(
 sudo pacman -S --noconfirm --needed "${offical[@]}"
 paru -S --noconfirm --needed "${aur[@]}"
 
-cp dotfiles/user-dirs.dirs $HOME/.config
+cp dotfiles/user-dirs.dirs /home/$USER/.config
 xdg-user-dirs-update
 
 nativefier --widevine netflix.com ~/Desktop # Creates a Netflix client
@@ -219,47 +217,46 @@ rm -r ~/.npm
 # To remove them, you do not run the usual 'pacman -R', instead, just delete their folder and all of the contents.
 
 #import dotfiles
-mv -r dotfiles/alacritty ~/.config
-mv -r dotfiles/dunst ~/.config
-mv -r dotfiles/gtk-3.0 ~/.config
-mv -r dotfiles/gtk-4.0 ~/.config
-mv -r dotfiles/mpd ~/.config
-mv -r dotfiles/mpv ~/.config
-mv -r dotfiles/ncmpcpp ~/.config
-mv -r dotfiles/neofetch ~/.config
-mv -r dotfiles/newsboat ~/.config
-mv -r dotfiles/nvim ~/.config
-mv -r dotfiles/paru ~/.config
-mv -r dotfiles/qtile ~/.config
-mv -r dotfiles/qutebrowser ~/.config
-mv -r dotfiles/spacefm ~/.config
-mv -r dotfiles/sxhkd ~/.config
-mv -r dotfiles/vifm ~/.config
-mv -r dotfiles/zathura ~/.config
-mv -r dotfiles/zsh ~/.config
-mv -r dotfiles/bin ~/.local
-mv dotfiles/.zprofile ~
-mv dotfiles/.bashrc ~
-mv dotfiles/macros ~/Documents/Groff
-mv dotfiles/starship.toml ~/.config
-mv dotfiles/.xinitrc ~/.config
+mv -r dotfiles/alacritty /home/$USER/.config
+mv -r dotfiles/dunst /home/$USER/.config
+mv -r dotfiles/gtk-3.0 /home/$USER/.config
+mv -r dotfiles/gtk-4.0 /home/$USER/.config
+mv -r dotfiles/mpd /home/$USER.config
+mv -r dotfiles/mpv /home/$USER/.config
+mv -r dotfiles/ncmpcpp /home/$USER/.config
+mv -r dotfiles/neofetch /home/$USER/.config
+mv -r dotfiles/newsboat /home/$USER/.config
+mv -r dotfiles/nvim /home/$USER/.config
+mv -r dotfiles/paru /home/$USER/.config
+mv -r dotfiles/qtile /home/$USER/.config
+mv -r dotfiles/qutebrowser /home/$USER/.config
+mv -r dotfiles/spacefm /home/$USER/.config
+mv -r dotfiles/sxhkd /home/$USER/.config
+mv -r dotfiles/vifm /home/$USER/.config
+mv -r dotfiles/zathura /home/$USER/.config
+mv -r dotfiles/zsh /home/$USER/.config
+mv -r dotfiles/bin /home/$USER/.local
+mv dotfiles/.zprofile /home/$USER
+mv dotfiles/.bashrc /home/$USER
+mv dotfiles/macros /home/$USER/Documents/Groff
+mv dotfiles/starship.toml /home/$USER/.config
+mv dotfiles/.xinitrc /home/$USER/.config
 sudo mv dotfiles/hosts /etc/
 sudo mv dotfiles/lynx.cfg /etc/
 sudo touch /etc/doas.conf
 sudo echo "permit $USER as root" > /etc/doas.conf
-rm .bash_logout
-rm .bash_history
-sudo chmod +x ~/.local/bin/*
+rm /home/$USER/.bash_logout
+rm /home/$USER/.bash_history
+sudo chmod +x /home/$USER/.local/bin/*
 
 sudo pkgfile --update
 sudo mandb
 sudo chsh -s /bin/zsh # sets zsh as the login shell (interactive shell)
 sudo ln -sfT /bin/dash /bin/sh # sets dash as the default shell (the shell used by '#!/bin/sh' scripts)
 mv dotfiles/bash2dash.hook /usr/share/libalpm/hooks
-mkdir $HOME/.cache/zsh
-mkdir $HOME/.local/share/virtualbox # change the default machine folder to this
-rm -r $HOME/.cargo
-sudo rm -r /kai || sudo rm -r /KAI
+mkdir /home/$USER/.cache/zsh
+mkdir /home/$USER/.local/share/virtualbox # change the default machine folder to this
+rm -r /home/$USER/.cargo
 rm -r dotfiles
 cd /usr/share/doc/arch-wiki/html
 shopt -s extglob
