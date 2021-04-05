@@ -1,7 +1,7 @@
 ﻿#!/bin/env bash
 # This has script bashisms so do not run it with another shell
 
-USER=""
+
 read -p "Enter your username: " USER
 
 git clone https://aur.archlinux.org/paru.git
@@ -18,7 +18,6 @@ official=(
     "neofetch"
     "ueberzug"
     "cronie"
-    "ntfs-3g"
     "wget"
     "curl"
     "ffmpeg"
@@ -44,6 +43,9 @@ official=(
     "mpv"
     "zathura"
     "zathura-pdf-poppler"
+    "mupdf"
+    "pandoc"
+    "unoconv"
     "sxiv"
     "keepassxc"
     #"pass"
@@ -120,7 +122,7 @@ official=(
     "unclutter"
     "neovim"
     "alacritty"
-    "nitrogen"
+    "hsetroot"
     "sxhkd"
     "xdotool"
     "xclip"
@@ -159,6 +161,7 @@ official=(
     "github-cli"
     "lynx"
     "streamlink"
+    "shellcheck"
     #"gallery-dl"
 )
 
@@ -171,7 +174,6 @@ aur=(
     "vim-plug"
     "betterlockscreen"
     "ytfzf"
-    "archiver"
     "grap"
     "spacefm"
     "simple-mtpfs"
@@ -247,6 +249,7 @@ rm .bash_logout
 rm .bash_history
 
 sudo pkgfile --update
+sudo mandb
 sudo chsh -s /bin/zsh # sets zsh as the login shell (interactive shell)
 sudo ln -sfT /bin/dash /bin/sh # sets dash as the default shell (the shell used by '#!/bin/sh' scripts)
 mv dotfiles/bash2dash.hook /usr/share/libalpm/hooks
