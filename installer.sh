@@ -6,9 +6,9 @@ until [ "$HOST" = "$CONFIRMHOST" ]; do
     read -p "Enter your host name: " HOST
     read -p "Retype host name: " CONFIRMHOST
 done
-echo ""
+echo
 echo "Your host name is $HOST."
-echo ""
+echo
 
 read -p "Enter your username: " USERNAME
 read -p "Retype username: " CONFIRMUSERNAME
@@ -17,9 +17,9 @@ until [ "$USERNAME" = "$CONFIRMUSERNAME" ]; do
     read -p "Enter your username: " USERNAME
     read -p "Retype username: " CONFIRMUSERNAME
 done
-echo ""
+echo
 echo "Your username is $USERNAME."
-echo ""
+echo
 
 read -p "Enter your password: " PASSWORD
 read -p "Retype password: " CONFIRMPASSWORD
