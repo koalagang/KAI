@@ -237,16 +237,19 @@ mv -r dotfiles/sxhkd ~/.config
 mv -r dotfiles/vifm ~/.config
 mv -r dotfiles/zathura ~/.config
 mv -r dotfiles/zsh ~/.config
+mv -r dotfiles/bin ~/.local
 mv dotfiles/.zprofile ~
 mv dotfiles/.bashrc ~
 mv dotfiles/macros ~/Documents/Groff
 mv dotfiles/starship.toml ~/.config
+mv dotfiles/.xinitrc ~/.config
 sudo mv dotfiles/hosts /etc/
 sudo mv dotfiles/lynx.cfg /etc/
 sudo touch /etc/doas.conf
 sudo echo "permit $USER as root" > /etc/doas.conf
 rm .bash_logout
 rm .bash_history
+sudo chmod +x ~/.local/bin/*
 
 sudo pkgfile --update
 sudo mandb
