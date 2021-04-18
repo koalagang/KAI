@@ -1,4 +1,5 @@
 #!/bin/sh
+
 read -p "Enter your host name: " HOST
 read -p "Retype host name: " CONFIRMHOST
 until [ "$HOST" = "$CONFIRMHOST" ]; do

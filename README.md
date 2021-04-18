@@ -1,24 +1,17 @@
-THIS REPO WILL PROBABLY BE MIGRATED LATER. THE BELOW DETAILS MAY OR MAY NOT APPLY BECAUSE I AM NOT MAINTAINING THE README AS OF RIGHT NOW.
-
 ### DISCLAIMER
 
-This installer has been developed for MY OWN use. You are free to fork it or use it but it has been designed for my system and my preferences; I will not tailor this software to anyone's but my own needs. I AM NOT RESPONSIBLE FOR ANY DAMAGES YOU MAY ENDURE THROUGH THE USE OF THESE SCRIPTS. I personally recommend that you learn how to install Arch Linux the manual way, if you haven't already, but if you want an easy Arch installation, check out [archfi](https://github.com/MatMoul/archfi), [LARBS](https://github.com/LukeSmithxyz/LARBS) or [Archer](https://github.com/james-d12/arch-installer).
+This installer has been developed for MY OWN use. You are free to fork it or use it but it has been designed for my system and my preferences; I will not tailor this software to anyone but my own needs. *I AM NOT RESPONSIBLE FOR ANY DAMAGES YOU MAY ENDURE THROUGH THE USE OF THESE SCRIPTS.* I personally recommend that you learn how to install Artix Linux the manual way. If you really want an easy Artix install then download one of the [Artix isos](https://artixlinux.org/download.php) which comes with a desktop environment. Also note that this script sets up the timezone as Europe/London.
 
-If you still wish to use KAI, proceed with the instructions.
+This script installs the runit version of Artix, *not* the OpenRC or s6 version.
+If you still wish to use KAI, proceed with the instructions below.
 
 ### Instructions
+Any text in these instructions formatted `like this` is a command which you should execute.
 
-1. Install an Arch iso from the [official Arch Linux website](https://archlinux.org/download/).
-2. [Verify its signature](https://wiki.archlinux.org/index.php/Installation_guide#Verify_signature).
-3. Flash it to a memory stick or CD drive and boot into it.
-4. Parition your drive, format it and mount your root parition (usually /dev/sda2, so run 'mount /dev/sda2 /mnt').
-5. Run 'mdkir /mnt/boot' and then mount your boot partition (usually /dev/sda1, so run 'mount /dev/sda1 /mnt/boot').
-6. Run 'pacman -Syy && pacman -S git'.
-7. Run 'git clone https://github.com/koalagang/KAI.git' (the capitals in 'KAI' are important).
-8. Change into KAI and run installer-1.sh with 'cd KAI && bash installer-1.sh'.
-9. Change into home, repeat step 6 and 7, change into KAI, and then run installer-2.sh with 'bash installer-2.sh'.
-10. Unmount everyting with 'umount -a'
-11. Reboot your computer with 'reboot'. Depending on your BIOS settings, you may need to shutdown 'shutdown now' and remove your live boot before you turn it back on.
-12. Sign in (user: admin & password: admin)
-
-As of right now, it does not install any desktop environment or tiling window manager (neither does the post-installation script) so you will need to install that. If you wish to use my post-installation script (which I do not recommend because it is extremely tailored to me, run 'cd KAI && bash post-installation.sh'. NOTE: the only user created is called 'admin'. The password to 'admin' and to root is "admin" - you should change this. You may also wish to switch to a different language and keyboard layout if you don't use the American keyboard layout or British English localisation.
+1. Login using username: 'artix' and password: 'artix'
+2. Enable root privilidges by entering `su` and typing in the password: 'artix'
+3. Partition your disk like this - /dev/sda1 = smallest partition (about 128M to 512M), /dev/sda2 = largest partition (the rest of the storage available)
+4. Download git and glibc `pacman -Syy && pacman -S glibc git`
+5. Clone this repo `git clone https://github.com/koalagang/kai.git`
+6. Run the script `chmod +x kai/artix-installer.sh && ./kai/artix-installer.sh`
+7. Reboot your computer with `reboot`. Depending on your BIOS settings, you may need to shutdown `loginctl poweroff` and remove your live boot before you turn it back on.

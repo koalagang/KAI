@@ -1,28 +1,37 @@
-﻿#!/bin/bash
+﻿#!/bin/sh
 
-read -p "Enter your username: " USER
-
-git clone https://aur.archlinux.org/paru.git
-cd paru
-makepkg -si --noconfirm
-cd ..
-sudo rm -r paru
+sudo pacman -S --needed --noconfirm base-devel
+git clone https://aur.archlinux.org/paru.git initparu
+sh -c "cd 'initparu' && makepkg -si"
+sudo rm -r initparu && sudo rm -r $HOME/.cargo
 
 git clone https://github.com/koalagang/dotfiles.git
-sudo cp dotfiles/pacman.conf /etc/
 sudo pacman -Syu
 
+# Stuff I may or may not wish to install:
+#"udisks2" # I'm considering using Luke Smith's dmenu script instead
+#"calcurse"
+#"pass"
+#"ufw"
+#"neofetch"
+#"libresprite" # probably won't use this because I have Aseprite on Steam
+#"godot-mono-bin" # probably not yet because it's still in alpha
+
+#"xautolock" or "xidlehook"??
+
 official=(
-    "neofetch"
+    "wget"
+    "libx11"
+    "libxinerama"
+    "curl"
+    "git"
     "ueberzug"
     "cronie"
-    "wget"
-    "curl"
+    "cronie-runit"
     "ffmpeg"
-    #"unzip"
+    "unzip"
     "make"
     "openvpn"
-    "ufw"
     "adobe-source-han-sans-otc-fonts"
     "adobe-source-han-serif-otc-fonts"
     "gnu-free-fonts"
@@ -30,23 +39,15 @@ official=(
     "ttf-linux-libertine"
     "ttf-ubuntu-font-family"
     "noto-fonts-emoji"
-    "python-fontawesome"
     "opendoas"
     "pulseaudio"
     "youtube-dl"
-    #"calcurse"
-    "htop"
-    "bashtop"
-    "libqalculate"
     "mpv"
     "zathura"
-    "zathura-pdf-poppler"
-    "mupdf"
+    "zathura-pdf-mupdf"
     "pandoc"
-    "unoconv"
-    "sxiv"
+    "texlive-core"
     "keepassxc"
-    #"pass"
     "anki"
     "libreoffice-still"
     "gimp"
@@ -56,9 +57,7 @@ official=(
     "zsh-autosuggestions"
     "pkgfile"
     "signal-desktop"
-    #"easytag"
     "groff"
-    #"nvidia"
     "nvidia-lts"
     "nvidia-dkms"
     "nvidia-utils"
@@ -123,6 +122,7 @@ official=(
     "hsetroot"
     "sxhkd"
     "xdotool"
+    "xdo"
     "xclip"
     "fd"
     "bat"
@@ -134,13 +134,9 @@ official=(
     "alsa-utils"
     "lxsession"
     "newsboat"
-    #"sc-controller-git"
-    #"legendary"
-    #"itch"
-    #"multimc5"
-    #"sent"
-    #"farbfeld"
-    #"buku-git"
+    "legendary"
+    "itch"
+    "multimc5"
     "starship"
     "network-manager-applet"
     "picom"
@@ -149,28 +145,28 @@ official=(
     "xorg-xinit"
     "xdg-user-dirs"
     "mpd"
-    "ncmpcpp-git"
+    "mpd-runit"
+    "ncmpcpp"
     "playerctl"
     "lollypop"
-    #"udisks2" # I'm considering using Luke Smith's dmenu script instead
     "translate-shell"
     "arch-wiki-docs"
-    #"ytmdl"
     "github-cli"
     "lynx"
     "streamlink"
     "shellcheck"
-    #"gallery-dl"
+    "godot"
+    "lmms"
 )
 
 aur=(
+    "bottom-bin"
     "timeshift-bin"
+    "z.lua"
     "so"
     "mpdris2"
-    "zsh-abbr"
     "zsh-you-should-use"
     "vim-plug"
-    "betterlockscreen"
     "ytfzf"
     "grap"
     "spacefm"
@@ -179,7 +175,6 @@ aur=(
     "ucollage"
     "colorpicker"
     "python-readability-lxml"
-    "nodejs-nativefier"
     "python-spotdl"
     "redshift-minimal"
     "tuxi-git"
@@ -190,79 +185,15 @@ aur=(
     "protonvpn-cli-ng"
     "pipe-viewer-git"
     "papirus-folders-git"
-    "glow"
+    "glow-bin"
     "dragon-drag-and-drop"
-    #"zsh-abbr"
+    "quich"
+    "nerd-fonts-hack"
+    "discord_arch_electron"
 )
 
 sudo pacman -S --noconfirm --needed "${offical[@]}"
 paru -S --noconfirm --needed "${aur[@]}"
 
-cp dotfiles/user-dirs.dirs /home/$USER/.config
-xdg-user-dirs-update
-
-nativefier --widevine netflix.com ~/Desktop # Creates a Netflix client
-nativefier crunchyroll.com ~/Desktop # Creates a Crunchyroll client
-nativefier discord.com/app ~/Desktop # Creates a Discord client
-# Giving the files and folders better names
-mv ~/Desktop/Netflix* ~/Desktop/.netflix
-mv ~/Desktop/.netflix/Netflix* ~/Desktop/.netflix/netflix
-mv ~/Desktop/APP-linux-x64 ~/Desktop/.crunchyroll
-mv ~/Desktop/.crunchyroll/APP ~/Desktop/.crunchyroll/crunchyroll
-mv ~/Desktop/Discord* ~/Desktop/.discord
-mv ~/Desktop/.discord/Discord* ~/Desktop/.discord/discord
-sudo pacman -R nodejs-nativefier --noconfirm # Uninstalling nativefier which I no longer need
-rm -r ~/.npm
-# NOTE: these electron clients are not technically installed onto your computer - They are simply executables (kind of like appimages).
-# To remove them, you do not run the usual 'pacman -R', instead, just delete their folder and all of the contents.
-
-#import dotfiles
-mv -r dotfiles/alacritty /home/$USER/.config
-mv -r dotfiles/dunst /home/$USER/.config
-mv -r dotfiles/gtk-3.0 /home/$USER/.config
-mv -r dotfiles/gtk-4.0 /home/$USER/.config
-mv -r dotfiles/mpd /home/$USER.config
-mv -r dotfiles/mpv /home/$USER/.config
-mv -r dotfiles/ncmpcpp /home/$USER/.config
-mv -r dotfiles/neofetch /home/$USER/.config
-mv -r dotfiles/newsboat /home/$USER/.config
-mv -r dotfiles/nvim /home/$USER/.config
-mv -r dotfiles/paru /home/$USER/.config
-mv -r dotfiles/qtile /home/$USER/.config
-mv -r dotfiles/qutebrowser /home/$USER/.config
-mv -r dotfiles/spacefm /home/$USER/.config
-mv -r dotfiles/sxhkd /home/$USER/.config
-mv -r dotfiles/vifm /home/$USER/.config
-mv -r dotfiles/zathura /home/$USER/.config
-mv -r dotfiles/zsh /home/$USER/.config
-mv -r dotfiles/bin /home/$USER/.local
-mv dotfiles/.zprofile /home/$USER
-mv dotfiles/.bashrc /home/$USER
-mv dotfiles/macros /home/$USER/Documents/Groff
-mv dotfiles/starship.toml /home/$USER/.config
-mv dotfiles/.xinitrc /home/$USER/.config
-sudo mv dotfiles/hosts /etc/
-sudo mv dotfiles/lynx.cfg /etc/
-sudo touch /etc/doas.conf
-sudo echo "permit $USER as root" > /etc/doas.conf
-rm /home/$USER/.bash_logout
-rm /home/$USER/.bash_history
-sudo chmod +x /home/$USER/.local/bin/*
-
-sudo pkgfile --update
-sudo mandb
-sudo chsh -s /bin/zsh # sets zsh as the login shell (interactive shell)
-sudo ln -sfT /bin/dash /bin/sh # sets dash as the default shell (the shell used by '#!/bin/sh' scripts)
-mv dotfiles/bash2dash.hook /usr/share/libalpm/hooks
-mkdir /home/$USER/.cache/zsh
-mkdir /home/$USER/.local/share/virtualbox # change the default machine folder to this
-rm -r /home/$USER/.cargo
-rm -r dotfiles
-cd /usr/share/doc/arch-wiki/html
-shopt -s extglob
-sudo rm -r /usr/share/doc/arch-wiki/html/!("en"|"ArchWikiOffline.css")
-paru -c
-sudo paccache -r -q && sudo paccache -ruk0 -q
-sudo timeshift --create --comments "Fresh install" && echo "created timeshift backup"
 echo "post-installation script complete!"
 printf "\nTo switch to a binary version of paru, you must manually enter:\n`paru -S paru-bin`\nYou may also wish to logout or restart for certain changes to take affect.\n"

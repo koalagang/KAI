@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# As of now, the script assumes that you have formatted the disk to only have a root and a boot parititon.
+# I may set the script to allow other partitions, e.g. home and swap, as well later.
+
 lsblk
 printf "\nWARNING: this script assumes that you have partitioned your disk like this\n/dev/sda1 = boot (about 128M to 512M in size) - this should be marked as bootable\n/dev/sda2 = root (largest partition)\n"
 printf "\nIf you have not partitioned it like this, you MUST go back and partition it that way OR edit the script.\n"
