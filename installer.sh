@@ -12,9 +12,9 @@ locale-gen
 touch /etc/locale.conf
 echo "LANG=en_GB.UTF-8" > /etc/locale.conf
 pacman -S networkmanager networkmanager-runit grub efibootmgr xorg xorg-xinit git --noconfirm
-if [ DUAL = "y" || DUAL = "Y" ]; then
+if [ DUAL = "y" ] || [ DUAL = "Y" ] || [ DUAL = "yes" ]; then
     pacman -S os-prober ntfs-3g
-elif [ DUAL = "n" || DUAL = "N" ]; then
+elif [ DUAL = "n" ] || [ DUAL = "N" ] || [ DUAL = "no" ]; then
     break
 fi
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub

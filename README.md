@@ -1,6 +1,6 @@
 ### DISCLAIMER
 
-This installer has been developed for MY OWN convenience. You are free to fork it or use it but it has been designed for my system and my preferences; I will not tailor this software to anyone but my own needs. *I AM NOT RESPONSIBLE FOR ANY DAMAGES YOU MAY ENDURE THROUGH THE USE OF THESE SCRIPTS.* I personally recommend that you learn how to install Artix Linux the manual way. If you really want an easy Artix install then download one of the [Artix isos](https://artixlinux.org/download.php) which comes with a desktop environment. Also note that this script sets up the timezone as Europe/London.
+This installer has been developed for MY OWN convenience. You are free to fork it or use it but it has been designed for my system and my preferences; I will not tailor this software to anyone but my own needs. *I AM NOT RESPONSIBLE FOR ANY DAMAGES YOU MAY ENDURE THROUGH THE USE OF THESE SCRIPTS.* I personally recommend that you learn how to install Artix Linux the manual way. If you really want an easy Artix install then download one of the [Artix isos](https://artixlinux.org/download.php) which comes with a desktop environment.
 
 This script installs the runit version of Artix, *not* the OpenRC or s6 version.
 If you still wish to use KAI, proceed with the instructions below.
