@@ -9,6 +9,51 @@ printf "\nIf you have not partitioned it like this, you MUST go back and partiti
 read -p "AGREE AND CONTINUE? [Y/N]" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo
+    read -p "Enter your host name: " HOST
+    read -p "Retype host name: " CONFIRMHOST
+    until [ "$HOST" = "$CONFIRMHOST" ]; do
+        echo "Host names did not match!"
+        read -p "Enter your host name: " export HOST
+        read -p "Retype host name: " export CONFIRMHOST
+    done
+    echo
+    echo "Your host name is $HOST."
+    echo
+    read -p "Enter your username: " export USERNAME
+    read -p "Retype username: " export CONFIRMUSERNAME
+    until [ "$USERNAME" = "$CONFIRMUSERNAME" ]; do
+        echo "Usernames did not match!"
+        read -p "Enter your username: " export USERNAME
+        read -p "Retype username: " export CONFIRMUSERNAME
+    done
+    echo
+    echo "Your username is $USERNAME."
+    echo
+    read -p "Enter your password: " export PASSWORD
+    read -p "Retype password: " export CONFIRMPASSWORD
+    until [ "$PASSWORD" = "$CONFIRMPASSWORD" ]; do
+        echo "Passwords did not match!"
+        read -p "Enter your password: " export PASSWORD
+        read -p "Retype password: " export CONFIRMPASSWORD
+    done
+    echo""
+    echo "Your password is $PASSWORD."
+    echo""
+    read -p "Enter your root password: " export ROOTPASSWORD
+    read -p "Retype root password: " export ROOTCONFIRMPASSWORD
+    until [ "$ROOTPASSWORD" = "$ROOTCONFIRMPASSWORD" ]; do
+        echo "Root passwords did not match!"
+        read -p "Enter your root password: " export ROOTPASSWORD
+        read -p "Retype root password: " export ROOTCONFIRMPASSWORD
+    done
+    read -p "Are you dual-booting? [Y/N] " export DUAL
+    read -p "Confirm your answer by typing it again: " export CONFIRMDUAL
+    until [ "$DUAL" = "$CONFIRMDUAL" ]; do
+        echo "Answers did not match!"
+        read -p "Are you dual-booting? [Y/N] " export DUAL
+        read -p "Confirm your answer by typing it again: " export CONFIRMDUAL
+    done
     mkfs.ext4 /dev/sda2 # root
     mkfs.ext4 /dev/sda3 # home
     mkfs.fat -F32 /dev/sda1 # boot
@@ -17,12 +62,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     mkdir /mnt/home
     mount /dev/sda1 /mnt/boot
     mount /dev/sda3 /mnt/home
-    cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-	sed -i '36s/Server/#Server/g' /etc/pacman.d/mirrorlist
-	sed -i '37s/Server/#Server/g' /etc/pacman.d/mirrorlist
-	sed -i '38s/Server/#Server/g' /etc/pacman.d/mirrorlist
-	sed -i '39s/Server/#Server/g' /etc/pacman.d/mirrorlist
-    pacman -Syy
     basestrap /mnt base base-devel runit elogind-runit linux-lts linux-firmware linux-lts-headers --noconfirm
     fstabgen -U /mnt >> /mnt/etc/fstab
     chmod +x kai/installer.sh || chmod +x KAI/installer.sh
