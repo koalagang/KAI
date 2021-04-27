@@ -63,6 +63,8 @@ echo "LANG=en_GB.UTF-8" > /etc/locale.conf
 pacman -S networkmanager networkmanager-runit grub efibootmgr xorg git --noconfirm
 if [ DUAL = "y" ]; then
     pacman -S os-prober ntfs-3g
+elif [ DUAL = "n" ]; then
+    break
 fi
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -73,6 +75,7 @@ ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
 useradd -m -G wheel $USERNAME
 ( echo "$PASSWORD"; echo "$PASSWORD" ) | passwd $USERNAME
 cp /etc/sudoers /etc/sudoers.bak
-echo "$USERNAME ALL=(ALL) ALL" >> /etc/sudoers
+sed -i "s/#\ %wheel\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
+sed -i "s/#\ %sudo\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
 ( echo "$ROOTPASSWORD"; echo "$ROOTPASSWORD" ) | passwd
-echo "Please reboot your system with 'sudo reboot' or 'sudo shutdown -h now'."
+echo "Please reboot your system with 'sudo reboot' or 'loginctl poweroff' or 'sudo shutdown -h now'."
