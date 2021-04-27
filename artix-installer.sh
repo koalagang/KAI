@@ -54,12 +54,12 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Your password is $ROOTPASSWORD."
     export ROOTPASSWORD
     echo
-    read -p "Are you dual-booting? [Y/N] "  DUAL
-    read -p "Confirm your answer by typing it again: "  CONFIRMDUAL
+    read -p "Are you dual-booting? [Y/N] " DUAL
+    read -p "Confirm your answer by typing it again: " CONFIRMDUAL
     until [ "$DUAL" = "$CONFIRMDUAL" ]; do
         echo "Answers did not match!"
-        read -p "Are you dual-booting? [Y/N] "  DUAL
-        read -p "Confirm your answer by typing it again: "  CONFIRMDUAL
+        read -p "Are you dual-booting? [Y/N] " DUAL
+        read -p "Confirm your answer by typing it again: " CONFIRMDUAL
     done
     export DUAL
     mkfs.ext4 /dev/sda2 # root

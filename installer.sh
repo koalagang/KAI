@@ -31,4 +31,4 @@ sed -i "s/#\ %sudo\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
 ( echo "$ROOTPASSWORD"; echo "$ROOTPASSWORD" ) | passwd
 rm installer.sh
 echo
-echo "Please reboot your system with 'sudo reboot' or 'loginctl poweroff' or 'sudo shutdown -h now'."
+echo "Please reboot your system with 'loginctl reboot' or 'loginctl poweroff'."
