@@ -20,11 +20,7 @@ sudo rm -r initparu
 #'pipewire-jack'
 
 sudo pacman -Syu --noconfirm
-# I am well aware that `paru -S $(cat 'packages') --noconfirm --needed`
-# would be more efficient but it outputs some errors for some reason.
-for i in `cat packages`; do
-    paru -S $i --noconfirm --needed
-done
+paru -S $(cat packages) --noconfirm --needed
 
 echo "post-installation script complete!"
 printf "\nTo switch to a binary version of paru, you must manually enter:\n'paru -S paru-bin'\nYou may also wish to logout or restart for certain changes to take affect.\n"
