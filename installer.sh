@@ -17,6 +17,11 @@ if [ DUAL = "y" ] || [ DUAL = "Y" ] || [ DUAL = "yes" ]; then
 elif [ DUAL = "n" ] || [ DUAL = "N" ] || [ DUAL = "no" ]; then
     break
 fi
+if [ TWM = "y" ] || [ TWM = "Y" ] || [ TWM = "yes" ]; then
+    echo 'startx "/home/$USER/.config/x11/.xinitrc"' >> /etc/profile
+elif [ TWM = "n" ] || [ TWM = "N" ] || [ TWM = "no" ]; then
+    break
+fi
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 grub-mkconfig -o /boot/grub/grub.cfg
 touch /etc/hostname

@@ -62,6 +62,16 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         read -p "Confirm your answer by typing it again: " CONFIRMDUAL
     done
     export DUAL
+    echo
+    echo "NOTE: saying yes to the following adds 'startx /home/$USER/.config/x11/.xinitrc' to /etc/profile"
+    read -p "Are you using a tiling window manager? [Y/N] " TWM
+    read -p "Confirm your answer by typing it again: " CONFIRMTWM
+    until [ "$TWM" = "$CONFIRMTWM" ]; do
+        echo "Answers did not match!"
+        read -p "Are you using a tiling window manager? [Y/N] " TWM
+        read -p "Confirm your answer by typing it again: " CONFIRMTWM
+    done
+    export TWM
     mkfs.ext4 /dev/sda2 # root
     mkfs.ext4 /dev/sda3 # home
     mkfs.fat -F32 /dev/sda1 # boot
