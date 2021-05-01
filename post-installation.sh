@@ -17,6 +17,7 @@ sudo rm -r initparu
 #'pipewire-pulseaudio'
 #'pipewire-jack'
 #'syncthing'
+#'itch'
 
 sudo pacman -Syu --noconfirm
 paru -S $(cat packages) --noconfirm --needed

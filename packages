@@ -1,10 +1,12 @@
 libx11
 libxinerama
-python-pysmartdl
+qtile
 python-psutil
 python-readability-lxml
-qtile
+python-pysmartdl
 anime-downloader-git
+qutebrowser
+bpytop
 youtube-dl
 ueberzug
 surfraw
@@ -114,7 +116,6 @@ alsa-utils
 lxsession
 newsboat
 legendary
-itch
 starship-bin
 network-manager-applet
 picom
@@ -129,16 +130,15 @@ ncmpcpp
 mpd
 mpd-runit
 ncspot
+python-spotdl
 translate-shell
 arch-wiki-docs
 lynx
 shellcheck-bin
 godot-bin
 lmms
-bpytop
 timeshift-bin
 z.lua
-qutebrowser
 zsh-you-should-use
 vim-plug
 ytfzf
@@ -167,5 +167,4 @@ so-git
 tuxi-git
 github-cli
 multimc-git
-man-pages
 shortwave
