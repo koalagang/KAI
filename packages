@@ -4,8 +4,11 @@ python-pysmartdl
 python-psutil
 python-readability-lxml
 qtile
+anime-downloader-git
 youtube-dl
 ueberzug
+surfraw
+ddgr
 cronie
 cronie-runit
 ffmpeg
@@ -21,9 +24,6 @@ ttf-ubuntu-font-family
 noto-fonts-emoji
 nerd-fonts-hack
 opendoas
-pulseaudio
-mpv
-anime-downloader-git
 zathura
 zathura-pdf-mupdf
 pandoc-bin
@@ -122,12 +122,16 @@ dunst
 trash-cli
 xorg-xinit
 xdg-user-dirs
+mpv
 playerctl
 lollypop
+ncmpcpp
+mpd
+mpd-runit
+ncspot
 translate-shell
 arch-wiki-docs
 lynx
-streamlink
 shellcheck-bin
 godot-bin
 lmms
@@ -138,6 +142,8 @@ qutebrowser
 zsh-you-should-use
 vim-plug
 ytfzf
+fzf
+buku
 grap
 spacefm
 simple-mtpfs
@@ -150,6 +156,7 @@ sc-im
 id3
 protonvpn-cli-ng
 glow-bin
+pistol-git
 dragon-drag-and-drop
 quich
 discord_arch_electron
@@ -161,5 +168,4 @@ tuxi-git
 github-cli
 multimc-git
 man-pages
-ncspot
 shortwave

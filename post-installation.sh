@@ -10,14 +10,13 @@ sudo rm -r initparu
 #"calcurse"
 #"pass"
 #"ufw"
-#"neofetch"
-#"pfetch"
 #"libresprite" # probably won't use this because I have Aseprite on Steam
 #"godot-mono-bin" # probably not yet because it's still in alpha
 #'pipewire'
 #'pipewire-alsa'
 #'pipewire-pulseaudio'
 #'pipewire-jack'
+#'syncthing'
 
 sudo pacman -Syu --noconfirm
 paru -S $(cat packages) --noconfirm --needed
