@@ -41,11 +41,6 @@ zsh-autosuggestions
 pkgfile
 signal-desktop
 groff
-nvidia-lts
-nvidia-dkms
-nvidia-utils
-lib32-nvidia-utils
-nvidia-settings
 wine-staging
 giflib
 lib32-giflib
@@ -113,6 +108,7 @@ virtualbox
 lm_sensors
 lm_sensors-runit
 alsa-utils
+pulseaudio-alsa
 lxsession
 newsboat
 legendary
@@ -168,3 +164,7 @@ tuxi-git
 github-cli
 multimc-git
 shortwave
+redshift-minimal
+nvidia
+nvidia-utils
+nvidia-settings

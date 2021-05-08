@@ -11,14 +11,15 @@ sed -i "s/#nb_NO\ ISO-8859-1/nb_NO\ ISO-8859-1/g" /etc/locale.gen
 locale-gen
 touch /etc/locale.conf
 echo "LANG=en_GB.UTF-8" > /etc/locale.conf
-pacman -S networkmanager networkmanager-runit grub efibootmgr xorg xorg-xinit git --noconfirm
+pacman -S networkmanager networkmanager-runit grub efibootmgr xorg --noconfirm
 if [ DUAL = "y" ] || [ DUAL = "Y" ] || [ DUAL = "yes" ]; then
     pacman -S os-prober ntfs-3g
 elif [ DUAL = "n" ] || [ DUAL = "N" ] || [ DUAL = "no" ]; then
     break
 fi
 if [ TWM = "y" ] || [ TWM = "Y" ] || [ TWM = "yes" ]; then
-    echo 'startx "/home/$USER/.config/x11/.xinitrc"' >> /etc/profile
+    pacman -S xorg-xinit
+    printf '\nif [ "$(tty)" = "/dev/tty1" ]; then\n\tstartx /home/$USER/.config/X11/xinitrc\nfi' >> /etc/profile
 elif [ TWM = "n" ] || [ TWM = "N" ] || [ TWM = "no" ]; then
     break
 fi
