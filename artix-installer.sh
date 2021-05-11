@@ -64,14 +64,14 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     export DUAL
     echo
     echo "NOTE: saying yes to the following adds 'startx /home/$USER/.config/x11/.xinitrc' to /etc/profile"
-    read -p "Are you using a tiling window manager? [Y/N] " TWM
-    read -p "Confirm your answer by typing it again: " CONFIRMTWM
-    until [ "$TWM" = "$CONFIRMTWM" ]; do
+    read -p "Are you using startx? [Y/N] " STARTX
+    read -p "Confirm your answer by typing it again: " CONFIRMSTARTX
+    until [ "$STARTX" = "$CONFIRMSTARTX" ]; do
         echo "Answers did not match!"
-        read -p "Are you using a tiling window manager? [Y/N] " TWM
-        read -p "Confirm your answer by typing it again: " CONFIRMTWM
+        read -p "Are you using startx? [Y/N] " STARTX
+        read -p "Confirm your answer by typing it again: " CONFIRMSTARTX
     done
-    export TWM
+    export STARTX
     mkfs.ext4 /dev/sda2 # root
     mkfs.ext4 /dev/sda3 # home
     mkfs.fat -F32 /dev/sda1 # boot

@@ -17,10 +17,10 @@ if [ DUAL = "y" ] || [ DUAL = "Y" ] || [ DUAL = "yes" ]; then
 elif [ DUAL = "n" ] || [ DUAL = "N" ] || [ DUAL = "no" ]; then
     break
 fi
-if [ TWM = "y" ] || [ TWM = "Y" ] || [ TWM = "yes" ]; then
+if [ STARTX = "y" ] || [ STARTX = "Y" ] || [ STARTX = "yes" ]; then
     pacman -S xorg-xinit
     printf '\nif [ "$(tty)" = "/dev/tty1" ]; then\n\tstartx /home/$USER/.config/X11/xinitrc\nfi' >> /etc/profile
-elif [ TWM = "n" ] || [ TWM = "N" ] || [ TWM = "no" ]; then
+elif [ STARTX = "n" ] || [ STARTX = "N" ] || [ STARTX = "no" ]; then
     break
 fi
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub

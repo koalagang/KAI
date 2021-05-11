@@ -3,8 +3,6 @@ libxinerama
 qtile
 python-psutil
 python-readability-lxml
-python-pysmartdl
-anime-downloader-git
 qutebrowser
 bpytop
 youtube-dl
@@ -139,7 +137,7 @@ zsh-you-should-use
 vim-plug
 ytfzf
 fzf
-buku
+buku-git
 grap
 spacefm
 simple-mtpfs
@@ -165,6 +163,7 @@ github-cli
 multimc-git
 shortwave
 redshift-minimal
-nvidia
-nvidia-utils
+libglvnd
+nvidia-lts
+nvidia-dkms
 nvidia-settings
