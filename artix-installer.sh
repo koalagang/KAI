@@ -4,7 +4,7 @@
 # I may set the script to allow other partitions, e.g. home and swap, as well later.
 
 lsblk
-printf "\nWARNING: this script assumes that you have already partitioned your disk like this:\n/dev/sda1 = approx. 128M to 512M in size - this should be marked as bootable, it will be the boot partition\n/dev/sda2 = approx. 30 GB in size - this will be the root partition\n/dev/sda3 = the rest of the disk space - this will be the home partition\nThere will be no swap partition because we will be using a swap file.\n"
+printf "\nWARNING: this script assumes that you have already partitioned your disk like this:\n/dev/sda1 = approx. 128M to 512M in size - this should be marked as bootable, it will be the boot partition\n/dev/sda2 = approx. 30 G in size - this will be the root partition\n/dev/sda3 = the rest of the disk space - this will be the home partition\nThere will be no swap partition because we will be using a swap file.\n"
 printf "\nIf you have not partitioned it like this, you MUST go back and partition it that way OR manually edit the script.\n"
 read -p "AGREE AND CONTINUE? [Y/N]" -n 1 -r
 echo
@@ -63,7 +63,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     done
     export DUAL
     echo
-    echo "NOTE: saying yes to the following adds 'startx /home/$USER/.config/x11/.xinitrc' to /etc/profile"
+    echo "NOTE: saying yes to the following adds 'startx /home/$USER/.config/X11/xinitrc' to /etc/profile"
     read -p "Are you using startx? [Y/N] " STARTX
     read -p "Confirm your answer by typing it again: " CONFIRMSTARTX
     until [ "$STARTX" = "$CONFIRMSTARTX" ]; do

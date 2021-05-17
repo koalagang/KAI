@@ -14,9 +14,13 @@
 #'pipewire-jack'
 #'syncthing'
 #'itch'
+#'mpd'
+#'mpd-runit'
+#'ncmpcpp'
+#'lollypop'
+#'neofetch'
 
 sudo pacman -Syu --noconfirm
 paru -S $(cat packages) --noconfirm --needed
 
 echo "post-installation script complete!"
-printf "\nTo switch to a binary version of paru, you must manually enter:\n'paru -S paru-bin'\nYou may also wish to logout or restart for certain changes to take affect.\n"

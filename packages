@@ -119,10 +119,6 @@ xorg-xinit
 xdg-user-dirs
 mpv
 playerctl
-lollypop
-ncmpcpp
-mpd
-mpd-runit
 ncspot
 python-spotdl
 translate-shell
@@ -163,6 +159,7 @@ github-cli
 multimc-git
 shortwave
 redshift-minimal
+downgrade
 libglvnd
 nvidia-lts
 nvidia-dkms
