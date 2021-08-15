@@ -43,7 +43,6 @@ dash
 zsh
 zsh-syntax-highlighting
 zsh-autosuggestions
-pkgfile
 signal-desktop
 nvidia-prime
 nvidia-lts
@@ -116,7 +115,7 @@ alsa-utils
 pulseaudio-alsa
 lxsession
 newsboat
-starship-bin
+starship
 network-manager-applet
 xcompmgr
 dunst
@@ -134,14 +133,14 @@ shellcheck-bin
 godot-bin
 lmms
 testdisk
-timeshift-bin
+timeshift
 downgrade
 z.lua
-zsh-you-should-use
 neovim-plug
 fzf
 ytfzf
 grap
+python-grip-git
 simple-mtpfs
 devour
 redshift-minimal
@@ -151,6 +150,8 @@ colorpicker
 discord_arch_electron
 xidlehook
 so-git
+wikicurses
 tuxi-git
 github-cli
 ani-cli-git
+piper

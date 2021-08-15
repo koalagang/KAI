@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# This script is just a personal thing. Don't bother using this.
 
 # Stuff I may or may not wish to install:
 #"udisks2" # I'm considering using Luke Smith's dmenu script instead
@@ -19,6 +20,7 @@
 #'ncmpcpp'
 #'lollypop'
 #'neofetch'
+usermod -aG input "$USER"
 
 sudo pacman -Syu --noconfirm
 paru -S $(cat packages) --noconfirm --needed
