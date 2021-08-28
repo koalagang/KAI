@@ -1,3 +1,8 @@
+## IMPROVED KAI VERSION IN PROGRESS
+I am currently working on a revised much improved version of KAI. When I originally made KAI I was pretty bad at shell/bash (and pretty much everything else to do with Linux for that matter) so I intend to make KAI a lot better and to allow for a more customised Artix system rather than how it works at its current state where there is very little personalisation.
+
+*Stay tuned.*
+
 ### DISCLAIMER
 
 This installer has been developed for MY OWN convenience. You are free to fork it or use it but it has been designed for my system and my preferences; I will not tailor this software to anyone but my own needs. *I AM NOT RESPONSIBLE FOR ANY DAMAGES YOU MAY ENDURE THROUGH THE USE OF THESE SCRIPTS.* I personally recommend that you learn how to install Artix Linux the manual way. If you really want an easy Artix install then download one of the [Artix isos](https://artixlinux.org/download.php) which comes with a desktop environment.
