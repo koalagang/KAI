@@ -60,22 +60,22 @@ username () {
 
 password () {
     read -s -p 'Enter your user password: ' PASSWORD ; echo
-    read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD
+    read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD ; echo
     until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
         echo ; echo
         printf 'Passwords did not match!\n'
         read -s -p 'Enter your user password: ' PASSWORD ; echo
-        read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD
+        read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD ; echo
     done
     export PASSWORD
 
     read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
-    read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD
+    read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
     until [ "$ROOT_PASSWORD" = "$CONFIRM_ROOT_PASSWORD" ]; do
         echo ; echo
         printf 'Passwords did not match!\n'
         read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
-        read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD
+        read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
     done
     export ROOT_PASSWORD
 }
@@ -88,7 +88,6 @@ city () {
         read -p 'Enter your city (formatted as continent/city, e.g. Europe/London): ' CITY
         read -p 'Re-enter your city (formatted as continent/city, e.g. Europe/London): ' CONFIRM_CITY
     done
-    echo
     echo "Your city is $CITY." ; continue_prompt
     export CITY
 }
@@ -101,18 +100,16 @@ lang () {
         read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' LANGUAGE
         read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_LANGUAGE
     done
-    echo
     echo "Your language is $LANGUAGE." ; continue_prompt
     export LANGUAGE
 
     while true; do
-        echo
         echo 'It is recommended that you enable en_US in addition to any other languages because some applications only support enUS.'
         read -p 'Would you like to add additional languages? [Y/n] ' yn
         case "$yn" in
             [Yy]* ) read -p 'How many extra languages would you like to add? ' lang_num ; break ;;
             [Nn]* ) break ;;
-            '') read -p 'How many extra languages would you like to add? ' lang_num ;;
+            '') read -p 'How many extra languages would you like to add? ' lang_num ; break ;;
             * ) echo 'Please answer "yes" or "no".'
         esac
     done
