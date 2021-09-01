@@ -40,7 +40,6 @@ host () {
         read -p 'Enter your host name: '  HOST
         read -p 'Retype host name: '  CONFIRM_HOST
     done
-    echo
     echo "Your host name is $HOST." ; continue_prompt
     export HOST
 }
@@ -53,7 +52,6 @@ username () {
         read -p 'Enter your username: '  USERNAME
         read -p 'Retype username: '  CONFIRM_USERNAME
     done
-    echo
     echo "Your username is $USERNAME." ; continue_prompt
     export USERNAME
 }
@@ -69,6 +67,7 @@ password () {
     done
     export PASSWORD
 
+    echo
     read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
     read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
     until [ "$ROOT_PASSWORD" = "$CONFIRM_ROOT_PASSWORD" ]; do
@@ -81,6 +80,7 @@ password () {
 }
 
 city () {
+    echo
     read -p 'Enter your city (formatted as continent/city, e.g. Europe/London): ' CITY
     read -p 'Re-enter your city (formatted as continent/city, e.g. Europe/London): ' CONFIRM_CITY
     until [ "$CITY" = "$CONFIRM_CITY" ]; do
@@ -136,7 +136,7 @@ kernel () {
     select answer in 'linux' 'linux-lts' 'linux-zen' 'linux-hardened'; do
         case "$answer" in
             'linux') KERNEL='linux' ; break ;;
-            'linux-ltd') KERNEL='linux-lts' ; break ;;
+            'linux-lts') KERNEL='linux-lts' ; break ;;
             'linux-zen') KERNEL='linux-zen' ; break ;;
             'linux-hardened') KERNEL='linux-hardened' ; break
         esac
@@ -164,7 +164,7 @@ which_wrong () {
 }
 
 check_correct () {
-    printf "HOST: $HOST\nUSERNAME: $USERNAME\nCITY: $CITY\nMAIN LANGUAGE: $LANGUAGE\nKERNEL: $KERNEL\n"
+    printf "\nHOST: $HOST\nUSERNAME: $USERNAME\nCITY: $CITY\nMAIN LANGUAGE: $LANGUAGE\nKERNEL: $KERNEL\n"
     while true; do
         read -p 'Is this correct? [Y/n] ' yn
         case "$yn" in
@@ -174,21 +174,24 @@ check_correct () {
             * ) echo 'Please answer "yes" or "no".'
         esac
     done
-    echo
 }
 check_correct
 
 encrypt () {
-    read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS
-    read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS
+    read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS ; echo
+    read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
     until [ "$ENCRYPTION_PASS" = "$CONFIRM_ENCRYPTION_PASS" ]; do
         printf 'Encryption keys did not match!\n'
-        read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS
-        read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS
+        read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS ; echo
+        read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
     done
+    echo
     echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
     echo "Wiping $DEVICE..." && sfdisk --delete "$DEVICE" && echo "$DEVICE successfully wiped."
-    echo "Partitioning $DEVICE..." && printf 'n\n\n\n+128M\nn\n\n\n\nw' | fdisk "$DEVICE" && echo "Successfully partitioned $DEVICE."
+    echo "Partitioning $DEVICE..." && parted --script "$device" mklabel gpt \
+        mkpart primary 1MiB 129MiB \
+        mkpart primary 129MiB 30.1GiB \
+        && echo "Successfully partitioned $DEVICE."
     echo "Encrypting $DEVICE..." && echo "$ENCRYPTION_PASS" | cryptsetup luksFormat "$DEVICE"2 -q --force-password &&
         cryptsetup open "$DEVICE"2 cryptlvm &&
         pvcreate /dev/mapper/cryptlvm &&
@@ -212,16 +215,21 @@ printf '\nWhen it comes to partitioning, we are going for 128M for the bootloade
 echo 'Do you wish to encrypt the drive?'
 partition_format_encrypt_mount () {
     lsblk
+    pacman -S parted --noconfirm >/dev/null 2&>1
     read -p 'Enter the name of the device you wish to install Artix on? (e.g. /dev/sda, /dev/sdb, etc) ' DEVICE
     while true; do
         echo
-        echo 'It is recommended that you enable en_US in addition to any other languages because some applications only support enUS.'
         read -p 'Would you like to encrypt your drive? [Y/n] ' yn
         case "$yn" in
             [Yy]* ) encrypt ; break ;;
             [Nn]* ) echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
                 sfdisk --delete "$DEVICE"
-                printf 'n\n\n\n+128M\nn\n\n\n+1G\nn\n\n\n\nw' | fdisk "$DEVICE"
+                parted --script "$DEVICE" mklabel gpt \
+                mkpart primary 1MiB 129MiB \
+                mkpart primary 129MiB 30.1GiB
+                float="$(parted --script $DEVICE print free | grep 'Free Space' | tail -1 | awk '{print $3}' |
+                    tr -d '[:alpha:]' | xargs -I% echo '% * 0.9313226' | bc -l)"
+                parted --script "$DEVICE" mklabel gpt mkpart primary 30.1GiB "$(printf '%.1f\n' $(echo "$float/1" | bc -l))" \
                 mkfs.fat -F32 "$DEVICE"1 -n boot
                 mkfs.ext4 "$DEVICE"2 -L root
                 mkfs.ext4 "$DEVICE"3 -L home
