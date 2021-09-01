@@ -107,10 +107,6 @@ lang () {
     echo "Your language is $LANGUAGE." ; continue_prompt
     export LANGUAGE
 
-
-read -p 'Enter an integer: ' input
-[ "$input" -eq "$input" 2>/dev/null ] || echo 'that is not an integer!'
-
     while true; do
         echo 'It is recommended that you enable en_US in addition to any other languages because some applications only support enUS.'
         read -p 'Would you like to add additional languages? [Y/n] ' yn
@@ -204,10 +200,7 @@ encrypt () {
     echo
     echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
     echo "Wiping $DEVICE..." && sfdisk --delete "$DEVICE" && echo "$DEVICE successfully wiped."
-    echo "Partitioning $DEVICE..." && parted --script "$DEVICE" mklabel gpt \
-        mkpart primary 1MiB 129MiB \ # here we leave 1 MiB of empty space because it's a good idea to leave the start of the disk empty
-        mkpart primary 129MiB 30.1GiB \
-        && echo "Successfully partitioned $DEVICE."
+    echo "Partitioning $DEVICE..." && parted --script "$DEVICE" mklabel gpt mkpart primary 1MiB 129MiB mkpart primary 129MiB 30.1GiB && echo "Successfully partitioned $DEVICE."
     echo "Encrypting $DEVICE..." && echo "$ENCRYPTION_PASS" | cryptsetup luksFormat "$DEVICE"2 -q --force-password &&
         echo "$ENCRYPTION_PASS" | cryptsetup open "$DEVICE"2 cryptlvm &&
         pvcreate /dev/mapper/cryptlvm &&
@@ -233,7 +226,7 @@ echo 'Do you wish to encrypt the drive?'
 partition_format_encrypt_mount () {
     lsblk
     pacman -S parted --noconfirm >/dev/null 2>&1
-    read -p 'Enter the name of the device you wish to install Artix on? (e.g. /dev/sda, /dev/sdb, etc) ' DEVICE
+    read -p 'Enter the name of the device you wish to install Artix on? (e.g. /dev/sda, /dev/sdb, etc): ' DEVICE
     while true; do
         echo
         read -p 'Would you like to encrypt your drive? [Y/n] ' yn
@@ -241,12 +234,7 @@ partition_format_encrypt_mount () {
             [Yy]* ) encrypt ; break ;;
             [Nn]* ) echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
                 sfdisk --delete "$DEVICE"
-                parted --script "$DEVICE" mklabel gpt \
-                mkpart primary 1MiB 129MiB \
-                mkpart primary 129MiB 30.1GiB
-                float="$(parted --script $DEVICE print free | grep 'Free Space' | tail -1 | awk '{print $3}' |
-                    tr -d '[:alpha:]' | xargs -I% echo '% * 0.9313226' | bc -l)"
-                parted --script "$DEVICE" mklabel gpt mkpart primary 30.1GiB "$(printf '%.1f\n' $(echo "$float/1" | bc -l))" \
+                parted --script "$DEVICE" mklabel gpt mkpart primary 1MiB 129MiB mkpart primary 129MiB 30.1GiB && printf 'n\n\n\n\nw\n' | fdisk "$DEVICE"
                 mkfs.fat -F32 "$DEVICE"1 -n boot
                 mkfs.ext4 "$DEVICE"2 -L root
                 mkfs.ext4 "$DEVICE"3 -L home
