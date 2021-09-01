@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#ddi!/usr/bin/env bash
 
 # AUTHOR: koalagang (https://github.com/koalagang)
 # A bash script to simplify the process of installing Artix Linux.
@@ -220,7 +220,7 @@ encrypt () {
     fi
 
     echo "Mounting $DEVICE..." && mount /dev/lvmSystem/root /mnt &&
-        mkdir -p /mnt/boot && mount "$DEVICE"1 /mnt/boot && mount_succcess=1
+        mkdir -p /mnt/boot && mount "$DEVICE"1 /mnt/boot && mount_success=1
     if [ "$mount_success" -eq 1 ]; then
         echo "Successfully mounted $DEVICE."
     else
