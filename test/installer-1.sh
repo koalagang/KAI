@@ -18,9 +18,9 @@ continue_prompt () {
 }
 
 clear
-printf 'Welcome to KAI!\n\nThis script is mainly intended for my own personal use but it is also available here for those who want a quick Artix install or are lazy.\nIf at any point you wish to cancel then simply press ctrl+c.' ; continue_prompt
-printf 'Also, please make sure that you have root privilidges before continuing. If you have not already done so then exit by saying no to the below prompt and then just type `su` and enter the password: `artix`\nAfter doing so, reinitiate the script.' ; continue_prompt
-printf "So that you don't waste your time, I would like to say this right away: this script does not support dual-booting or MBR/BIOS systems (it may support these in the future but I'm not guaranteeing it) Also this script is for Artix runit (i.e. does not support OpenRC or s6; may support this in the future as well).\nAlso the default option for all the yes/no prompts like the one below is, as indicated by the capital Y, yes - this means that if you press return instead of inputing 'y' or 'n' then it will take your answer as a 'yes'." ; continue_prompt
+printf 'Welcome to KAI!\n\nThis script is mainly intended for my own personal use but it is also available here for those who want a quick Artix install or are lazy.\nIf at any point you wish to cancel then simply press ctrl+c.\n' ; continue_prompt
+printf 'Also, please make sure that you have root privilidges before continuing. If you have not already done so then exit by saying no to the below prompt and then just type `su` and enter the password: `artix`\nAfter doing so, reinitiate the script.\n' ; continue_prompt
+printf "So that you don't waste your time, I would like to say this right away: this script does not support dual-booting or MBR/BIOS systems (it may support these in the future but I'm not guaranteeing it) Also this script is for Artix runit (i.e. does not support OpenRC or s6; may support this in the future as well).\nAlso the default option for all the yes/no prompts like the one below is, as indicated by the capital Y, yes - this means that if you press return instead of inputing 'y' or 'n' then it will take your answer as a 'yes'.\n" ; continue_prompt
 
 printf "Because I originally made this mainly for my own personal use, I've made some custom installers for myself. You should probably go and select the first option in the below prompt.\n"
 select answer in 'Guided install (recommended)' "Koala's desktop install" "Koala's ThinkPad install"; do
@@ -194,7 +194,7 @@ encrypt () {
     echo
     echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
     echo "Wiping $DEVICE..." && sfdisk --delete "$DEVICE" && echo "$DEVICE successfully wiped."
-    echo "Partitioning $DEVICE..." && parted --script "$device" mklabel gpt \
+    echo "Partitioning $DEVICE..." && parted --script "$DEVICE" mklabel gpt \
         mkpart primary 1MiB 129MiB \
         mkpart primary 129MiB 30.1GiB \
         && echo "Successfully partitioned $DEVICE."
