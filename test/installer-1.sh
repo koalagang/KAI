@@ -200,7 +200,7 @@ encrypt () {
     echo
     echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
     echo "Wiping $DEVICE..." && sfdisk --delete "$DEVICE" && echo "$DEVICE successfully wiped."
-    echo "Partitioning $DEVICE..." && parted --script "$DEVICE" mklabel gpt mkpart primary 1MiB 129MiB mkpart primary 129MiB 30.1GiB && echo "Successfully partitioned $DEVICE."
+    echo "Partitioning $DEVICE..." && printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n\n\nw\n' && echo "Successfully partitioned $DEVICE."
     echo "Encrypting $DEVICE..." && echo "$ENCRYPTION_PASS" | cryptsetup luksFormat "$DEVICE"2 -q --force-password &&
         echo "$ENCRYPTION_PASS" | cryptsetup open "$DEVICE"2 cryptlvm &&
         pvcreate /dev/mapper/cryptlvm &&
@@ -225,7 +225,6 @@ printf '\nWhen it comes to partitioning, we are going for 128M for the bootloade
 echo 'Do you wish to encrypt the drive?'
 partition_format_encrypt_mount () {
     lsblk
-    pacman -S parted --noconfirm >/dev/null 2>&1
     read -p 'Enter the name of the device you wish to install Artix on? (e.g. /dev/sda, /dev/sdb, etc): ' DEVICE
     while true; do
         echo
@@ -234,7 +233,7 @@ partition_format_encrypt_mount () {
             [Yy]* ) encrypt ; break ;;
             [Nn]* ) echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
                 sfdisk --delete "$DEVICE"
-                parted --script "$DEVICE" mklabel gpt mkpart primary 1MiB 129MiB mkpart primary 129MiB 30.1GiB && printf 'n\n\n\n\nw\n' | fdisk "$DEVICE"
+                printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n+30G\nn\np\n2\n\n\n\nw' | fdisk "$DEVICE"
                 mkfs.fat -F32 "$DEVICE"1 -n boot
                 mkfs.ext4 "$DEVICE"2 -L root
                 mkfs.ext4 "$DEVICE"3 -L home
