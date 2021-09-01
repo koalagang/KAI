@@ -107,11 +107,21 @@ lang () {
     echo "Your language is $LANGUAGE." ; continue_prompt
     export LANGUAGE
 
+
+read -p 'Enter an integer: ' input
+[ "$input" -eq "$input" 2>/dev/null ] || echo 'that is not an integer!'
+
     while true; do
         echo 'It is recommended that you enable en_US in addition to any other languages because some applications only support enUS.'
         read -p 'Would you like to add additional languages? [Y/n] ' yn
         case "$yn" in
-            [Yy]* ) read -p 'How many extra languages would you like to add? ' lang_num ; break ;;
+            [Yy]* ) read -p 'How many extra languages would you like to add? ' lang_num
+                # ensure that the input is an integer
+                until [ "$lang_num" -eq "$lang_num" 2>/dev/null ]; do
+                    echo 'That is not an integer!'
+                    read -p 'How many extra languages would you like to add? ' lang_num
+                done
+                break ;;
             [Nn]* ) break ;;
             '') read -p 'How many extra languages would you like to add? ' lang_num ; break ;;
             * ) echo 'Please answer "yes" or "no".'
@@ -195,24 +205,25 @@ encrypt () {
     echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
     echo "Wiping $DEVICE..." && sfdisk --delete "$DEVICE" && echo "$DEVICE successfully wiped."
     echo "Partitioning $DEVICE..." && parted --script "$DEVICE" mklabel gpt \
-        mkpart primary 1MiB 129MiB \
+        mkpart primary 1MiB 129MiB \ # here we leave 1 MiB of empty space because it's a good idea to leave the start of the disk empty
         mkpart primary 129MiB 30.1GiB \
         && echo "Successfully partitioned $DEVICE."
     echo "Encrypting $DEVICE..." && echo "$ENCRYPTION_PASS" | cryptsetup luksFormat "$DEVICE"2 -q --force-password &&
-        cryptsetup open "$DEVICE"2 cryptlvm &&
+        echo "$ENCRYPTION_PASS" | cryptsetup open "$DEVICE"2 cryptlvm &&
         pvcreate /dev/mapper/cryptlvm &&
-        vgcreate encrypted_volumes &&
-        vgcreate encrypted_volumes /dev/mapper/cryptlvm &&
-        lvcreate -L 30G encrypted_volumes -n root &&
-        lvcreate -L 100%FREE encrypted_volumes -n home &&
+        vgcreate encrypted_volume /dev/mapper/cryptlvm &&
+        lvcreate -L 30G encrypted_volume -n root &&
+        lvcreate -l 100%FREE encrypted_volume -n home &&
         encryption_success=1
     [ "$encryption_success" -eq 1 ] && echo "Successfully encrypted $DEVICE."
     [ "$encryption_success" -ne 1 ] && echo "error: failed to encrypt $DEVICE." && exit 0
     echo "Formatting $DEVICE..." &&
-        mkfs.ext4 /dev/encrypted_volumes/root -L root && mkfs.ext4 /dev/encrypted_volumes/home -L home && mkfs.fat -F32 "$DEVICE"1 && format_success=1
+        mkfs.ext4 /dev/encrypted_volume/root -L root && mkfs.ext4 /dev/encrypted_volume/home -L home && mkfs.fat -F32 "$DEVICE"1 && format_success=1
     [ "$format_success" -eq 1 ] && echo "Successfully formatted $DEVICE."
     [ "$format_sucess" -ne 1 ] && echo "error: failed to format $DEVICE." && exit 0
-    echo "Mounting $DEVICE..." && mount "$DEVICE"2 /mnt && mkdir /mnt/boot && mount "$DEVICE"1 /mnt/boot && mount_succcess=1
+    echo "Mounting $DEVICE..." && mount /dev/encrypted_volume/root /mnt &&
+        mkdir -p /mnt/boot && mkdir -p /mnt/home &&
+        mount /dev/encrypted_volume/home && mount "$DEVICE"1 /mnt/boot && mount_succcess=1
     [ "$mount_success" -eq 1 ] && "Successfully mounted $DEVICE."
     [ "$mount_success" -ne 1 ] && "error: failed to mount $DEVICE." && exit 0
 }
