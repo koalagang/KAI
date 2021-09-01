@@ -199,39 +199,36 @@ encrypt () {
     done
     echo
     echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
-    echo "Wiping $DEVICE..." && sfdisk --delete "$DEVICE" && echo "$DEVICE successfully wiped."
-    echo "Partitioning $DEVICE..." && printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n\n\nw\n' | fdisk "$DEVICE" && echo "Successfully partitioned $DEVICE."
+    echo "Partitioning $DEVICE..." && printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n\nw' | fdisk "$DEVICE" && echo "Successfully partitioned $DEVICE."
     echo "Encrypting $DEVICE..." && echo "$ENCRYPTION_PASS" | cryptsetup luksFormat "$DEVICE"2 -q --force-password &&
         echo "$ENCRYPTION_PASS" | cryptsetup open "$DEVICE"2 cryptlvm &&
         pvcreate /dev/mapper/cryptlvm &&
-        vgcreate encrypted_volume /dev/mapper/cryptlvm &&
-        lvcreate -L 30G encrypted_volume -n root &&
-        lvcreate -l 100%FREE encrypted_volume -n home && encryption_success=1
-    if [ "$encryption_success" -eq 1  ]; then
+        vgcreate lvmSystem /dev/mapper/cryptlvm &&
+        lvcreate -l 100%FREE lvmSystem -n root && encryption_success=1
+    if [ "$encryption_success" -eq 1 ]; then
         echo "Successfully encrypted $DEVICE."
     else
         echo "error: failed to encrypt $DEVICE" && exit 0
     fi
 
     echo "Formatting $DEVICE..." &&
-        mkfs.ext4 /dev/encrypted_volume/root -L root && mkfs.ext4 /dev/encrypted_volume/home -L home && mkfs.fat -F32 "$DEVICE"1 && format_success=1
-    if [ "$format_success" -eq 1  ]; then
+        mkfs.ext4 /dev/lvmSystem/root -L root && mkfs.fat -F32 "$DEVICE"1 && format_success=1
+    if [ "$format_success" -eq 1 ]; then
         echo "Successfully formatted $DEVICE."
     else
         echo "error: failed to format $DEVICE" && exit 0
     fi
 
-    echo "Mounting $DEVICE..." && mount /dev/encrypted_volume/root /mnt &&
-        mkdir -p /mnt/boot && mkdir -p /mnt/home &&
-        mount /dev/encrypted_volume/home && mount "$DEVICE"1 /mnt/boot && mount_succcess=1
-    if [ "$mount_success" -eq 1  ]; then
+    echo "Mounting $DEVICE..." && mount /dev/lvmSystem/root /mnt &&
+        mkdir -p /mnt/boot && mount "$DEVICE"1 /mnt/boot && mount_succcess=1
+    if [ "$mount_success" -eq 1 ]; then
         echo "Successfully mounted $DEVICE."
     else
         echo "error: failed to mount $DEVICE" && exit 0
     fi
 }
 
-printf '\nWhen it comes to partitioning, we are going for 128M for the bootloader, 30G for the root and the rest of the free space should go towards the home partition. There is no need for a swap partition because swap files are far superior. You can see the currently existing paritions above.\n\nWARNING: you are responsible for any loss of data.\nFor this reason, I cannot stress it enough that you should backup anything you wish to keep before continuing!\n' ; continue_prompt
+printf '\nWhen it comes to partitioning, we are going for 128M for the bootloader and the rest will be allocated to the root. There is no need for a swap partition because swap files are far superior. You can see the currently existing paritions above.\n\nWARNING: you are responsible for any loss of data.\nFor this reason, I cannot stress it enough that you should backup anything you wish to keep before continuing!\n' ; continue_prompt
 echo 'Do you wish to encrypt the drive?'
 partition_format_encrypt_mount () {
     lsblk
@@ -242,14 +239,12 @@ partition_format_encrypt_mount () {
         case "$yn" in
             [Yy]* ) encrypt ; break ;;
             [Nn]* ) echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
-                sfdisk --delete "$DEVICE"
-                printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n+30G\nn\np\n2\n\n\n\nw' | fdisk "$DEVICE"
+                printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n\nw' | fdisk "$DEVICE"
                 mkfs.fat -F32 "$DEVICE"1 -n boot
                 mkfs.ext4 "$DEVICE"2 -L root
-                mkfs.ext4 "$DEVICE"3 -L home
                 mount "$DEVICE"2 /mnt
-                mkdir -p /mnt/boot ; mkdir -p /mnt/home
-                mount "$DEVICE"1 /mnt/boot ; mount "$DEVICE"3 /mnt/home
+                mkdir -p /mnt/boot
+                mount "$DEVICE"1 /mnt/boot
                 break ;;
             '') encrypt ; break ;;
             * ) echo 'Please answer "yes" or "no".'
