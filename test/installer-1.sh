@@ -255,8 +255,8 @@ partition_format_encrypt_mount () {
 
 swap_yes () {
     echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE
-    echo "Creating $SWAP_SIZE swapfile..." && dd if=/dev/zero of=/swapfile bs=1M count=$SWAPS_SIZE status=progress &&
-        chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && swap_success=1
+    echo "Creating $SWAP_SIZE swapfile..." && fallocate --length "$SWAP_SIZE" /mnt/swapfile &&
+        chmod 600 /mnt/swapfile && mkswap /mnt/swapfile && swapon /mnt/swapfile && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && swap_success=1
     if [ "$swap_success" -eq 1  ]; then
         echo "Successfully created a $SWAP_SIZE swapfile."
     else
