@@ -5,7 +5,7 @@
 
 continue_prompt () {
     while true; do
-        echo ; echo
+        echo
         read -p 'Do you wish to continue? [Y/n] ' yn
         case "$yn" in
             [Yy]* ) break ;;
@@ -40,6 +40,7 @@ host () {
         read -p 'Enter your host name: '  HOST
         read -p 'Retype host name: '  CONFIRM_HOST
     done
+    echo
     echo "Your host name is $HOST." ; continue_prompt
     export HOST
 }
@@ -52,6 +53,7 @@ username () {
         read -p 'Enter your username: '  USERNAME
         read -p 'Retype username: '  CONFIRM_USERNAME
     done
+    echo
     echo "Your username is $USERNAME." ; continue_prompt
     export USERNAME
 }
@@ -88,6 +90,7 @@ city () {
         read -p 'Enter your city (formatted as continent/city, e.g. Europe/London): ' CITY
         read -p 'Re-enter your city (formatted as continent/city, e.g. Europe/London): ' CONFIRM_CITY
     done
+    echo
     echo "Your city is $CITY." ; continue_prompt
     export CITY
 }
@@ -100,6 +103,7 @@ lang () {
         read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' LANGUAGE
         read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_LANGUAGE
     done
+    echo
     echo "Your language is $LANGUAGE." ; continue_prompt
     export LANGUAGE
 
@@ -141,6 +145,7 @@ kernel () {
             'linux-hardened') KERNEL='linux-hardened' ; break
         esac
     done
+    echo
     echo "Your kernel is $KERNEL." ; continue_prompt
     export KERNEL
 }
@@ -164,7 +169,7 @@ which_wrong () {
 }
 
 check_correct () {
-    printf "\nHOST: $HOST\nUSERNAME: $USERNAME\nCITY: $CITY\nMAIN LANGUAGE: $LANGUAGE\nKERNEL: $KERNEL\n"
+    printf "\nHOST: $HOST\nUSERNAME: $USERNAME\nCITY: $CITY\nMAIN LANGUAGE: $LANGUAGE\nKERNEL: $KERNEL\n\n"
     while true; do
         read -p 'Is this correct? [Y/n] ' yn
         case "$yn" in
@@ -178,6 +183,7 @@ check_correct () {
 check_correct
 
 encrypt () {
+    echo
     read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS ; echo
     read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
     until [ "$ENCRYPTION_PASS" = "$CONFIRM_ENCRYPTION_PASS" ]; do
@@ -215,7 +221,7 @@ printf '\nWhen it comes to partitioning, we are going for 128M for the bootloade
 echo 'Do you wish to encrypt the drive?'
 partition_format_encrypt_mount () {
     lsblk
-    pacman -S parted --noconfirm >/dev/null 2&>1
+    pacman -S parted --noconfirm >/dev/null 2>&1
     read -p 'Enter the name of the device you wish to install Artix on? (e.g. /dev/sda, /dev/sdb, etc) ' DEVICE
     while true; do
         echo
@@ -255,7 +261,7 @@ swap_yes () {
 swap () {
     while true; do
         echo
-        read -p 'Would you like to create a swap partition? [Y/n] ' yn
+        read -p 'Would you like to create a swap file? [Y/n] ' yn
         case "$yn" in
             [Yy]* ) swap_yes ; break ;;
             [Nn]* ) break ;;

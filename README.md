@@ -16,7 +16,7 @@ Any text in these instructions formatted `like this` is a command which you shou
 1. If you find yourself stuck on an infinitely loading "Successfully initialized wpa_supplicant", simply press the enter key. Login using username: 'artix' and password: 'artix'
 2. Enable root privilidges by entering `su`
 3. Partition your disk like this - /dev/sda1 = approx. 128M to 512M - this should be marked as bootable, /dev/sda2 = approx. 30G, /dev/sda3 = rest of the disk space. You may do this with `fdisk` *or* `cfdisk`.
-4. Download git and glibc `pacman -Syy && pacman -S glibc git`
+4. Download git and glibc `pacman -Syy git`
 5. Clone this repo `git clone https://github.com/koalagang/kai.git`
 6. Run the script `chmod +x kai/artix-installer.sh && ./kai/artix-installer.sh`
 7. After answering the prompts, feel free to leave the computer until it is done. Depending on the speed of your hardware and internet connection, this may or may not take long.
