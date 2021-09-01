@@ -30,7 +30,7 @@ sed -i "s/#\ %wheel\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
 sed -i "s/#\ %sudo\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
 ( echo "$ROOTPASSWORD" ; echo "$ROOTPASSWORD" ) | passwd
 
-[ "$reboot" -eq 1 ] && loginctl reboot
-[ "$shutdown" -eq 1 ] && loginctl poweroff
+[ "$reboot" -eq 1 2>/dev/null ] && loginctl reboot
+[ "$shutdown" -eq 1 2>/dev/null ] && loginctl poweroff
 echo
 echo 'Installation complete! If you wish to reboot or shutdown, simply enter "loginctl reboot" or "loginctl poweroff" respectively.'

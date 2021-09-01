@@ -1,4 +1,4 @@
-#ddi!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # AUTHOR: koalagang (https://github.com/koalagang)
 # A bash script to simplify the process of installing Artix Linux.
@@ -205,7 +205,7 @@ encrypt () {
         pvcreate /dev/mapper/cryptlvm &&
         vgcreate lvmSystem /dev/mapper/cryptlvm &&
         lvcreate -l 100%FREE lvmSystem -n root && encryption_success=1
-    if [ "$encryption_success" -eq 1 ]; then
+    if [ "$encryption_success" -eq 1 2>/dev/null ]; then
         echo "Successfully encrypted $DEVICE."
     else
         echo "error: failed to encrypt $DEVICE" && exit 0
@@ -213,7 +213,7 @@ encrypt () {
 
     echo "Formatting $DEVICE..." &&
         mkfs.ext4 /dev/lvmSystem/root -L root && mkfs.fat -F32 "$DEVICE"1 && format_success=1
-    if [ "$format_success" -eq 1 ]; then
+    if [ "$format_success" -eq 1 2>/dev/null ]; then
         echo "Successfully formatted $DEVICE."
     else
         echo "error: failed to format $DEVICE" && exit 0
@@ -221,7 +221,7 @@ encrypt () {
 
     echo "Mounting $DEVICE..." && mount /dev/lvmSystem/root /mnt &&
         mkdir -p /mnt/boot && mount "$DEVICE"1 /mnt/boot && mount_success=1
-    if [ "$mount_success" -eq 1 ]; then
+    if [ "$mount_success" -eq 1 2>/dev/null ]; then
         echo "Successfully mounted $DEVICE."
     else
         echo "error: failed to mount $DEVICE" && exit 0
@@ -257,7 +257,7 @@ swap_yes () {
     echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE
     echo "Creating $SWAP_SIZE swapfile..." && fallocate --length "$SWAP_SIZE" /mnt/swapfile &&
         chmod 600 /mnt/swapfile && mkswap /mnt/swapfile && swapon /mnt/swapfile && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && swap_success=1
-    if [ "$swap_success" -eq 1  ]; then
+    if [ "$swap_success" -eq 1 2>/dev/null ]; then
         echo "Successfully created a $SWAP_SIZE swapfile."
     else
         echo 'error: failed to create swap.' && exit 0
@@ -266,7 +266,6 @@ swap_yes () {
 
 swap () {
     while true; do
-        echo
         read -p 'Would you like to create a swap file? [Y/n] ' yn
         case "$yn" in
             [Yy]* ) swap_yes ; break ;;
@@ -279,7 +278,7 @@ swap () {
 }
 
 what_next () {
-    printf 'Last question! Would you like to reboot or shutdown your machine once complete or just do nothing and leave the system on?'
+    echo 'Last question! Would you like to reboot or shutdown your machine once complete or just do nothing and leave the system on?'
     select answer in 'Reboot' 'Shutdown' 'Do nothing'; do
         case "$answer" in
             'Reboot') reboot=1 ; break ;;
@@ -294,4 +293,4 @@ partition_format_encrypt_mount ; swap ; what_next
 
 basestrap /mnt base base-devel runit elogind-runit "$KERNEL" "$KERNEL"-headers linux-firmware --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
-artix-chroot /mnt ./installer-2.sh
+mv installer-2.sh /mnt && artix-chroot /mnt ./installer-2.sh
