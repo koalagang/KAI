@@ -5,7 +5,7 @@
 
 continue_prompt () {
     while true; do
-        echo
+        echo ; echo
         read -p 'Do you wish to continue? [Y/n] ' yn
         case "$yn" in
             [Yy]* ) break ;;
@@ -18,11 +18,11 @@ continue_prompt () {
 }
 
 clear
-printf 'Welcome to KAI!\n\nThis script is mainly intended for my own personal use but it is also available here for those who want a quick Artix install or are lazy.\nIf at any point you wish to cancel then simply press ctrl+c.\n' ; continue_prompt
+printf 'Welcome to KAI!\n\nThis script is mainly intended for my own personal use but it is also available here for those who want a quick Artix install or are lazy.\nIf at any point you wish to cancel then simply press ctrl+c.' ; continue_prompt
 printf 'Also, please make sure that you have root privilidges before continuing. If you have not already done so then exit by saying no to the below prompt and then just type `su` and enter the password: `artix`\nAfter doing so, reinitiate the script.' ; continue_prompt
 printf "So that you don't waste your time, I would like to say this right away: this script does not support dual-booting or MBR/BIOS systems (it may support these in the future but I'm not guaranteeing it) Also this script is for Artix runit (i.e. does not support OpenRC or s6; may support this in the future as well).\nAlso the default option for all the yes/no prompts like the one below is, as indicated by the capital Y, yes - this means that if you press return instead of inputing 'y' or 'n' then it will take your answer as a 'yes'." ; continue_prompt
 
-printf "Because I originally made this mainly for my own personal use I've made some custom installers for myself. You should probably go and select the first option in the below prompt.\n"
+printf "Because I originally made this mainly for my own personal use, I've made some custom installers for myself. You should probably go and select the first option in the below prompt.\n"
 select answer in 'Guided install (recommended)' "Koala's desktop install" "Koala's ThinkPad install"; do
     case "$answer" in
         'Guided install (recommended)') break ;;
@@ -43,7 +43,6 @@ host () {
     echo
     echo "Your host name is $HOST." ; continue_prompt
     export HOST
-    echo
 }
 
 username () {
@@ -57,29 +56,28 @@ username () {
     echo
     echo "Your username is $USERNAME." ; continue_prompt
     export USERNAME
-    echo
 }
 
 password () {
-    read -s -p 'Enter your user password: ' PASSWORD
+    read -s -p 'Enter your user password: ' PASSWORD ; echo
     read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD
     until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
+        echo ; echo
         printf 'Passwords did not match!\n'
-        read -s -p 'Enter your user password: ' PASSWORD
+        read -s -p 'Enter your user password: ' PASSWORD ; echo
         read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD
     done
     export PASSWORD
-    echo
 
-    read -s -p 'Enter your root password: ' ROOT_PASSWORD
+    read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
     read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD
     until [ "$ROOT_PASSWORD" = "$CONFIRM_ROOT_PASSWORD" ]; do
+        echo ; echo
         printf 'Passwords did not match!\n'
-        read -s -p 'Enter your root password: ' ROOT_PASSWORD
+        read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
         read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD
     done
     export ROOT_PASSWORD
-    echo
 }
 
 city () {
@@ -93,21 +91,19 @@ city () {
     echo
     echo "Your city is $CITY." ; continue_prompt
     export CITY
-    echo
 }
 
 lang () {
     read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' LANGUAGE
-    read -p 'Re-nter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_LANGUAGE
+    read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_LANGUAGE
     until [ "$LANGUAGE" = "$CONFIRM_LANGUAGE" ]; do
         echo 'Languages did not match!'
         read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' LANGUAGE
-        read -p 'Re-nter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_LANGUAGE
+        read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_LANGUAGE
     done
     echo
     echo "Your language is $LANGUAGE." ; continue_prompt
     export LANGUAGE
-    echo
 
     while true; do
         echo
@@ -120,22 +116,22 @@ lang () {
             * ) echo 'Please answer "yes" or "no".'
         esac
     done
-    echo
 
+    langs=($(seq 1 "$lang_num" | xargs -I% -n 1 echo 'EXTRA_LANG%'))
+    echo ; echo "The below prompt will repeat $lang_num times so that you can enter every language."
     [ -n "$lang_num" ] &&
-        orig_lang_num="$lang_num" ; export orig_lang_num
-        until [ "$lang_num" -eq 1 ]; do
-            read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' EXTRA_LANGUAGE"$lang_num"
-            read -p 'Re-nter your language and region (formatted as language_region, e.g. en_GB): ' EXTRA_CONFIRM_LANGUAGE"$lang_num"
-            until [ $EXTRA_LANGUAGE"$lang_num" = $EXTRA_CONFIRM_LANGUAGE"$lang_num" ]; do
+        for i in "${langs[@]}"; do
+            read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' "${langs[i]}"
+            read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_"${langs[i]}"
+            echo
+            until [ "${langs[i]}" = $CONFIRM_"${langs[i]}" ]; do
                 echo 'Languages did not match!'
-                read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' EXTRA_LANGUAGE"$lang_num"
-                read -p 'Re-nter your language and region (formatted as language_region, e.g. en_GB): ' EXTRA_CONFIRM_LANGUAGE"$lang_num"
+                read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' "${langs[i]}"
+                read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' "${langs[i]}"
             done
-            echo
-            echo "Your extra language is $EXTRA_LANGUAGE"$lang_num"." ; continue_prompt ; export EXTRA_LANGUAGE"$lang_num" ; $((lang_num - 1))
-            echo
+            export "${langs[i]}"
         done
+        export lang_num
 }
 
 kernel () {
@@ -150,7 +146,6 @@ kernel () {
     done
     echo "Your kernel is $KERNEL." ; continue_prompt
     export KERNEL
-    echo
 }
 
 host ; username ; password ; city ; lang ; kernel
@@ -168,7 +163,7 @@ which_wrong () {
             "I changed my mind. They're all correct.") check_correct ; break
         esac
     done
-    continue_prompt ; echo
+    continue_prompt
 }
 
 check_correct () {
