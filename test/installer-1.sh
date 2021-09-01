@@ -200,25 +200,35 @@ encrypt () {
     echo
     echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
     echo "Wiping $DEVICE..." && sfdisk --delete "$DEVICE" && echo "$DEVICE successfully wiped."
-    echo "Partitioning $DEVICE..." && printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n\n\nw\n' && echo "Successfully partitioned $DEVICE."
+    echo "Partitioning $DEVICE..." && printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n\n\nw\n' | fdisk "$DEVICE" && echo "Successfully partitioned $DEVICE."
     echo "Encrypting $DEVICE..." && echo "$ENCRYPTION_PASS" | cryptsetup luksFormat "$DEVICE"2 -q --force-password &&
         echo "$ENCRYPTION_PASS" | cryptsetup open "$DEVICE"2 cryptlvm &&
         pvcreate /dev/mapper/cryptlvm &&
         vgcreate encrypted_volume /dev/mapper/cryptlvm &&
         lvcreate -L 30G encrypted_volume -n root &&
-        lvcreate -l 100%FREE encrypted_volume -n home &&
-        encryption_success=1
-    [ "$encryption_success" -eq 1 ] && echo "Successfully encrypted $DEVICE."
-    [ "$encryption_success" -ne 1 ] && echo "error: failed to encrypt $DEVICE." && exit 0
+        lvcreate -l 100%FREE encrypted_volume -n home && encryption_success=1
+    if [ "$encryption_success" -eq 1  ]; then
+        echo "Successfully encrypted $DEVICE."
+    else
+        echo "error: failed to encrypt $DEVICE" && exit 0
+    fi
+
     echo "Formatting $DEVICE..." &&
         mkfs.ext4 /dev/encrypted_volume/root -L root && mkfs.ext4 /dev/encrypted_volume/home -L home && mkfs.fat -F32 "$DEVICE"1 && format_success=1
-    [ "$format_success" -eq 1 ] && echo "Successfully formatted $DEVICE."
-    [ "$format_sucess" -ne 1 ] && echo "error: failed to format $DEVICE." && exit 0
+    if [ "$format_success" -eq 1  ]; then
+        echo "Successfully formatted $DEVICE."
+    else
+        echo "error: failed to format $DEVICE" && exit 0
+    fi
+
     echo "Mounting $DEVICE..." && mount /dev/encrypted_volume/root /mnt &&
         mkdir -p /mnt/boot && mkdir -p /mnt/home &&
         mount /dev/encrypted_volume/home && mount "$DEVICE"1 /mnt/boot && mount_succcess=1
-    [ "$mount_success" -eq 1 ] && "Successfully mounted $DEVICE."
-    [ "$mount_success" -ne 1 ] && "error: failed to mount $DEVICE." && exit 0
+    if [ "$mount_success" -eq 1  ]; then
+        echo "Successfully mounted $DEVICE."
+    else
+        echo "error: failed to mount $DEVICE" && exit 0
+    fi
 }
 
 printf '\nWhen it comes to partitioning, we are going for 128M for the bootloader, 30G for the root and the rest of the free space should go towards the home partition. There is no need for a swap partition because swap files are far superior. You can see the currently existing paritions above.\n\nWARNING: you are responsible for any loss of data.\nFor this reason, I cannot stress it enough that you should backup anything you wish to keep before continuing!\n' ; continue_prompt
@@ -252,8 +262,11 @@ swap_yes () {
     echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE
     echo "Creating $SWAP_SIZE swapfile..." && dd if=/dev/zero of=/swapfile bs=1M count=$SWAPS_SIZE status=progress &&
         chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && swap_success=1
-    [ "$swap_success" -eq 1 ] && echo "Successfully created a $SWAP_SIZE swapfile."
-    [ "$swap_success" -ne 1 ] && echo 'error: failed to create swap.' && exit 0
+    if [ "$swap_success" -eq 1  ]; then
+        echo "Successfully created a $SWAP_SIZE swapfile."
+    else
+        echo 'error: failed to create swap.' && exit 0
+    fi
 }
 
 swap () {
