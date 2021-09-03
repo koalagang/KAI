@@ -36,7 +36,7 @@ host () {
     read -p 'Enter your host name: ' HOST
     read -p 'Retype host name: ' CONFIRM_HOST
     until [ "$HOST" = "$CONFIRM_HOST" ]; do
-        printf 'Host names did not match!\n'
+        echo 'Host names did not match!'
         read -p 'Enter your host name: '  HOST
         read -p 'Retype host name: '  CONFIRM_HOST
     done
@@ -46,18 +46,22 @@ host () {
 }
 
 username () {
-    echo 'Your username must be in all lowercase letters and can be a maximum of 16 characters.'
-    read -n 16 -p 'Enter your username: '  USERNAME
-    read -n 16 -p 'Re-type username: '  CONFIRM_USERNAME
+    echo 'Your username can only contain letters and numbers, all the letters must be lowercase and the first character must be a letter.'
+    read -p 'Enter your username: '  USERNAME
+    read -p 'Re-type username: '  CONFIRM_USERNAME
     until [ "$USERNAME" = "$CONFIRM_USERNAME" ]; do
-        printf 'Usernames did not match!\n'
-        read -n 16 -p 'Enter your username: '  USERNAME
-        read -n 16 -p 'Re-type username: '  CONFIRM_USERNAME
+        echo 'Usernames did not match!'
+        read -p 'Enter your username: '  USERNAME
+        read -p 'Re-type username: '  CONFIRM_USERNAME
+    done
+    until [[ ${USERNAME:0:1} != "1" ]]; do
+        echo 'Username cannot start with a number!'
+        read -p 'Enter your username: '  USERNAME
+        read -p 'Re-type username: '  CONFIRM_USERNAME
     done
     USERNAME="$(echo $USERNAME | tr '[:upper:]' '[:lower:]')"
     echo
     echo "Your username is $USERNAME." ; continue_prompt
-    export USERNAME
 }
 
 password () {
@@ -65,7 +69,7 @@ password () {
     read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD ; echo
     until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
         echo ; echo
-        printf 'Passwords did not match!\n'
+        echo 'Passwords did not match!'
         read -s -p 'Enter your user password: ' PASSWORD ; echo
         read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD ; echo
     done
@@ -77,7 +81,7 @@ password () {
     read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
     until [ "$ROOT_PASSWORD" = "$CONFIRM_ROOT_PASSWORD" ]; do
         echo ; echo
-        printf 'Passwords did not match!\n'
+        echo 'Passwords did not match!'
         read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
         read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
     done
@@ -196,7 +200,7 @@ encrypt () {
     read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS ; echo
     read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
     until [ "$ENCRYPTION_PASS" = "$CONFIRM_ENCRYPTION_PASS" ]; do
-        printf 'Encryption keys did not match!\n'
+        echo 'Encryption keys did not match!'
         read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS ; echo
         read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
     done

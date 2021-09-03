@@ -9,8 +9,8 @@ sed -i "s/#$LANGUAGE\ ISO-8859-1/$LANGUAGE\ ISO-8859-1/" /etc/locale.gen
 langs=($(seq 1 "$lang_num" | xargs -I% -n 1 echo 'EXTRA_LANG%'))
 [ -n "$lang_num" ] &&
     for i in "${langs[@]}"; do
-        sed -i "s/#$EXTRA_LANGUAGE${langs[i]}.UTF-8\ UTF-8/$EXTRA_LANGUAGE${langs[i]}.UTF-8\ UTF-8/" /etc/locale.gen
-        sed -i "s/#$EXTRA_LANGUAGE${langs[i]}\ ISO-8859-1/$EXTRA_LANGUAGE${langs[i]}\ ISO-8859-1/" /etc/locale.gen
+        sed -i "s/#${langs[i]}.UTF-8\ UTF-8/${langs[i]}.UTF-8\ UTF-8/" /etc/locale.gen
+        sed -i "s/#${langs[i]}\ ISO-8859-1/${langs[i]}\ ISO-8859-1/" /etc/locale.gen
     done
 locale-gen
 echo "LANG=$LANGUAGE.UTF-8" > /etc/locale.conf
