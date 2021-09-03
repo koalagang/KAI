@@ -132,7 +132,7 @@ lang () {
         esac
     done
 
-    langs="$(seq 1 "$lang_num" | xargs -I% -n 1 echo 'EXTRA_LANG%')"
+    langs=($(seq 1 "$lang_num" | xargs -I% -n 1 echo 'EXTRA_LANG%'))
     echo ; echo "The below prompt will repeat $lang_num times so that you can enter every language."
     [ -n "$lang_num" ] &&
         for i in "${langs[@]}"; do
