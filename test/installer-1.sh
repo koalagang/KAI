@@ -46,13 +46,15 @@ host () {
 }
 
 username () {
-    read -p 'Enter your username: '  USERNAME
-    read -p 'Retype username: '  CONFIRM_USERNAME
+    echo 'Your username must be in all lowercase letters and can be a maximum of 16 characters.'
+    read -n 16 -p 'Enter your username: '  USERNAME
+    read -n 16 -p 'Re-type username: '  CONFIRM_USERNAME
     until [ "$USERNAME" = "$CONFIRM_USERNAME" ]; do
         printf 'Usernames did not match!\n'
-        read -p 'Enter your username: '  USERNAME
-        read -p 'Retype username: '  CONFIRM_USERNAME
+        read -n 16 -p 'Enter your username: '  USERNAME
+        read -n 16 -p 'Re-type username: '  CONFIRM_USERNAME
     done
+    USERNAME="$(echo $USERNAME | tr '[:upper:]' '[:lower:]')"
     echo
     echo "Your username is $USERNAME." ; continue_prompt
     export USERNAME
@@ -67,7 +69,8 @@ password () {
         read -s -p 'Enter your user password: ' PASSWORD ; echo
         read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD ; echo
     done
-    export PASSWORD
+    USER_PASSWORD="$PASSWORD"
+    export USER_PASSWORD
 
     echo
     read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo

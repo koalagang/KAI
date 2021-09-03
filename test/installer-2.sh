@@ -24,11 +24,13 @@ printf "127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t $HOST.localdoma
 ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
 
 useradd -m -G wheel "$USERNAME"
-( echo "$PASSWORD" ; echo "$PASSWORD" ) | passwd "$USERNAME"
+( echo "$USER_PASSWORD" ; echo "$USER_PASSWORD" ) | passwd "$USERNAME"
 cp /etc/sudoers /etc/sudoers.bak
 sed -i "s/#\ %wheel\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
 sed -i "s/#\ %sudo\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
-( echo "$ROOTPASSWORD" ; echo "$ROOTPASSWORD" ) | passwd
+( echo "$ROOT_PASSWORD" ; echo "$ROOT_PASSWORD" ) | passwd
+
+pacman -Syu --noconfirm
 
 [ "$reboot" -eq 1 2>/dev/null ] && loginctl reboot
 [ "$shutdown" -eq 1 2>/dev/null ] && loginctl poweroff
