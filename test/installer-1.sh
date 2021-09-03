@@ -62,6 +62,7 @@ username () {
     USERNAME="$(echo $USERNAME | tr '[:upper:]' '[:lower:]')"
     echo
     echo "Your username is $USERNAME." ; continue_prompt
+    export USERNAME
 }
 
 password () {
@@ -115,7 +116,7 @@ lang () {
     export LANGUAGE
 
     while true; do
-        echo 'It is recommended that you enable en_US in addition to any other languages because some applications only support enUS.'
+        echo 'It is recommended that you enable en_US in addition to any other languages because some applications only support en_US.'
         read -p 'Would you like to add additional languages? [Y/n] ' yn
         case "$yn" in
             [Yy]* ) read -p 'How many extra languages would you like to add? ' lang_num
@@ -131,7 +132,7 @@ lang () {
         esac
     done
 
-    langs=($(seq 1 "$lang_num" | xargs -I% -n 1 echo 'EXTRA_LANG%'))
+    langs="$(seq 1 "$lang_num" | xargs -I% -n 1 echo 'EXTRA_LANG%')"
     echo ; echo "The below prompt will repeat $lang_num times so that you can enter every language."
     [ -n "$lang_num" ] &&
         for i in "${langs[@]}"; do
@@ -297,6 +298,7 @@ what_next () {
 }
 
 partition_format_encrypt_mount ; swap ; what_next
+printf '\nStarting Artix Linux installation.' && sleep 1 && printf '.' && sleep 1 && printf '.' && sleep 1 && printf ' NOW!\n' && sleep 0.5
 
 basestrap /mnt base base-devel runit elogind-runit "$KERNEL" "$KERNEL"-headers linux-firmware --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
