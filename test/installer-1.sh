@@ -235,6 +235,7 @@ encrypt () {
         echo "error: failed to mount $DEVICE" && exit 0
     fi
 
+    encryption_packages='lvm2 cryptsetup'
     encrypt=1 && export encrypt && export DEVICE
 }
 
@@ -267,7 +268,6 @@ swap_yes () {
     echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE
     echo "Creating $SWAP_SIZE swapfile..." && fallocate --length "$SWAP_SIZE" /mnt/swapfile &&
         chmod 600 /mnt/swapfile && mkswap /mnt/swapfile && swapon /mnt/swapfile && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && swap_success=1
-    export SWAP_UUID
     if [ "$swap_success" -eq 1 2>/dev/null ]; then
         echo "Successfully created a $SWAP_SIZE swapfile."
     else
@@ -291,6 +291,6 @@ swap () {
 partition_format_encrypt_mount ; swap
 printf '\nStarting Artix Linux installation.' && sleep 1 && printf '.' && sleep 1 && printf '.' && sleep 1 && printf ' NOW!\n' && sleep 0.5
 
-basestrap /mnt base base-devel runit elogind-runit "$KERNEL" "$KERNEL"-headers linux-firmware --noconfirm
+basestrap /mnt base base-devel runit elogind-runit "$KERNEL" "$KERNEL"-headers linux-firmware "$encryption_packages" --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv installer-2.sh /mnt && artix-chroot /mnt ./installer-2.sh
