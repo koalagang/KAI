@@ -6,16 +6,17 @@ hwclock --systohc
 cp /etc/locale.gen /etc/locale.gen.bak
 sed -i "s/#$LANGUAGE.UTF-8\ UTF-8/$LANGUAGE.UTF-8\ UTF-8/" /etc/locale.gen
 sed -i "s/#$LANGUAGE\ ISO-8859-1/$LANGUAGE\ ISO-8859-1/" /etc/locale.gen
-langs=($(seq 1 "$lang_num" | xargs -I% -n 1 echo 'EXTRA_LANG%'))
-[ -n "$lang_num" ] &&
-    for i in "${langs[@]}"; do
-        sed -i "s/#${langs[i]}.UTF-8\ UTF-8/${langs[i]}.UTF-8\ UTF-8/" /etc/locale.gen
-        sed -i "s/#${langs[i]}\ ISO-8859-1/${langs[i]}\ ISO-8859-1/" /etc/locale.gen
-    done
+#langs=($(seq 1 $lang_num | xargs -I% -n 1 echo '%'))
+#[ -n "$lang_num" ] &&
+#    for i in "${langs[@]}"; do
+#        sed -i "s/#${langs[i]}.UTF-8\ UTF-8/${langs[i]}.UTF-8\ UTF-8/" /etc/locale.gen
+#        sed -i "s/#${langs[i]}\ ISO-8859-1/${langs[i]}\ ISO-8859-1/" /etc/locale.gen
+#    done
 locale-gen
 echo "LANG=$LANGUAGE.UTF-8" > /etc/locale.conf
 
-pacman -S networkmanager networkmanager-runit grub efibootmgr xorg wget git --noconfirm
+pacman -Syy networkmanager networkmanager-runit grub efibootmgr xorg wget git --noconfirm
+[ -n "$encrypt" ] && pacman -S lvm2 cryptsetup && sed -i "s/$(grep '^HOOKS')/HOOKS=(base udev autodetect modconf block encrypt filesystems keyboard lvm2 resume fsck)/" /etc/mkinitcpio.conf && sed -i -e "s/$(grep 'GRUB_CMDLINE_LINUX_DEFAULT')/GRUB_CMDLINE_LINUX_DEFAULT=\"cryptdevice=UUID=$(blkid -s UUID -o value $DEVICE):lvm-system loglevel=3 quiet net.ifnames=0\"/" -e "s/$(grep 'GRUB_ENABLE_CRYPTODISK')/GRUB_ENABLE_CRYPTODISK=y/" /etc/default/grub
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -31,10 +32,4 @@ sed -i "s/#\ %wheel\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
 sed -i "s/#\ %sudo\ ALL=(ALL)\ ALL/%wheel\ ALL=(ALL) ALL/g" /etc/sudoers
 ( echo "$ROOT_PASSWORD" ; echo "$ROOT_PASSWORD" ) | passwd
 
-echo
-pacman -Syu --noconfirm
-
-[ -n "$reboot" ] && loginctl reboot
-[ -n "$shutdown" ] && loginctl poweroff
-echo
-echo 'Installation complete! If you wish to reboot or shutdown, simply enter "loginctl reboot" or "loginctl poweroff" respectively.'
+printf '\n\nInstallation complete! If you wish to reboot or shutdown, simply enter "loginctl reboot" or "loginctl poweroff" respectively.\n'

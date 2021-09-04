@@ -20,7 +20,6 @@
 #'ncmpcpp'
 #'lollypop'
 #'neofetch'
-usermod -aG input "$USER"
 
 sudo pacman -Syu --noconfirm
 paru -S $(cat packages) --noconfirm --needed

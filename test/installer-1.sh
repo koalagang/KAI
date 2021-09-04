@@ -115,38 +115,38 @@ lang () {
     echo "Your language is $LANGUAGE." ; continue_prompt
     export LANGUAGE
 
-    while true; do
-        echo 'It is recommended that you enable en_US in addition to any other languages because some applications only support en_US.'
-        read -p 'Would you like to add additional languages? [Y/n] ' yn
-        case "$yn" in
-            [Yy]* ) read -p 'How many extra languages would you like to add? ' lang_num
-                # ensure that the input is an integer
-                until [ "$lang_num" -eq "$lang_num" 2>/dev/null ]; do
-                    echo 'That is not an integer!'
-                    read -p 'How many extra languages would you like to add? ' lang_num
-                done
-                break ;;
-            [Nn]* ) break ;;
-            '') read -p 'How many extra languages would you like to add? ' lang_num ; break ;;
-            * ) echo 'Please answer "yes" or "no".'
-        esac
-    done
-
-    langs=($(seq 1 "$lang_num" | xargs -I% -n 1 echo 'EXTRA_LANG%'))
-    echo ; echo "The below prompt will repeat $lang_num times so that you can enter every language."
-    [ -n "$lang_num" ] &&
-        for i in "${langs[@]}"; do
-            read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' "${langs[i]}"
-            read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_"${langs[i]}"
-            echo
-            until [ "${langs[i]}" = $CONFIRM_"${langs[i]}" ]; do
-                echo 'Languages did not match!'
-                read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' "${langs[i]}"
-                read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' "${langs[i]}"
-            done
-            export "${langs[i]}"
-        done
-        export lang_num
+#    while true; do
+#        echo 'It is recommended that you enable en_US in addition to any other languages because some applications only support en_US.'
+#        read -p 'Would you like to add additional languages? [Y/n] ' yn
+#        case "$yn" in
+#            [Yy]* ) read -p 'How many extra languages would you like to add? ' lang_num
+#                # ensure that the input is an integer
+#                until [ "$lang_num" -eq "$lang_num" 2>/dev/null ]; do
+#                    echo 'That is not an integer!'
+#                    read -p 'How many extra languages would you like to add? ' lang_num
+#                done
+#                break ;;
+#            [Nn]* ) break ;;
+#            '') read -p 'How many extra languages would you like to add? ' lang_num ; break ;;
+#            * ) echo 'Please answer "yes" or "no".'
+#        esac
+#    done
+#
+#    langs=($(seq 1 5 | xargs -I% -n 1 echo '%'))
+#    echo ; echo "The below prompt will repeat $lang_num times so that you can enter every language."
+#    [ -n "$lang_num" ] &&
+#        for i in "${langs[@]}"; do
+#            read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' EXTRA_LANGUAGE$i
+#            read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' CONFIRM_"${langs[i]}"
+#            echo
+#            until [ "${langs[i]}" = $CONFIRM_"${langs[i]}" ]; do
+#                echo 'Languages did not match!'
+#                read -p 'Enter your language and region (formatted as language_region, e.g. en_GB): ' "${langs[i]}"
+#                read -p 'Re-enter your language and region (formatted as language_region, e.g. en_GB): ' "${langs[i]}"
+#            done
+#            export "${langs[i]}"
+#        done
+#        export lang_num
 }
 
 kernel () {
@@ -208,7 +208,7 @@ encrypt () {
     echo
     echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
     echo "Partitioning $DEVICE..." && printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n\nw' | fdisk "$DEVICE" && echo "Successfully partitioned $DEVICE."
-    echo "Encrypting $DEVICE..." && echo "$ENCRYPTION_PASS" | cryptsetup luksFormat "$DEVICE"2 -q --force-password &&
+    echo "Encrypting $DEVICE..." && echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -q --force-password --type luks1 "$DEVICE"2 &&
         echo "$ENCRYPTION_PASS" | cryptsetup open "$DEVICE"2 cryptlvm &&
         pvcreate /dev/mapper/cryptlvm &&
         vgcreate lvmSystem /dev/mapper/cryptlvm &&
@@ -234,6 +234,8 @@ encrypt () {
     else
         echo "error: failed to mount $DEVICE" && exit 0
     fi
+
+    encrypt=1 && export encrypt && export DEVICE
 }
 
 printf '\nWhen it comes to partitioning, we are going for 128M for the bootloader and the rest will be allocated to the root. There is no need for a swap partition because swap files are far superior. You can see the currently existing paritions above.\n\nWARNING: you are responsible for any loss of data.\nFor this reason, I cannot stress it enough that you should backup anything you wish to keep before continuing!\n' ; continue_prompt
@@ -265,6 +267,7 @@ swap_yes () {
     echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE
     echo "Creating $SWAP_SIZE swapfile..." && fallocate --length "$SWAP_SIZE" /mnt/swapfile &&
         chmod 600 /mnt/swapfile && mkswap /mnt/swapfile && swapon /mnt/swapfile && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && swap_success=1
+    export SWAP_UUID
     if [ "$swap_success" -eq 1 2>/dev/null ]; then
         echo "Successfully created a $SWAP_SIZE swapfile."
     else
@@ -285,19 +288,7 @@ swap () {
     echo
 }
 
-what_next () {
-    echo 'Last question! Would you like to reboot or shutdown your machine once complete or just do nothing and leave the system on?'
-    select answer in 'Reboot' 'Shutdown' 'Do nothing'; do
-        case "$answer" in
-            'Reboot') reboot=1 ; break ;;
-            'Shutdown') shutdown=1 ; break ;;
-            'Do nothing') break
-        esac
-    done
-    echo
-}
-
-partition_format_encrypt_mount ; swap ; what_next
+partition_format_encrypt_mount ; swap
 printf '\nStarting Artix Linux installation.' && sleep 1 && printf '.' && sleep 1 && printf '.' && sleep 1 && printf ' NOW!\n' && sleep 0.5
 
 basestrap /mnt base base-devel runit elogind-runit "$KERNEL" "$KERNEL"-headers linux-firmware --noconfirm
