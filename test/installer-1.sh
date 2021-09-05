@@ -19,7 +19,7 @@ continue_prompt () {
 
 clear
 printf 'Welcome to KAI!\n\nThis script is mainly intended for my own personal use but it is also available here for those who want a quick Artix install or are lazy.\nIf at any point you wish to cancel then simply press ctrl+c.\n' ; continue_prompt
-printf 'Please make sure that you have root privilidges before continuing. If you have not already done so then exit by saying no to the below prompt and then just type `su` and enter the password: `artix`\nAfter doing so, reinitiate the script.\n' ; continue_prompt
+printf 'Please make sure that you have root privilidges before continuing. If you have not already done so then exit by saying no to the below prompt and then just type `su`.\nAfter doing so, reinitiate the script.\n' ; continue_prompt
 printf "So that you don't waste your time, I would like to say this right away: this script does not support dual-booting or MBR/BIOS systems (it may support these in the future but I'm not guaranteeing it). Also this script is for Artix runit (i.e. does not support OpenRC or s6; may support this in the future as well).\n\nThe default option for all the yes/no prompts like the one below is, as indicated by the capital Y, yes - this means that if you press return instead of inputing 'y' or 'n' then it will take your answer as a 'yes'.\n" ; continue_prompt
 
 printf "Because I originally made this mainly for my own personal use, I've made some custom installers for myself. You should probably go and select the first option in the below prompt.\n"
@@ -235,7 +235,6 @@ encrypt () {
         echo "error: failed to mount $DEVICE" && exit 0
     fi
 
-    encryption_packages='lvm2 cryptsetup'
     encrypt=1 && export encrypt && export DEVICE
 }
 
@@ -263,31 +262,22 @@ partition_format_encrypt_mount () {
     echo
 }
 
-swap_yes () {
-    echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE
-    echo "Creating $SWAP_SIZE swapfile..." && fallocate --length "$SWAP_SIZE" /mnt/swapfile &&
-        chmod 600 /mnt/swapfile && mkswap /mnt/swapfile && swapon /mnt/swapfile && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && swap_success=1
-    if [ -n "$swap_success" ]; then
-        echo "Successfully created a $SWAP_SIZE swapfile."
-    else
-        echo 'error: failed to create swap.' && exit 0
-    fi
-}
-
 swap () {
     while true; do
         read -p 'Would you like to create a swap file? [Y/n] ' yn
         case "$yn" in
-            [Yy]* ) swap_yes ; break ;;
+            [Yy]* ) echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE ; break ;;
             [Nn]* ) break ;;
-            '') swap_yes ; break ;;
+            '') echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE ; break ;;
             * ) echo 'Please answer "yes" or "no".'
         esac
     done
+    [ -n "$SWAP_SIZE" ] && export SWAP_SIZE
     echo
 }
 
 partition_format_encrypt_mount ; swap
+
 printf '\nStarting Artix Linux installation.' && sleep 1 && printf '.' && sleep 1 && printf '.' && sleep 1 && printf ' NOW!\n' && sleep 0.5
 
 basestrap /mnt base base-devel runit elogind-runit "$KERNEL" "$KERNEL"-headers linux-firmware --noconfirm
