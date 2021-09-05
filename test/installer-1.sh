@@ -19,8 +19,8 @@ continue_prompt () {
 
 clear
 printf 'Welcome to KAI!\n\nThis script is mainly intended for my own personal use but it is also available here for those who want a quick Artix install or are lazy.\nIf at any point you wish to cancel then simply press ctrl+c.\n' ; continue_prompt
-printf 'Also, please make sure that you have root privilidges before continuing. If you have not already done so then exit by saying no to the below prompt and then just type `su` and enter the password: `artix`\nAfter doing so, reinitiate the script.\n' ; continue_prompt
-printf "So that you don't waste your time, I would like to say this right away: this script does not support dual-booting or MBR/BIOS systems (it may support these in the future but I'm not guaranteeing it) Also this script is for Artix runit (i.e. does not support OpenRC or s6; may support this in the future as well).\nAlso the default option for all the yes/no prompts like the one below is, as indicated by the capital Y, yes - this means that if you press return instead of inputing 'y' or 'n' then it will take your answer as a 'yes'.\n" ; continue_prompt
+printf 'Please make sure that you have root privilidges before continuing. If you have not already done so then exit by saying no to the below prompt and then just type `su` and enter the password: `artix`\nAfter doing so, reinitiate the script.\n' ; continue_prompt
+printf "So that you don't waste your time, I would like to say this right away: this script does not support dual-booting or MBR/BIOS systems (it may support these in the future but I'm not guaranteeing it). Also this script is for Artix runit (i.e. does not support OpenRC or s6; may support this in the future as well).\n\nThe default option for all the yes/no prompts like the one below is, as indicated by the capital Y, yes - this means that if you press return instead of inputing 'y' or 'n' then it will take your answer as a 'yes'.\n" ; continue_prompt
 
 printf "Because I originally made this mainly for my own personal use, I've made some custom installers for myself. You should probably go and select the first option in the below prompt.\n"
 select answer in 'Guided install (recommended)' "Koala's desktop install" "Koala's ThinkPad install"; do
@@ -240,7 +240,6 @@ encrypt () {
 }
 
 printf '\nWhen it comes to partitioning, we are going for 128M for the bootloader and the rest will be allocated to the root. There is no need for a swap partition because swap files are far superior. You can see the currently existing paritions above.\n\nWARNING: you are responsible for any loss of data.\nFor this reason, I cannot stress it enough that you should backup anything you wish to keep before continuing!\n' ; continue_prompt
-echo 'Do you wish to encrypt the drive?'
 partition_format_encrypt_mount () {
     lsblk
     read -p 'Enter the name of the device you wish to install Artix on? (e.g. /dev/sda, /dev/sdb, etc): ' DEVICE
