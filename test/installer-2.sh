@@ -16,7 +16,7 @@ locale-gen
 echo "LANG=$LANGUAGE.UTF-8" > /etc/locale.conf
 
 pacman -Syy networkmanager networkmanager-runit grub efibootmgr xorg wget git --noconfirm
-[ -n "$encrypt" ] && sed -i "s/$(grep '^HOOKS' /etc/mkinitcpio.conf)/HOOKS=(base udev autodetect modconf block encrypt filesystems keyboard lvm2 fsck)/" /etc/mkinitcpio.conf && sed -i -e "s/$(grep 'GRUB_CMDLINE_LINUX_DEFAULT' /etc/default/grub)/GRUB_CMDLINE_LINUX_DEFAULT=\"cryptdevice=UUID=$(blkid -s UUID -o value $DEVICE):lvm-system loglevel=3 quiet net.ifnames=0\"/" -e "s/$(grep 'GRUB_ENABLE_CRYPTODISK' /etc/default/grub)/GRUB_ENABLE_CRYPTODISK=y/" /etc/default/grub
+[ -n "$encrypt" ] && pacman -S lvm2 cryptsetup && sed -i "s/$(grep '^HOOKS' /etc/mkinitcpio.conf)/HOOKS=(base udev autodetect modconf block encrypt filesystems keyboard lvm2 fsck)/" /etc/mkinitcpio.conf && sed -i -e "s/$(grep 'GRUB_CMDLINE_LINUX_DEFAULT' /etc/default/grub)/GRUB_CMDLINE_LINUX_DEFAULT=\"cryptdevice=UUID=$(blkid -s UUID -o value $DEVICE):lvm-system loglevel=3 quiet net.ifnames=0\"/" -e "s/$(grep 'GRUB_ENABLE_CRYPTODISK' /etc/default/grub)/GRUB_ENABLE_CRYPTODISK=y/" /etc/default/grub
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 grub-mkconfig -o /boot/grub/grub.cfg
 

@@ -213,7 +213,7 @@ encrypt () {
         pvcreate /dev/mapper/cryptlvm &&
         vgcreate lvmSystem /dev/mapper/cryptlvm &&
         lvcreate -l 100%FREE lvmSystem -n root && encryption_success=1
-    if [ "$encryption_success" -eq 1 2>/dev/null ]; then
+    if [ -n "$encryption_success" ]; then
         echo "Successfully encrypted $DEVICE."
     else
         echo "error: failed to encrypt $DEVICE" && exit 0
@@ -221,7 +221,7 @@ encrypt () {
 
     echo "Formatting $DEVICE..." &&
         mkfs.ext4 /dev/lvmSystem/root -L root && mkfs.fat -F32 "$DEVICE"1 && format_success=1
-    if [ "$format_success" -eq 1 2>/dev/null ]; then
+    if [ -n "$format_success" ]; then
         echo "Successfully formatted $DEVICE."
     else
         echo "error: failed to format $DEVICE" && exit 0
@@ -229,7 +229,7 @@ encrypt () {
 
     echo "Mounting $DEVICE..." && mount /dev/lvmSystem/root /mnt &&
         mkdir -p /mnt/boot && mount "$DEVICE"1 /mnt/boot && mount_success=1
-    if [ "$mount_success" -eq 1 2>/dev/null ]; then
+    if [ -n "$mount_success" ]; then
         echo "Successfully mounted $DEVICE."
     else
         echo "error: failed to mount $DEVICE" && exit 0
@@ -268,7 +268,7 @@ swap_yes () {
     echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE
     echo "Creating $SWAP_SIZE swapfile..." && fallocate --length "$SWAP_SIZE" /mnt/swapfile &&
         chmod 600 /mnt/swapfile && mkswap /mnt/swapfile && swapon /mnt/swapfile && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && swap_success=1
-    if [ "$swap_success" -eq 1 2>/dev/null ]; then
+    if [ -n "$swap_success" ]; then
         echo "Successfully created a $SWAP_SIZE swapfile."
     else
         echo 'error: failed to create swap.' && exit 0
@@ -291,6 +291,6 @@ swap () {
 partition_format_encrypt_mount ; swap
 printf '\nStarting Artix Linux installation.' && sleep 1 && printf '.' && sleep 1 && printf '.' && sleep 1 && printf ' NOW!\n' && sleep 0.5
 
-basestrap /mnt base base-devel runit elogind-runit "$KERNEL" "$KERNEL"-headers linux-firmware "$encryption_packages" --noconfirm
+basestrap /mnt base base-devel runit elogind-runit "$KERNEL" "$KERNEL"-headers linux-firmware --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv installer-2.sh /mnt && artix-chroot /mnt ./installer-2.sh
