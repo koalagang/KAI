@@ -26,8 +26,8 @@ printf "Because I originally made this mainly for my own personal use, I've made
 select answer in 'Guided install (recommended)' "Koala's desktop install" "Koala's ThinkPad install"; do
     case "$answer" in
         'Guided install (recommended)') break ;;
-        "Koala's desktop install") HOST='Alfheim' ; export HOST ; ./koala/koala-personal-installer-1.sh ; exit 0 ;;
-        "Koala's ThinkPad install") HOST='Asgard' ; export HOST ; ./koala/koala-personal-installer-1.sh ; exit 0
+        "Koala's desktop install") HOST='Alfheim' ; export HOST ; ./koala-personal/koala-personal-installer-1.sh ; exit 0 ;;
+        "Koala's ThinkPad install") HOST='Asgard' ; export HOST ; ./koala-personal/koala-personal-installer-1.sh ; exit 0
     esac
 done
 echo
