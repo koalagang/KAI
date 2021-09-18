@@ -15,17 +15,18 @@ sed -i "s/#$LANGUAGE\ ISO-8859-1/$LANGUAGE\ ISO-8859-1/" /etc/locale.gen
 locale-gen
 echo "LANG=$LANGUAGE.UTF-8" > /etc/locale.conf
 
-[ -n "$SWAP_SIZE" ] && fallocate --length "$SWAP_SIZE" /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile && cp /etc/fstab /etc/fstab.bak && echo '/swapfile none swap defaults 0 0' >> /etc/fstab
+[ -n "$SWAP" ] && echo 'Creating swapfile...' &&
+    dd if=/dev/zero of=/swapfile bs=1M count="$(free -m | awk 'NR==2 {print $NF}')" status=progress && chmod 600 /swapfile &&
+    mkswap /swapfile && swapon /swapfile && cp /etc/fstab /etc/fstab.bak && echo '/swapfile none swap defaults 0 0' >> /etc/fstab && echo 'Successfully created swapfile!'
 
 pacman -Syy networkmanager networkmanager-runit grub efibootmgr xorg --noconfirm
 
-[ -n "$encrypt" ] && pacman -S lvm2 cryptsetup --noconfirm && cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak && cp /etc/default/grub /etc/default/grub.bak &&
-    sed -i "s+$(grep '^HOOKS' /etc/mkinitcpio.conf)+HOOKS=(base udev autodetect modconf block encrypt filesystems resume keyboard lvm2 fsck)+" /etc/mkinitcpio.conf &&
-    [ -z "$SWAP_SIZE" ] && sed -i 's/ resume//' /etc/mkinitcpio.conf ; mkinitcpio -p "$KERNEL" &&
-    sed -i -e "s+$(grep 'GRUB_CMDLINE_LINUX_DEFAULT' /etc/default/grub)+GRUB_CMDLINE_LINUX_DEFAULT=\"cryptdevice=UUID=$(blkid -s UUID -o value "$DEVICE"2):cryptlvm\"+" -e "s+$(grep 'GRUB_ENABLE_CRYPTODISK' /etc/default/grub)+GRUB_ENABLE_CRYPTODISK=y+" /etc/default/grub &&
-
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub --recheck "$DEVICE"
-grub-mkconfig -o /boot/grub/grub.cfg
+[ -n "$encrypt" ] && echo 'Configuring mkinitcpio...' && pacman -S lvm2 cryptsetup --noconfirm && cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak && cp /etc/default/grub /etc/default/grub.bak &&
+    sed -i "s+$(grep '^HOOKS' /etc/mkinitcpio.conf)+HOOKS=(base udev autodetect modconf block encrypt filesystems keyboard lvm2 fsck)+" /etc/mkinitcpio.conf &&
+    mkinitcpio -p "$KERNEL" && echo 'Successfully configured mkinitcpio!' && echo 'Configuring grub...' && cp /etc/default/grub /etc/default/grub.bak &&
+    sed -i -e "s+$(grep 'GRUB_CMDLINE_LINUX' /etc/default/grub)+GRUB_CMDLINE=\"cryptdevice=/dev/sda2:cryptlvm\"+" -e "s+$(grep 'GRUB_ENABLE_CRYPTODISK' /etc/default/grub)+GRUB_ENABLE_CRYPTODISK=y+" /etc/default/grub &&
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub --recheck "$DEVICE" &&
+grub-mkconfig -o /boot/grub/grub.cfg && echo 'Successfully configured grub!'
 
 echo "$HOST" > /etc/hostname
 printf '127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t %s.localdomain \t %s' "$HOST" "$HOST" > /etc/hosts

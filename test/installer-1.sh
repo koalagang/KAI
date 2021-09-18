@@ -150,7 +150,7 @@ lang () {
 }
 
 kernel () {
-    echo 'Which kernel would you like to use?'
+    printf '\nWhich kernel would you like to use?\nlinux-lts is recommended for users of the Nvidia proprietary drivers.\n'
     select answer in 'linux' 'linux-lts' 'linux-zen' 'linux-hardened'; do
         case "$answer" in
             'linux') KERNEL='linux' ; break ;;
@@ -266,13 +266,13 @@ swap () {
     while true; do
         read -p 'Would you like to create a swap file? [Y/n] ' yn
         case "$yn" in
-            [Yy]* ) echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE ; break ;;
+            [Yy]* ) SWAP=1 ; break ;;
             [Nn]* ) break ;;
-            '') echo 'The recommended swap size is the size of your RAM +1GB.' ; read -p 'Enter swap size: ' SWAP_SIZE ; break ;;
+            '') SWAP=1 ; break ;;
             * ) echo 'Please answer "yes" or "no".'
         esac
     done
-    [ -n "$SWAP_SIZE" ] && export SWAP_SIZE
+    [ -n "$SWAP" ] && export SWAP
     echo
 }
 
