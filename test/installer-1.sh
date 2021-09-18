@@ -220,7 +220,7 @@ encrypt () {
     fi
 
     echo "Formatting $DEVICE..." &&
-        mkfs.ext4 /dev/lvmSystem/root -L root && mkfs.fat -F32 "$DEVICE"1 && format_success=1
+        mkfs.ext4 -F /dev/lvmSystem/root -L root && mkfs.fat -F32 "$DEVICE"1 && format_success=1
     if [ -n "$format_success" ]; then
         echo "Successfully formatted $DEVICE."
     else
@@ -250,7 +250,7 @@ partition_format_encrypt_mount () {
             [Nn]* ) echo "THE CONTENTS OF $DEVICE IS ABOUT TO BE DELETED. YOU WILL LOSE ALL DATA ON $DEVICE AND THERE WILL BE NO GOING BACK!" ; continue_prompt
                 printf 'o\nn\np\n1\n\n+128M\nn\np\n2\n\n\nw' | fdisk "$DEVICE"
                 mkfs.fat -F32 "$DEVICE"1 -n boot
-                mkfs.ext4 "$DEVICE"2 -L root
+                mkfs.ext4 -F "$DEVICE"2 -L root
                 mount "$DEVICE"2 /mnt
                 mkdir -p /mnt/boot
                 mount "$DEVICE"1 /mnt/boot
