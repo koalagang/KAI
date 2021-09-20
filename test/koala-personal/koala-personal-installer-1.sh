@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-read -p 'What is the name of the device you wish to install Artix on? (e.g. /dev/sda, /dev/sdb/, /dev/sdx, etc) ' DEVICE
+lsblk
+read -p 'What is the name of the device you wish to install Artix on? (e.g. /dev/sda, /dev/sdb/, /dev/sdx, etc) ' DEVICE && export DEVICE
 
-USERNAME = 'gabriel' && export USERNAME
+USERNAME='gabriel' && export USERNAME
 
 read -s -p 'Enter your user password: ' PASSWORD
 read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD
@@ -24,17 +25,6 @@ done
 export ROOT_PASSWORD
 echo
 
-read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS
-read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS
-until [ "$ENCRYPTION_PASS" = "$CONFIRM_ENCRYPTION_PASS" ]; do
-    echo 'Encryption keys did not match!'
-    read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS
-    read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS
-done
-export ENCRYPTION_PASS
-echo
-
-echo
 read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS ; echo
 read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
 until [ "$ENCRYPTION_PASS" = "$CONFIRM_ENCRYPTION_PASS" ]; do
@@ -57,7 +47,7 @@ else
 fi
 
 echo "Formatting $DEVICE..." &&
-    mkfs.ext4 /dev/lvmSystem/root -L root && mkfs.fat -F32 "$DEVICE"1 && format_success=1
+    mkfs.ext4 -F /dev/lvmSystem/root -L root && mkfs.fat -F32 "$DEVICE"1 && format_success=1
 if [ -n "$format_success" ]; then
     echo "Successfully formatted $DEVICE."
 else
@@ -72,9 +62,8 @@ else
     echo "error: failed to mount $DEVICE" && exit 0
 fi
 
-encrypt=1 && export encrypt && export DEVICE
+encrypt=1 && export encrypt
 
 basestrap /mnt base base-devel runit elogind-runit linux-lts linux-lts-headers linux-firmware --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
-artix-chroot /mnt ./koala-personal-installer-2.sh
-mv koala-personal/koala-personal-installer-2.sh /mnt && artix-chroot /mnt ./koala-personal-installer-installer-2.sh
+mv koala-personal/koala-personal-installer-2.sh /mnt && artix-chroot /mnt ./koala-personal-installer-2.sh
