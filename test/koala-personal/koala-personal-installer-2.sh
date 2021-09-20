@@ -20,13 +20,12 @@ echo 'Creating swapfile...' &&
 
 pacman -Syy networkmanager networkmanager-runit grub efibootmgr xorg git --noconfirm
 
-pacman -Syy networkmanager networkmanager-runit grub efibootmgr xorg --noconfirm
 # there's no need to install amd-ucode manually for amd users because it comes as a part of linux-firmware but intel-ucode does not so we need to manually install that for intel users
 [ "$HOST" = 'Asgard' ] && pacman -S intel-ucode --noconfirm
 
 echo 'Configuring mkinitcpio...' && pacman -S lvm2 cryptsetup --noconfirm && cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak && cp /etc/default/grub /etc/default/grub.bak &&
     sed -i "s+$(grep '^HOOKS' /etc/mkinitcpio.conf)+HOOKS=(base udev autodetect modconf block encrypt filesystems keyboard lvm2 fsck)+" /etc/mkinitcpio.conf &&
-    mkinitcpio -p "$KERNEL" && echo 'Successfully configured mkinitcpio!' &&
+    mkinitcpio -p linux-lts && echo 'Successfully configured mkinitcpio!' &&
     echo 'Configuring grub...' && cp /etc/default/grub /etc/default/grub.bak &&
     sed -i -e "s+$(grep -w 'GRUB_CMDLINE_LINUX' /etc/default/grub)+GRUB_CMDLINE_LINUX=\"cryptdevice=/dev/sda2:cryptlvm\"+" \
     -e "s+$(grep 'GRUB_ENABLE_CRYPTODISK' /etc/default/grub)+GRUB_ENABLE_CRYPTODISK=y+" /etc/default/grub

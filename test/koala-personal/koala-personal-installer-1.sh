@@ -5,22 +5,22 @@ read -p 'What is the name of the device you wish to install Artix on? (e.g. /dev
 
 USERNAME='gabriel' && export USERNAME
 
-read -s -p 'Enter your user password: ' PASSWORD
-read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD
+read -s -p 'Enter your user password: ' PASSWORD ; echo
+read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD ; echo
 until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
     echo 'Passwords did not match!'
-    read -s -p 'Enter your user password: ' PASSWORD
-    read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD
+    read -s -p 'Enter your user password: ' PASSWORD ; echo
+    read -s -p 'Re-enter your user password: ' CONFIRM_PASSWORD ; echo
 done
 export PASSWORD
 echo
 
-read -s -p 'Enter your root password: ' ROOT_PASSWORD
-read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD
+read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
+read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
 until [ "$ROOT_PASSWORD" = "$CONFIRM_ROOT_PASSWORD" ]; do
     echo 'Passwords did not match!'
-    read -s -p 'Enter your root password: ' ROOT_PASSWORD
-    read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD
+    read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
+    read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
 done
 export ROOT_PASSWORD
 echo
