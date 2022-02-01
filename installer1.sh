@@ -90,4 +90,4 @@ echo 'Mounting /dev/sda1' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit cups cups-runit connman-runit $wifi_pkg \
     grub efibootmgr xorg xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
-mv koala-personal/koala-personal-installer-2.sh /mnt && artix-chroot /mnt ./koala-personal-installer-2.sh
+mv kai/installer2.sh /mnt && artix-chroot /mnt ./installer2.sh
