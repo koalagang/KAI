@@ -87,6 +87,6 @@ echo 'Mounting /dev/sda1' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 [ "$HOST_NAME" = 'Asgard' ] && wifi_pkg='iwd'
 
 basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit cups cups-runit connman-runit $wifi_pkg \
-    grub efibootmgr xorg xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber git --noconfirm
+    grub efibootmgr xorg xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber curl wget git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv kai/installer2.sh /mnt && artix-chroot /mnt ./installer2.sh

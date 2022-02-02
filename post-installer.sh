@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-sudo pacman -Syu --noconfirm
-echo 'Installing paru aur helper...' && git clone https://aur.archlinux.org/paru install-paru && sh -c "cd 'install-paru' && makepkg -si" && sudo rm -rf install-paru
-yes | paru -S paru-bin # replace paru package with a pre-compiled binary
+# these should already be installed but let's just double-check that we have them all
+sudo pacman git curl base base-devel -Syu --noconfirm --needed
+
+# install paru (using baph so that we don't have to compile it)
+curl -sL 'https://raw.githubusercontent.com/PandaFoss/baph/master/baph' -o "$HOME/baph" && chmod +x baph
+./baph -nN -i paru-bin
+rm "$HOME/baph"
 
 # configure pacman to support lib32 and have parallel downloads and pretty colours ;)
 sudo cp --backup=numbered /etc/pacman.conf /etc/pacman.conf.bak && echo '/etc/pacman.conf has been safely backed up!'
@@ -18,16 +22,16 @@ readarray -t progs < 'progs.txt'
 paru -S "${progs[@]}" --noconfirm --needed
 git clone https://github.com/koalagang/suckless-koala.git
 if [ "$HOST" = 'Alfheim' ]; then
-    sudo make install -C suckless-skoala/dwm
-    sudo make install -C suckless-skoala/dwmblocks
+    sudo make install -C suckless-koala/dwm
+    sudo make install -C suckless-koala/dwmblocks
 elif [ "$HOST" = 'Asgard' ]; then
-    sudo make install -C suckless-skoala/think-dwm
-    sudo make install -C suckless-skoala/think-dwmblocks
+    sudo make install -C suckless-koala/think-dwm
+    sudo make install -C suckless-koala/think-dwmblocks
 fi
-sudo make install -C suckless-skoala/dmenu
-sudo make install -C suckless-skoala/slock
-sudo make install -C suckless-skoala/st
-sudo make install -C suckless-skoala/sxiv
+sudo make install -C suckless-koala/dmenu
+sudo make install -C suckless-koala/slock
+sudo make install -C suckless-koala/st
+sudo make install -C suckless-koala/sxiv
 sudo rm -rf suckless-koala
 
 # configure shells
@@ -47,7 +51,7 @@ git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
 sudo cat hosts >> /etc/hosts
 echo 'permit persist :wheel' > /etc/doas.conf && chown -c root:root '/etc/doas.conf' && chmod 0444 '/etc/doas.conf'
 sudo curl -sL 'https://raw.githubusercontent.com/koalagang/doasedit/main/doasedit' -o /usr/bin/doasedit && chmod +x /usr/bin/doasedit
-sudo pacman -R sudo && doas ln -s /usr/bin/doas /usr/bin/sudo
+sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo
 
 # clear cache
 paru -c && doas paccache -r && doas paccache -ruk0
