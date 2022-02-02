@@ -21,8 +21,7 @@ mkinitcpio -p linux
 
 echo 'Configuring and installing grub...'
 cp /etc/default/grub /etc/default/grub.bak &&
-echo 'Configuring grub...' && cp /etc/default/grub /etc/default/grub.bak &&
-sed -i -e "s#$(grep -w 'GRUB_CMDLINE_LINUX')#GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$(blkid -s UUID -o value /dev/sda2):cryptroot root=/dev/mapper/cryptroot#" \
+sed -i -e "s#$(grep -w 'GRUB_CMDLINE_LINUX' /etc/default/grub)#GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$(blkid -s UUID -o value /dev/sda2):cryptroot root=/dev/mapper/cryptroot#" \
     -e 's#GRUB_ENABLE_CRYPTODISK#GRUB_ENABLE_CRYPTODISK=y#' /etc/default/grub
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg
 

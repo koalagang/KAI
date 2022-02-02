@@ -8,11 +8,11 @@ select answer in 'Alfheim (PC)' 'Asgard (ThinkPad)'; do
 done
 
 echo
-read -p 'Enter your username: ' USERNAME ; echo
+read -p 'Enter your username: ' USERNAME
 read -p 'Re-enter your user password: ' CONFIRM_USERNAME ; echo
 until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
     echo 'Passwords did not match!'
-    read -p 'Enter your user password: ' USERNAME ; echo
+    read -p 'Enter your user password: ' USERNAME
     read -p 'Re-enter your user password: ' CONFIRM_USERNAME ; echo
 done
 export USERNAME
