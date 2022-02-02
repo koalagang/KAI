@@ -1,7 +1,8 @@
 # Koala's Artix Installer (KAI)
 ## DISCLAIMER
 
-This installer has been developed for **MY OWN** convenience. You are free to fork it or use it but it has been designed for my system and my preferences; I will not tailor this software to anyone but my own needs. **Any breakages are on you.**\
+This installer has been developed for **MY OWN** convenience. You are free to fork it or use it but it has been designed for my system and my preferences; I will not tailor this software to anyone but my own needs. **Any breakages you experience from using this software are on you.**
+
 I personally recommend that you learn how to install Artix Linux the manual way. If you really want an easy Artix install then download one of the [Artix isos](https://artixlinux.org/download.php) which comes with a desktop environment.
 
 This script installs the runit version of Artix.\

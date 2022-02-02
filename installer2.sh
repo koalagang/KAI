@@ -62,7 +62,7 @@ if [ "$HOST_NAME" = 'Asgard' ]; then
     SWAP_DIR="/home/$USERNAME/.local/share" # use the home for swap because the root is on an SSD
 elif [ "$HOST_NAME" = 'Alfheim' ]; then
     SWAP_COUNT=15260 # 16GB
-    SWAP_DIR="/var/swapfile"
+    SWAP_DIR='/var/swapfile'
 fi
 
 # generate a swapfile
@@ -71,7 +71,7 @@ cp /etc/fstab /etc/fstab.bak
 dd if=/dev/zero of="$SWAP_DIR" bs=1M count=$SWAP_COUNT status=progress && chmod 600 /var/swapfile
 mkswap "$SWAP_DIR" && swapon "$SWAP_DIR" && printf '\n# swapfile\n%s none swap defaults 0 0' "$SWAP_DIR" >> /etc/fstab
 
-git clone https://github.com/koalagang/kai.git "/home/$USERNAME/kai"
+sudo -u "$USERNAME" git clone https://github.com/koalagang/kai.git "/home/$USERNAME/kai"
 
 printf '\n\nInstallation complete! If you wish to reboot or shutdown, simply enter "loginctl reboot" or "loginctl poweroff" respectively.\n'
 echo 'KAI has been cloned into your home directory so that you can install extra packages using paru without being root.'
