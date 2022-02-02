@@ -2,18 +2,18 @@
 
 select answer in 'Alfheim (PC)' 'Asgard (ThinkPad)'; do
     case "$answer" in
-        'Alfheim (PC)') HOST_NAME='Alfheim' ; export HOST_NAME ;;
-        'Asgard (ThinkPad)') HOST_NAME='Asgard' ; export HOST_NAME
+        'Alfheim (PC)') HOST_NAME='Alfheim' ; export HOST_NAME ; break ;;
+        'Asgard (ThinkPad)') HOST_NAME='Asgard' ; export HOST_NAME ; break
     esac
 done
 
 echo
-read -s -p 'Enter your username: ' USERNAME ; echo
-read -s -p 'Re-enter your user password: ' CONFIRM_USERNAME ; echo
+read -p 'Enter your username: ' USERNAME ; echo
+read -p 'Re-enter your user password: ' CONFIRM_USERNAME ; echo
 until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
     echo 'Passwords did not match!'
-    read -s -p 'Enter your user password: ' USERNAME ; echo
-    read -s -p 'Re-enter your user password: ' CONFIRM_USERNAME ; echo
+    read -p 'Enter your user password: ' USERNAME ; echo
+    read -p 'Re-enter your user password: ' CONFIRM_USERNAME ; echo
 done
 export USERNAME
 echo
@@ -52,8 +52,8 @@ while true; do
     printf '\nWARNING: shredding your devices will wipe ALL data!\n'
     read -p 'Do you wish to shred your device(s)? [y/N] ' yn
     case "$yn" in
-        [Yy]* ) shred -f /dev/sda
-            [ "$HOST_NAME" = 'Asgard' ] && shred -f /dev/sdb
+        [Yy]* ) shred -fv /dev/sda
+            [ "$HOST_NAME" = 'Asgard' ] && shred -fv /dev/sdb
             break ;;
         [Nn]* ) break ;;
         '') break ;;

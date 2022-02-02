@@ -75,6 +75,8 @@ ucollage
 ueberzug
 unclutter
 unzip
+virtualbox
+virtualbox-host-dkms
 vit
 wget
 wikicurses

@@ -9,7 +9,7 @@ sudo cp --backup=numbered /etc/pacman.conf /etc/pacman.conf.bak && echo '/etc/pa
 if [ "$HOST" = 'Alfheim' ]; then
     sudo cat arch-repos.txt >> /etc/pacman.conf
     sudo sed -i 's/#[lib32]/[lib32]/' /etc/pacman.conf && grep -A1 -n '\[lib32\]' /etc/pacman.conf | tail -1 | cut -d'-' -f1 | xargs -I% sudo sed -i '%s/#//' /etc/pacman.conf
-    sudo pacman -Syu lib32-artix-archlinux-support virtualbox virtualbox-host-dkms --noconfirm
+    sudo pacman -Syu lib32-artix-archlinux-support --noconfirm
 fi
 sudo sed -i -e "s/#ParralelDownloads = 5/ParallelDownloads = 20/" -e 's/#Color/Color/' /etc/pacman.conf
 

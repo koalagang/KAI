@@ -14,16 +14,6 @@ sed -i "s/#nb_NO\ ISO-8859-1/nb_NO\ ISO-8859-1/g" /etc/locale.gen
 locale-gen
 echo 'LANG=en_GB.UTF-8' > /etc/locale.conf
 
-echo 'Generating swapfile...'
-if [ "$HOST_NAME" = 'Asgard' ]; then
-    SWAP_COUNT=7630
-elif [ "$HOST_NAME" = 'Alfheim' ]; then
-    SWAP_COUNT=15260
-fi
-cp /etc/fstab /etc/fstab.bak
-dd if=/dev/zero of=/var/swapfile bs=1M count=$SWAP_COUNT status=progress && chmod 600 /var/swapfile
-mkswap /var/swapfile && swapon /var/swapfile && printf '\n# swapfile\n/var/swapfile none swap defaults 0 0' >> /etc/fstab
-
 echo 'Configuring mkinitcpio...'
 cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak
 sed -i "s/$(grep '^HOOKS' /etc/mkinitcpio.conf)/HOOKS=(base udev autodetect modconf block encrypt filesystems keyboard fsck)/" /etc/mkinitcpio.conf
@@ -67,10 +57,21 @@ if [ "$HOST_NAME" = 'Asgard' ]; then
         printf '#!/bin/sh\n# trim all mounted file systems which support it\n/sbin/fstrim --all || true' > /etc/cron.weekly/fstrim &&
         chmod a+x /etc/cron.weekly/fstrim
     echo 'Installing intel-ucode...' && pacman -Syu intel-ucode --noconfirm
+
+    SWAP_COUNT=7630
+    SWAP_DIR="/home/$USERNAME/.local/share"
+elif [ "$HOST_NAME" = 'Alfheim' ]
+    SWAP_COUNT=15260
+    SWAP_DIR="/var/swapfile"
 fi
+
+echo 'Generating swapfile...'
+cp /etc/fstab /etc/fstab.bak
+dd if=/dev/zero of="$SWAP_DIR" bs=1M count=$SWAP_COUNT status=progress && chmod 600 /var/swapfile
+mkswap "$SWAP_DIR" && swapon "$SWAP_DIR" && printf '\n# swapfile\n%s none swap defaults 0 0' "$SWAP_DIR" >> /etc/fstab
 
 git clone https://github.com/koalagang/kai.git "/home/$USERNAME/kai"
 
 printf '\n\nInstallation complete! If you wish to reboot or shutdown, simply enter "loginctl reboot" or "loginctl poweroff" respectively.\n'
 echo 'KAI has been cloned into your home directory so that you can install extra packages using paru without being root.'
-rm /koala-personal-installer-2.sh
+rm /installer2.sh
