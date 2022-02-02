@@ -6,7 +6,6 @@ sudo pacman git curl base base-devel -Syu --noconfirm --needed
 # install paru (using baph so that we don't have to compile it)
 curl -sL 'https://raw.githubusercontent.com/PandaFoss/baph/master/baph' -o baph && chmod +x baph
 ./baph -nN -i paru-bin
-rm baph
 
 # configure pacman to support lib32 and have parallel downloads and pretty colours ;)
 sudo cp --backup=numbered /etc/pacman.conf /etc/pacman.conf.bak && echo '/etc/pacman.conf has been safely backed up!'
@@ -30,17 +29,15 @@ sudo make install -C suckless-koala/dmenu
 sudo make install -C suckless-koala/slock
 sudo make install -C suckless-koala/st
 sudo make install -C suckless-koala/sxiv
-sudo rm -rf suckless-koala
 
 # configure shells
 sudo ln -sfT /bin/dash /bin/sh && cp bash2dash.hook /usr/share/libalmpm/hooks/bash2dash.hook
 sudo chsh -s /bin/zsh
-rm .bash*
+rm "$HOME"/.bash*
 
 # set up file structure
 git clone https://github.com/koalagang/dotfiles.git
 mv dotfiles/* $HOME
-rm -rf dotfiles
 mkdir -p "$HOME/Desktop/git/dotfiles"
 git clone --bare https://github.com/koalagang/dotfiles.git "$HOME/Desktop/git/dotfiles/dotfiles"
 git --git-dir=$HOME/Desktop/git/dotfiles/dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
@@ -55,3 +52,6 @@ sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo
 
 # clear cache
 paru -c && doas paccache -r && doas paccache -ruk0
+
+cd
+rm -rf kai

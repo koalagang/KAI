@@ -61,15 +61,16 @@ while true; do
 done
 echo
 
-echo "Partitioning /dev/sda..." && printf 'g\nn\np\n1\n\n+128M\nn\np\n2\n\n\nw' | fdisk /dev/sda
+echo "Partitioning /dev/sda..." && printf 'g\nn\np\n1\n\n+128M\nn\np\n2\n\n\nw' | fdisk /dev/sda >/dev/null
 echo "Encrypting /dev/sda2..."
 # cryptsetup defaults to using a 512-bit key
 # see https://security.stackexchange.com/a/40218 for why I choose to use a 256-bit key
+# use luks1 because grub does not fully support luks2
 echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --type luks1 /dev/sda2
 echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sda2 cryptroot
 
 if [ "$HOST_NAME" = 'Asgard' ]; then
-    echo "Partitioning /dev/sdb..." && printf 'g\nn\n\n\nw' | fdisk /dev/sda
+    echo "Partitioning /dev/sdb..." && printf 'g\nn\n\n\nw' | fdisk /dev/sda >/dev/null
     echo "Encrypting /dev/sdb1..."
     echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --type luks1 /dev/sdb1
     echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sdb1 crypthome
