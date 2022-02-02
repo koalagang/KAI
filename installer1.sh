@@ -8,49 +8,48 @@ select answer in 'Alfheim (PC)' 'Asgard (ThinkPad)'; do
 done
 
 echo
-read -p 'Enter your username: ' USERNAME
-read -p 'Re-enter your user password: ' CONFIRM_USERNAME ; echo
+read -p 'Enter username: ' USERNAME
+read -p 'Confirm username: ' CONFIRM_USERNAME
 until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
-    echo 'Passwords did not match!'
-    read -p 'Enter your user password: ' USERNAME
-    read -p 'Re-enter your user password: ' CONFIRM_USERNAME ; echo
+    echo 'Usernames did not match!'
+    read -p 'Enter username: ' USERNAME
+    read -p 'Confirm username: ' CONFIRM_USERNAME
 done
 export USERNAME
-echo
 
 echo
-read -s -p 'Enter your user password: ' USER_PASSWORD ; echo
-read -s -p 'Re-enter your user password: ' CONFIRM_USER_PASSWORD ; echo
+read -s -p 'Enter user password: ' USER_PASSWORD ; echo
+read -s -p 'Confirm user password: ' CONFIRM_USER_PASSWORD ; echo
 until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
     echo 'Passwords did not match!'
-    read -s -p 'Enter your user password: ' USER_PASSWORD ; echo
-    read -s -p 'Re-enter your user password: ' CONFIRM_USER_PASSWORD ; echo
+    read -s -p 'Enter user password: ' USER_PASSWORD ; echo
+    read -s -p 'Confirm user password: ' CONFIRM_USER_PASSWORD ; echo
 done
 export USER_PASSWORD
 echo
 
-read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
-read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
+read -s -p 'Enter root password: ' ROOT_PASSWORD ; echo
+read -s -p 'Confirm root password: ' CONFIRM_ROOT_PASSWORD ; echo
 until [ "$ROOT_PASSWORD" = "$CONFIRM_ROOT_PASSWORD" ]; do
     echo 'Passwords did not match!'
-    read -s -p 'Enter your root password: ' ROOT_PASSWORD ; echo
-    read -s -p 'Re-enter your root password: ' CONFIRM_ROOT_PASSWORD ; echo
+    read -s -p 'Enter root password: ' ROOT_PASSWORD ; echo
+    read -s -p 'Confirm root password: ' CONFIRM_ROOT_PASSWORD ; echo
 done
 export ROOT_PASSWORD
 echo
 
-read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS ; echo
-read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
+read -s -p 'Enter encryption key: ' ENCRYPTION_PASS ; echo
+read -s -p 'Confirm encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
 until [ "$ENCRYPTION_PASS" = "$CONFIRM_ENCRYPTION_PASS" ]; do
     echo 'Encryption keys did not match!'
-    read -s -p 'Enter your encryption key: ' ENCRYPTION_PASS ; echo
-    read -s -p 'Re-enter your encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
+    read -s -p 'Enter encryption key: ' ENCRYPTION_PASS ; echo
+    read -s -p 'Confirm encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
 done
 echo
 
 while true; do
-    printf '\nWARNING: shredding your devices will wipe ALL data!\n'
-    read -p 'Do you wish to shred your device(s)? [y/N] ' yn
+    printf '\nWARNING: shredding devices will wipe ALL data!\n'
+    read -p 'Do you wish to shred device(s)? [y/N] ' yn
     case "$yn" in
         [Yy]* ) shred -fv /dev/sda
             [ "$HOST_NAME" = 'Asgard' ] && shred -fv /dev/sdb

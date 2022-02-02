@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# there's no need to install amd-ucode manually for amd users because it comes as a part of linux-firmware but intel-ucode does not so we need to manually install that for intel users
-
 echo 'Setting local time to Europe/London...' && ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime && hwclock --systohc
 
 echo 'Generating locales...'
@@ -15,14 +13,12 @@ locale-gen
 echo 'LANG=en_GB.UTF-8' > /etc/locale.conf
 
 echo 'Configuring mkinitcpio...'
-cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak
 sed -i "s/$(grep '^HOOKS' /etc/mkinitcpio.conf)/HOOKS=(base udev autodetect modconf block encrypt filesystems keyboard fsck)/" /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
 echo 'Configuring and installing grub...'
-cp /etc/default/grub /etc/default/grub.bak &&
-sed -i -e "s#$(grep -w 'GRUB_CMDLINE_LINUX' /etc/default/grub)#GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$(blkid -s UUID -o value /dev/sda2):cryptroot root=/dev/mapper/cryptroot#" \
-    -e 's#GRUB_ENABLE_CRYPTODISK#GRUB_ENABLE_CRYPTODISK=y#' /etc/default/grub
+sed -i -e "s@GRUB_CMDLINE_LINUX=\"\"@GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$(blkid -s UUID -o value /dev/sda2):cryptroot root=/dev/mapper/cryptroot@" \
+    -e 's@#GRUB_ENABLE_CRYPTODISK=y@GRUB_ENABLE_CRYPTODISK=y@' /etc/default/grub
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg
 
 echo 'Enabling connman...'
@@ -42,28 +38,34 @@ export CONFIRM_ROOT_PASSWORD=''
 export CONFIRM_USER_PASSWORD=''
 # create the file structures for the home
 sudo -u "$USERNAME" 'xdg-user-dirs-update'
-rm -rf "/home/$USERNAME/Public" && rm -rf "/home/$USERNAME/Templates"
+rm -r "/home/$USERNAME/Public" "/home/$USERNAME/Templates"
 sed -i -e '/XDG_TEMPLATES_DIR/d' -e '/XDG_PUBLICSHARE_DIR/d' "/home/$USERNAME/.config/user-dirs.dirs"
 
 if [ "$HOST_NAME" = 'Asgard' ]; then
+    # generate keyfile
     echo 'Generating keyfile for home directory...'
     dd bs=512 count=4 if=/dev/random of=/var/home-keyfile iflag=fullblock
     chmod 400 /var/home-keyfile
     cryptsetup luksAddKey /dev/sdb1 /var/home-keyfile
     echo 'crypthome /dev/sdb1 /var/home-keyfile' >> /etc/crypttab
 
-    echo 'Enabling periodic FSTRIM...' &&
-        printf '#!/bin/sh\n# trim all mounted file systems which support it\n/sbin/fstrim --all || true' > /etc/cron.weekly/fstrim &&
-        chmod a+x /etc/cron.weekly/fstrim
+    # enable FSTRIM
+    echo 'Enabling periodic FSTRIM...'
+    printf '#!/bin/sh\n# trim all mounted file systems which support it\n/sbin/fstrim --all || true' > /etc/cron.weekly/fstrim
+    chmod a+x /etc/cron.weekly/fstrim
+
+    # there's no need to install amd-ucode manually for amd chips because it comes as a part of linux-firmware
+    # but intel-ucode does not so we need to manually install that for intel chips
     echo 'Installing intel-ucode...' && pacman -Syu intel-ucode --noconfirm
 
-    SWAP_COUNT=7630
-    SWAP_DIR="/home/$USERNAME/.local/share"
-elif [ "$HOST_NAME" = 'Alfheim' ]
-    SWAP_COUNT=15260
+    SWAP_COUNT=7630 # 8GB
+    SWAP_DIR="/home/$USERNAME/.local/share" # use the home for swap because the root is on an SSD
+elif [ "$HOST_NAME" = 'Alfheim' ]; then
+    SWAP_COUNT=15260 # 16GB
     SWAP_DIR="/var/swapfile"
 fi
 
+# generate a swapfile
 echo 'Generating swapfile...'
 cp /etc/fstab /etc/fstab.bak
 dd if=/dev/zero of="$SWAP_DIR" bs=1M count=$SWAP_COUNT status=progress && chmod 600 /var/swapfile
