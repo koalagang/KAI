@@ -84,10 +84,15 @@ echo 'Mounting /dev/mapper/cryptroot...' && mount /dev/mapper/cryptroot /mnt
 [ "$HOST_NAME" = 'Asgard' ] && echo 'Mounting /dev/mapper/crypthome' && mkdir /mnt/home && mount /dev/mapper/crypthome
 echo 'Mounting /dev/sda1' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 
-# I only need wifi on my laptop
-[ "$HOST_NAME" = 'Asgard' ] && wifi_pkg='iwd'
+if [ "$HOST_NAME" = 'Asgard' ]; then
+    # iwd is only need on my ThinkPad because I use ethernet on my desktop
+    extra_pkg='iwd intel-ucode'
+elif [ "$HOST_NAME" = 'Alfheim' ]; then
+    # amd-ucode is not needed because it is packaged into linux-firmware
+    extra_pkg='nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
+fi
 
-basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit cups cups-runit connman-runit $wifi_pkg \
+basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit cups cups-runit connman-runit $extra_pkg \
     grub efibootmgr xorg xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber curl wget git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv kai/installer2.sh /mnt && artix-chroot /mnt ./installer2.sh

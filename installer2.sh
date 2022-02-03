@@ -54,10 +54,6 @@ if [ "$HOST_NAME" = 'Asgard' ]; then
     printf '#!/bin/sh\n# trim all mounted file systems which support it\n/sbin/fstrim --all || true' > /etc/cron.weekly/fstrim
     chmod a+x /etc/cron.weekly/fstrim
 
-    # there's no need to install amd-ucode manually for amd chips because it comes as a part of linux-firmware
-    # but intel-ucode does not so we need to manually install that for intel chips
-    echo 'Installing intel-ucode...' && pacman -Syu intel-ucode --noconfirm
-
     SWAP_COUNT=7630 # 8GB
     SWAP_DIR="/home/$USERNAME/.local/share" # use the home for swap because the root is on an SSD
 elif [ "$HOST_NAME" = 'Alfheim' ]; then
