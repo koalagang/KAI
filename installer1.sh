@@ -81,7 +81,7 @@ echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot
 echo 'Formatting /dev/sda1...' && mkfs.fat -F32 /dev/sda1 -n BOOT
 
 echo 'Mounting /dev/mapper/cryptroot...' && mount /dev/mapper/cryptroot /mnt
-[ "$HOST_NAME" = 'Asgard' ] && echo 'Mounting /dev/mapper/crypthome' && mkdir /mnt/home && mount /dev/mapper/crypthome
+[ "$HOST_NAME" = 'Asgard' ] && echo 'Mounting /dev/mapper/crypthome' && mkdir /mnt/home && mount /dev/mapper/crypthome /mnt/home
 echo 'Mounting /dev/sda1' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 
 if [ "$HOST_NAME" = 'Asgard' ]; then
