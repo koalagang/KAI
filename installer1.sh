@@ -2,10 +2,11 @@
 
 select answer in 'Alfheim (PC)' 'Asgard (ThinkPad)'; do
     case "$answer" in
-        'Alfheim (PC)') HOST_NAME='Alfheim' ; export HOST_NAME ; break ;;
-        'Asgard (ThinkPad)') HOST_NAME='Asgard' ; export HOST_NAME ; break
+        'Alfheim (PC)') HOST_NAME='Alfheim' ; break ;;
+        'Asgard (ThinkPad)') HOST_NAME='Asgard' ; break
     esac
 done
+export HOST_NAME
 
 echo
 read -p 'Enter username: ' USERNAME
@@ -70,10 +71,9 @@ echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --typ
 echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sda2 cryptroot
 
 if [ "$HOST_NAME" = 'Asgard' ]; then
-    echo "Partitioning /dev/sdb..." && printf 'g\nn\n\n\nw' | fdisk /dev/sda >/dev/null
-    echo "Encrypting /dev/sdb1..."
-    echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --type luks1 /dev/sdb1
-    echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sdb1 crypthome
+    echo "Encrypting /dev/sdb..."
+    echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --type luks1 /dev/sdb
+    echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sdb crypthome
 fi
 
 echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot -L root

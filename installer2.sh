@@ -46,8 +46,8 @@ if [ "$HOST_NAME" = 'Asgard' ]; then
     echo 'Generating keyfile for home directory...'
     dd bs=512 count=4 if=/dev/random of=/var/home-keyfile iflag=fullblock
     chmod 400 /var/home-keyfile
-    cryptsetup luksAddKey /dev/sdb1 /var/home-keyfile
-    echo 'crypthome /dev/sdb1 /var/home-keyfile' >> /etc/crypttab
+    cryptsetup luksAddKey /dev/sdb /var/home-keyfile
+    echo 'crypthome /dev/sdb /var/home-keyfile' >> /etc/crypttab
 
     # enable FSTRIM
     echo 'Enabling periodic FSTRIM...'

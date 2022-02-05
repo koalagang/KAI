@@ -3,6 +3,8 @@
 # these should already be installed but let's just double-check that we have them all
 sudo pacman git curl base base-devel -Syu --noconfirm --needed
 
+[ "$(pwd)" != "$HOME/kai" ] && cd "$HOME/kai"
+
 # install paru (using baph so that we don't have to compile it)
 curl -sL 'https://raw.githubusercontent.com/PandaFoss/baph/master/baph' -o baph && chmod +x baph
 yes | ./baph -nNi paru-bin
