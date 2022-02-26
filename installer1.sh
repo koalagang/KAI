@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-select answer in 'Alfheim (PC)' 'Asgard (ThinkPad)'; do
+select answer in 'Ljosalfheim (PC)' 'Svartalfheim (ThinkPad)'; do
     case "$answer" in
-        'Alfheim (PC)') HOST_NAME='Alfheim' ; break ;;
-        'Asgard (ThinkPad)') HOST_NAME='Asgard' ; break
+        'Ljosalfheim (PC)') HOST_NAME='Ljosalfheim' ; break ;;
+        'Svartalfheim (ThinkPad)') HOST_NAME='Svartalfheim' ; break
     esac
 done
 export HOST_NAME
@@ -53,7 +53,7 @@ while true; do
     read -p 'Do you wish to shred device(s)? [y/N] ' yn
     case "$yn" in
         [Yy]* ) shred -fv /dev/sda
-            [ "$HOST_NAME" = 'Asgard' ] && shred -fv /dev/sdb
+            [ "$HOST_NAME" = 'Svartalfheim' ] && shred -fv /dev/sdb
             break ;;
         [Nn]* ) break ;;
         '') break ;;
@@ -62,7 +62,7 @@ while true; do
 done
 echo
 
-echo "Partitioning /dev/sda..." && printf 'g\nn\np\n1\n\n+128M\nn\np\n2\n\n\nw' | fdisk /dev/sda >/dev/null
+echo "Partitioning /dev/sda..." && printf 'g\nn\n\n\n+128M\nn\n\n\n\nw\n' | fdisk /dev/sda >/dev/null
 echo "Encrypting /dev/sda2..."
 # cryptsetup defaults to using a 512-bit key
 # see https://security.stackexchange.com/a/40218 for why I choose to use a 256-bit key
@@ -70,24 +70,24 @@ echo "Encrypting /dev/sda2..."
 echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --type luks1 /dev/sda2
 echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sda2 cryptroot
 
-if [ "$HOST_NAME" = 'Asgard' ]; then
+if [ "$HOST_NAME" = 'Svartalfheim' ]; then
     echo "Encrypting /dev/sdb..."
     echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --type luks1 /dev/sdb
     echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sdb crypthome
 fi
 
 echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot -L root
-[ "$HOST_NAME" = 'Asgard' ] && echo 'Formatting /dev/mapper/crypthome' && mkfs.ext4 -F /dev/mapper/crypthome -L home
+[ "$HOST_NAME" = 'Svartalfheim' ] && echo 'Formatting /dev/mapper/crypthome' && mkfs.ext4 -F /dev/mapper/crypthome -L home
 echo 'Formatting /dev/sda1...' && mkfs.fat -F32 /dev/sda1 -n BOOT
 
 echo 'Mounting /dev/mapper/cryptroot...' && mount /dev/mapper/cryptroot /mnt
-[ "$HOST_NAME" = 'Asgard' ] && echo 'Mounting /dev/mapper/crypthome' && mkdir /mnt/home && mount /dev/mapper/crypthome /mnt/home
+[ "$HOST_NAME" = 'Svartalfheim' ] && echo 'Mounting /dev/mapper/crypthome' && mkdir /mnt/home && mount /dev/mapper/crypthome /mnt/home
 echo 'Mounting /dev/sda1' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 
-if [ "$HOST_NAME" = 'Asgard' ]; then
+if [ "$HOST_NAME" = 'Svartalfheim' ]; then
     # iwd is only need on my ThinkPad because I use ethernet on my desktop
     extra_pkg='iwd intel-ucode'
-elif [ "$HOST_NAME" = 'Alfheim' ]; then
+elif [ "$HOST_NAME" = 'Ljosalfheim' ]; then
     # amd-ucode is not needed because it is packaged into linux-firmware
     extra_pkg='nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
 fi
