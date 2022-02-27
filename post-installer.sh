@@ -1,26 +1,11 @@
 #!/usr/bin/env bash
 
-# create the file structures for the home
-xdg-user-dirs-update
-rm -r "$HOME/Public" "$HOME/Templates"
-sed -i -e 's#XDG_TEMPLATES_DIR="$HOME/Templates"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' \
-    -e 's#XDG_PUBLICSHARE_DIR="$HOME/Public"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' "$HOME/.config/user-dirs.dirs"
-mkdir -p "$HOME/.local/share"
-mkdir -p "$HOME/.local/bin"
-git clone https://github.com/koalagang/dotfiles.git
-mv dotfiles/* $HOME
-mkdir -p "$HOME/Desktop/git/dotfiles"
-git clone --bare https://github.com/koalagang/dotfiles.git "$HOME/Desktop/git/dotfiles/dotfiles"
-git --git-dir=$HOME/Desktop/git/dotfiles/dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
-git clone https://github.com/koalagang/suckless-koala.git "$HOME/Desktop/git/suckless-koala"
-git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
-
 # compile yay because it is written in go so it is fast to compile
 # then install a pre-compiled paru binary and remove yay
 git clone https://aur.archlinux.org/yay.git
-sh -c 'cd yay && makepkg -si'
+bash -c 'cd yay && yes | makepkg -si'
 yay -S paru-bin --noconfirm
-yay -R yay
+yay -R yay --noconfirm
 rm -rf "$HOME/yay" "$HOME/.cache/yay" "$HOME/.cache/go-build"
 
 # configure pacman to support lib32 and have parallel downloads and pretty colours ;)
@@ -61,3 +46,19 @@ sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo
 
 # clear cache
 paru -c && doas paccache -r && doas paccache -ruk0
+
+# create the file structures for the home
+xdg-user-dirs-update
+rm -r "$HOME/Public" "$HOME/Templates"
+sed -i -e 's#XDG_TEMPLATES_DIR="$HOME/Templates"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' \
+    -e 's#XDG_PUBLICSHARE_DIR="$HOME/Public"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' "$HOME/.config/user-dirs.dirs"
+mkdir -p "$HOME/.local/share"
+mkdir -p "$HOME/.local/bin"
+git clone https://github.com/koalagang/dotfiles.git
+rm -rf dotfiles/.git
+cp -r dotfiles/.* $HOME
+mkdir -p "$HOME/Desktop/git/dotfiles"
+git clone --bare https://github.com/koalagang/dotfiles.git "$HOME/Desktop/git/dotfiles/dotfiles"
+git --git-dir=$HOME/Desktop/git/dotfiles/dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
+git clone https://github.com/koalagang/suckless-koala.git "$HOME/Desktop/git/suckless-koala"
+git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
