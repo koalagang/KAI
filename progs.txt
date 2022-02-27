@@ -109,3 +109,4 @@ z.lua
 zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
+recode
