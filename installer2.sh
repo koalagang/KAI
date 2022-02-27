@@ -43,12 +43,6 @@ export ROOT_PASSWORD=''
 export USER_PASSWORD=''
 export CONFIRM_ROOT_PASSWORD=''
 export CONFIRM_USER_PASSWORD=''
-# create the file structures for the home
-sudo -u "$USERNAME" 'xdg-user-dirs-update'
-rm -r "/home/$USERNAME/Public" "/home/$USERNAME/Templates"
-sed -i -e '/XDG_TEMPLATES_DIR/d' -e '/XDG_PUBLICSHARE_DIR/d' "/home/$USERNAME/.config/user-dirs.dirs"
-mkdir -p "/home/$USERNAME/.local/share"
-mkdir -p "/home/$USERNAME/.local/bin"
 
 #---Perform computer specific tasks
 if [ "$HOST_NAME" = 'Svartalfheim' ]; then

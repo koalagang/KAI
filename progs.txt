@@ -20,7 +20,8 @@ ddgr
 devour
 downgrade
 dunst
-efibootmgr
+cups
+cups-runit
 epson-inkjet-printer-escpr2
 ffmpeg
 firefox-esr-bin
@@ -70,7 +71,6 @@ shellcheck
 signal-desktop
 simple-mtpfs
 so-git
-songrec
 starship
 streamlink
 sxhkd
@@ -80,7 +80,6 @@ testdisk
 texlive-core
 timeshift
 timew
-timidity++
 translate-shell
 trash-cli
 ttf-joypixels
@@ -91,8 +90,6 @@ ucollage
 ueberzug
 unclutter
 unzip
-virtualbox
-virtualbox-host-dkms
 vit
 wget
 wikicurses

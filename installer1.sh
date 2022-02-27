@@ -90,7 +90,7 @@ elif [ "$HOST_NAME" = 'Ljosalfheim' ]; then
     extra_pkg='nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
 fi
 
-basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit cups cups-runit connman-runit $extra_pkg \
-    grub efibootmgr xorg xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber curl wget git --noconfirm
+basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit connman-runit $extra_pkg \
+    efibootmgr grub efibootmgr xorg xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber curl wget git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv kai/installer2.sh /mnt && artix-chroot /mnt ./installer2.sh
