@@ -46,6 +46,7 @@ until [ "$ENCRYPTION_PASS" = "$CONFIRM_ENCRYPTION_PASS" ]; do
     read -s -p 'Enter encryption key: ' ENCRYPTION_PASS ; echo
     read -s -p 'Confirm encryption key: ' CONFIRM_ENCRYPTION_PASS ; echo
 done
+export ENCRYPTION_PASS
 echo
 
 while true; do

@@ -57,6 +57,7 @@ if [ "$HOST_NAME" = 'Svartalfheim' ]; then
     dd bs=512 count=4 if=/dev/random of=/etc/home-keyfile iflag=fullblock
     echo "$ENCRYPTION_PASS" | cryptsetup luksAddKey /dev/sdb /etc/home-keyfile
     echo 'crypthome /dev/sdb /etc/home-keyfile' >> /etc/crypttab
+    chown -c root:root /etc/home-keyfile
 
     # enable FSTRIM
     echo 'Enabling periodic FSTRIM...'
