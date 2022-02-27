@@ -17,7 +17,7 @@ cat arch-repos.txt | sudo tee -a /etc/pacman.conf >/dev/null
 
 # install all my packages
 yes | paru -Syu libxft-bgra # conflicts with libxft
-readarray -t progs < 'progs.txt' && paru -S "${progs[@]}" --noconfirm --needed
+readarray -t progs < "$HOME/kai/progs.txt" && paru -S "${progs[@]}" --noconfirm --needed
 git clone https://github.com/koalagang/suckless-koala.git
 # device specific packages
 sudo make install -C suckless-koala/dmenu
@@ -44,9 +44,6 @@ echo 'permit persist :wheel' | sudo tee -a /etc/doas.conf >/dev/null && sudo cho
 sudo curl -sL 'https://raw.githubusercontent.com/koalagang/doasedit/main/doasedit' -o /usr/bin/doasedit && sudo chmod +x /usr/bin/doasedit
 sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo
 
-# clear cache
-paru -c && doas paccache -r && doas paccache -ruk0
-
 # create the file structures for the home
 xdg-user-dirs-update
 rm -r "$HOME/Public" "$HOME/Templates"
@@ -62,3 +59,6 @@ git clone --bare https://github.com/koalagang/dotfiles.git "$HOME/Desktop/git/do
 git --git-dir=$HOME/Desktop/git/dotfiles/dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
 git clone https://github.com/koalagang/suckless-koala.git "$HOME/Desktop/git/suckless-koala"
 git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
+
+# clear cache
+paru -c && doas paccache -r && doas paccache -ruk0
