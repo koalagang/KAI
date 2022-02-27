@@ -3,10 +3,10 @@
 # create the file structures for the home
 xdg-user-dirs-update
 rm -r "$HOME/Public" "$HOME/Templates"
-sed -i -e 's/XDG_TEMPLATES_DIR="$HOME/Templates"/XDG_TEMPLATES_DIR="$HOME/Desktop"/' \
-    -e 's/XDG_PUBLICSHARE_DIR="$HOME/Public"/XDG_TEMPLATES_DIR="$HOME/Desktop"/' "$HOME/.config/user-dirs.dirs"
-mkdir -p "/home/$USERNAME/.local/share"
-mkdir -p "/home/$USERNAME/.local/bin"
+sed -i -e 's#XDG_TEMPLATES_DIR="$HOME/Templates"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' \
+    -e 's#XDG_PUBLICSHARE_DIR="$HOME/Public"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' "$HOME/.config/user-dirs.dirs"
+mkdir -p "$HOME/.local/share"
+mkdir -p "$HOME/.local/bin"
 git clone https://github.com/koalagang/dotfiles.git
 mv dotfiles/* $HOME
 mkdir -p "$HOME/Desktop/git/dotfiles"
