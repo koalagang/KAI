@@ -64,15 +64,12 @@ echo
 
 echo "Partitioning /dev/sda..." && printf 'g\nn\n\n\n+128M\nn\n\n\n\nw\n' | fdisk /dev/sda >/dev/null
 echo "Encrypting /dev/sda2..."
-# cryptsetup defaults to using a 512-bit key
-# see https://security.stackexchange.com/a/40218 for why I choose to use a 256-bit key
-# use luks1 because grub does not fully support luks2
-echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --type luks1 /dev/sda2
+echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -q --force-password --type luks1 /dev/sda2
 echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sda2 cryptroot
 
 if [ "$HOST_NAME" = 'Svartalfheim' ]; then
     echo "Encrypting /dev/sdb..."
-    echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -s 256 -q --force-password --type luks1 /dev/sdb
+    echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -q --force-password --type luks1 /dev/sdb
     echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sdb crypthome
 fi
 
@@ -81,8 +78,8 @@ echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot
 echo 'Formatting /dev/sda1...' && mkfs.fat -F32 /dev/sda1 -n BOOT
 
 echo 'Mounting /dev/mapper/cryptroot...' && mount /dev/mapper/cryptroot /mnt
-[ "$HOST_NAME" = 'Svartalfheim' ] && echo 'Mounting /dev/mapper/crypthome' && mkdir /mnt/home && mount /dev/mapper/crypthome /mnt/home
-echo 'Mounting /dev/sda1' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
+[ "$HOST_NAME" = 'Svartalfheim' ] && echo 'Mounting /dev/mapper/crypthome...' && mkdir /mnt/home && mount /dev/mapper/crypthome /mnt/home
+echo 'Mounting /dev/sda1...' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 
 if [ "$HOST_NAME" = 'Svartalfheim' ]; then
     # iwd is only need on my ThinkPad because I use ethernet on my desktop

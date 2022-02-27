@@ -27,7 +27,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && g
 #---Enable services
 echo 'Enabling connman...'
 echo "$HOST_NAME" > /etc/hostname
-printf '127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t %s.localdomain \t %s' "$HOST_NAME" "$HOST_NAME" > /etc/hosts
+printf '127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t %s.localdomain \t %s' "$HOST_NAME" "$HOST_NAME" >> /etc/hosts
 ln -s /etc/runit/sv/connmand /etc/runit/runsvdir/default
 # enable cronjobs
 ln -s /etc/runit/sv/cronie /etc/runit/runsvdir/default
@@ -54,10 +54,9 @@ mkdir -p "/home/$USERNAME/.local/bin"
 if [ "$HOST_NAME" = 'Svartalfheim' ]; then
     # generate keyfile
     echo 'Generating keyfile for home directory...'
-    dd bs=512 count=4 if=/dev/random of=/var/home-keyfile iflag=fullblock
-    chmod 400 /var/home-keyfile
-    echo "$ENCRYPTION_PASS" | cryptsetup luksAddKey /dev/sdb /var/home-keyfile
-    echo 'crypthome /dev/sdb /var/home-keyfile' >> /etc/crypttab
+    dd bs=512 count=4 if=/dev/random of=/etc/home-keyfile iflag=fullblock
+    echo "$ENCRYPTION_PASS" | cryptsetup luksAddKey /dev/sdb /etc/home-keyfile
+    echo 'crypthome /dev/sdb /etc/home-keyfile' >> /etc/crypttab
 
     # enable FSTRIM
     echo 'Enabling periodic FSTRIM...'
