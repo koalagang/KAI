@@ -11,7 +11,7 @@ export HOST_NAME
 echo
 read -p 'Enter username: ' USERNAME
 read -p 'Confirm username: ' CONFIRM_USERNAME
-until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
+until [ "$USERNAME" = "$CONFIRM_USERNAME" ]; do
     echo 'Usernames did not match!'
     read -p 'Enter username: ' USERNAME
     read -p 'Confirm username: ' CONFIRM_USERNAME

@@ -34,11 +34,6 @@ elif [ "$HOSTNAME" = 'Svartalfheim' ]; then
 fi
 rm -rf suckless-koala
 
-# configure shells
-sudo ln -sfT /bin/dash /bin/sh && cp bash2dash.hook /usr/share/libalmpm/hooks/bash2dash.hook
-sudo chsh -s /bin/zsh
-rm "$HOME"/.bash*
-
 # create the file structures for the home
 xdg-user-dirs-update
 rm -r "$HOME/Public" "$HOME/Templates"
@@ -53,11 +48,24 @@ git --git-dir=$HOME/Desktop/git/dotfiles/dotfiles/ --work-tree=$HOME config --lo
 git clone https://github.com/koalagang/suckless-koala.git "$HOME/Desktop/git/suckless-koala"
 git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
 
+root_append (){
+    printf '%s' "$1" | sudo tee -a "$2" >/dev/null
+}
+
 # not sure why but directly appending these files without tee doesn't work
+[ "$HOST" = 'Ljosalfheim' ] && root_append '# startx\n[ "$(tty)" = "/dev/tty1" ] && "$HOME/.config/X11/wmselect" && startx "$XDG_CONFIG_HOME/X11/xinitrc"' '/etc/profile'
+[ "$HOST" = 'Svartalfheim' ] && root_append '# startx\n[ "$(tty)" = "/dev/tty1" ] && startx "$XDG_CONFIG_HOME/X11/xinitrc"' /etc/profile
 cat hosts | sudo tee -a /etc/hosts >/dev/null
-echo 'permit persist :wheel' | sudo tee -a /etc/doas.conf >/dev/null && sudo chown -c root:root '/etc/doas.conf' && sudo chmod 0444 '/etc/doas.conf'
+root_append 'permit persist :wheel' '/etc/doas.conf' && sudo chown -c root:root '/etc/doas.conf' && sudo chmod 0444 '/etc/doas.conf'
 sudo curl -sL 'https://raw.githubusercontent.com/koalagang/doasedit/main/doasedit' -o /usr/bin/doasedit && sudo chmod +x /usr/bin/doasedit
 sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo
 
 # clear cache
-paru -c && doas paccache -r && doas paccache -ruk0
+paru -c --noconfirm && doas paccache -r && doas paccache -ruk0
+
+# configure shells
+doas ln -sfT /bin/dash /bin/sh && cp bash2dash.hook /usr/share/libalmpm/hooks/bash2dash.hook
+mkdir -p "$HOME/.cache/zsh" && touch "$HOME/.cache/zsh/history"
+printf '\nCould not interactively configure login shell. Please enter the following commands:\nsudo chsh -s /bin/zsh\nrm "$HOME"/.bash*\n'
+
+rm -rf go kai

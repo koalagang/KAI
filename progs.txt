@@ -20,8 +20,6 @@ ddgr
 devour
 downgrade
 dunst
-cups
-cups-runit
 epson-inkjet-printer-escpr2
 ffmpeg
 firefox-esr-bin
@@ -56,6 +54,7 @@ noto-fonts-emoji
 opendoas
 otf-symbola
 pacman-contrib
+pamixer
 pandoc
 pipewire
 pipewire-alsa
@@ -64,6 +63,7 @@ playerctl
 polkit
 protonvpn-cli-ng
 python-spotdl
+recode
 recode
 redshift-minimal
 rsync
@@ -100,6 +100,7 @@ xcompmgr
 xdotool
 xurls
 xwallpaper
+xorg-xinit
 youtube-dl
 yt-dlp
 ytfzf
@@ -109,4 +110,3 @@ z.lua
 zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
-recode
