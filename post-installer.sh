@@ -2,11 +2,18 @@
 
 # compile yay because it is written in go so it is fast to compile
 # then install a pre-compiled paru binary and remove yay
-git clone https://aur.archlinux.org/yay.git
-bash -c 'cd yay && yes | makepkg -si'
-yay -S paru-bin --noconfirm
-yay -R yay --noconfirm
-rm -rf "$HOME/yay" "$HOME/.cache/yay" "$HOME/.cache/go-build"
+command -v paru && paru_aur_helper=1
+command -v yay && yay_aur_helper=1
+if [ -z "$paru_aur_helper" ] && [ -z "$yay_aur_helper" ]; then
+    git clone https://aur.archlinux.org/yay.git
+    ( cd yay && yes | makepkg -si )
+    yay -S paru-bin --noconfirm
+    yay -R yay --noconfirm
+    rm -rf "$HOME/yay" "$HOME/.cache/yay" "$HOME/.cache/go-build"
+elif [ -z "$paru_aur_helper" ] && [ -n "$yay_aur_helper" ]; then
+    yay -S paru-bin --noconfirm
+    yay -R yay --noconfirm
+fi
 
 # configure pacman to support lib32 and have parallel downloads and pretty colours ;)
 sudo cp --backup=numbered /etc/pacman.conf /etc/pacman.conf.bak && echo '/etc/pacman.conf has been safely backed up!'

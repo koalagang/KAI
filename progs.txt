@@ -78,7 +78,7 @@ task
 taskell
 testdisk
 texlive-core
-timeshift
+timeshift-bin
 timew
 translate-shell
 trash-cli

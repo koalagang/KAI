@@ -50,7 +50,6 @@ export ENCRYPTION_PASS
 echo
 
 while true; do
-    printf '\nWARNING: shredding devices will wipe ALL data!\n'
     read -p 'Do you wish to shred device(s)? [y/N] ' yn
     case "$yn" in
         [Yy]* ) shred -fv /dev/sda
@@ -91,6 +90,6 @@ elif [ "$HOST_NAME" = 'Ljosalfheim' ]; then
 fi
 
 basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit connman-runit $extra_pkg \
-    efibootmgr grub efibootmgr xorg xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber curl wget git --noconfirm
+    grub efibootmgr xorg xorg-xinit xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber man-db curl wget git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv kai/installer2.sh /mnt && artix-chroot /mnt ./installer2.sh

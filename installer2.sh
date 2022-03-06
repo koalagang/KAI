@@ -55,7 +55,7 @@ if [ "$HOST_NAME" = 'Svartalfheim' ]; then
 
     # enable FSTRIM
     echo 'Enabling periodic FSTRIM...'
-    printf '#!/bin/sh\n# trim all mounted file systems which support it\n/sbin/fstrim --all || true' > /etc/cron.weekly/fstrim
+    printf '#!/bin/sh\n# trim all mounted filesystems which support it\n/sbin/fstrim --all || true' > /etc/cron.weekly/fstrim
     chmod a+x /etc/cron.weekly/fstrim
 
     SWAP_COUNT=7630 # 8GB
