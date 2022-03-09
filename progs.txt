@@ -7,7 +7,7 @@ arch-wiki-docs
 axel
 bat
 bc
-bpytop
+btop
 capitaine-cursors
 colorpicker
 cronie
@@ -60,16 +60,13 @@ pipewire
 pipewire-alsa
 pipewire-pulse
 playerctl
-polkit
-protonvpn-cli-ng
 python-spotdl
-recode
 recode
 redshift-minimal
 rsync
 shellcheck
 signal-desktop
-simple-mtpfs
+go-mtpfs-git
 so-git
 starship
 streamlink

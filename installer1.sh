@@ -82,10 +82,8 @@ echo 'Mounting /dev/mapper/cryptroot...' && mount /dev/mapper/cryptroot /mnt
 echo 'Mounting /dev/sda1...' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 
 if [ "$HOST_NAME" = 'Svartalfheim' ]; then
-    # iwd is only need on my ThinkPad because I use ethernet on my desktop
-    extra_pkg='iwd intel-ucode'
+    extra_pkg='iwd intel-ucode smartmontools'
 elif [ "$HOST_NAME" = 'Ljosalfheim' ]; then
-    # amd-ucode is not needed because it is packaged into linux-firmware
     extra_pkg='nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
 fi
 
