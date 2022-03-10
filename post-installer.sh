@@ -84,7 +84,7 @@ if [ -z "$etc_profile_startx" ]; then
 fi
 [ "$(wc -l /etc/hosts | cut -d' ' -f1)" -eq 3 ] && cat hosts | sudo tee -a /etc/hosts >/dev/null
 [ -f '/etc/doas.conf' ] && doas_conf=1
-[ -z "$doas_conf" ] && root_append 'permit persist :wheel\n' '/etc/doas.conf' && sudo chown -c root:root '/etc/doas.conf' && sudo chmod 0444 '/etc/doas.conf'
+[ -z "$doas_conf" ] && echo 'permit persist :wheel\n' | sudo tee -a /etc/doas.conf >/dev/null && sudo chown -c root:root '/etc/doas.conf' && sudo chmod 0444 '/etc/doas.conf'
 sudo curl -sL 'https://raw.githubusercontent.com/koalagang/doasedit/main/doasedit' -o /usr/bin/doasedit && sudo chmod +x /usr/bin/doasedit # install doasedit
 # remove sudo and replace it with a symlink to doas to avoid issues with hardcoded software
 bak '/etc/sudoers' # backup sudoers file in case user ever wishes to revert back to using sudo

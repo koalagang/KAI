@@ -71,7 +71,6 @@ starship
 streamlink
 sxhkd
 task
-taskell
 testdisk
 texlive-core
 timeshift
