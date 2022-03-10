@@ -26,12 +26,12 @@ bak (){
 if [ -z "$pacman_conf" ]; then
     # only enable 32-bit support for Ljosalfheim
     if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
-        arch_repos='arch-repos.txt'
-    elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
         arch_repos='arch-repos-no_multilib.txt'
         lib32_support='lib32-artix-archlinux-support'
+    elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
+        arch_repos='arch-repos.txt'
     fi
-    bak '/etc/doas.conf'
+    bak '/etc/pacman.conf'
     sudo sed -i -e "s/#ParallelDownloads = 5/ParallelDownloads = 20/" -e 's/#Color/Color/' /etc/pacman.conf
     [ "$HOST_NAME" = 'Ljosalfheim' ] && sudo sed -i 's/#\[lib32\]/\[lib32\]/' /etc/pacman.conf && grep -A1 -n '\[lib32\]' /etc/pacman.conf | tail -1 | cut -d'-' -f1 | \
         xargs -I% sudo sed -i '%s/#//' /etc/pacman.conf
@@ -96,4 +96,4 @@ paru -c --noconfirm && doas paccache -r && doas paccache -ruk0
 # configure shells
 doas ln -sfT /bin/dash /bin/sh && cp bash2dash.hook /usr/share/libalmpm/hooks/bash2dash.hook
 mkdir -p "$HOME/.cache/zsh" && touch "$HOME/.cache/zsh/history"
-printf '\nCould not interactively configure login shell. Please enter the following commands:\nsudo chsh -s /bin/zsh\nrm "$HOME"/.bash*\n'
+printf '\nCould not automatically configure login shell. Please enter the following commands:\nsudo chsh -s /bin/zsh\nrm "$HOME"/.bash*\n'
