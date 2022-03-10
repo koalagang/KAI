@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 is_installed (){
-    whereis "$1" >/dev/null
+    command -v "$1" >/dev/null
 }
 
 # compile yay because it is written in go so it is fast to compile
@@ -12,20 +12,32 @@ if [ -z "$paru_installed" ]; then
     ( cd yay && yes | makepkg -si )
     yay -S paru-bin --noconfirm
     yay -R yay --noconfirm
-    rm -rf "$HOME/yay" "$HOME/.cache/yay" "$HOME/.cache/go-build"
-fi
-
-# configure pacman to support lib32 and have parallel downloads and pretty colours ;)
-[ -f '/etc/pacman.conf.bak' ] && pacman_conf=1
-if [ -z "$pacman_conf" ]; then
-    sudo cp --backup=numbered /etc/pacman.conf /etc/pacman.conf.bak && echo '/etc/pacman.conf has been safely backed up!'
-    sudo sed -i -e "s/#ParallelDownloads = 5/ParallelDownloads = 20/" -e 's/#Color/Color/' /etc/pacman.conf
-    sudo sed -i 's/#\[lib32\]/\[lib32\]/' /etc/pacman.conf && grep -A1 -n '\[lib32\]' /etc/pacman.conf | tail -1 | cut -d'-' -f1 | xargs -I% sudo sed -i '%s/#//' /etc/pacman.conf
-    sudo pacman -Syu artix-archlinux-support lib32-artix-archlinux-support --noconfirm --needed && sudo pacman-key --populate archlinux
-    cat "$HOME/kai/arch-repos.txt" | sudo tee -a /etc/pacman.conf
+    sudo rm -rf "$HOME/yay" "$HOME/.cache/yay" "$HOME/.cache/go-build" "$HOME/go"
 fi
 
 HOST_NAME="$(</etc/hostname)"
+
+bak (){
+    sudo cp --backup=numbered "$1" "$1.bak" && echo "$1 has been safely backed up as $1.bak"
+}
+
+# configure pacman to support arch repositories and have parallel downloads and pretty colours
+[ -f '/etc/pacman.conf.bak' ] && pacman_conf=1
+if [ -z "$pacman_conf" ]; then
+    # only enable 32-bit support for Ljosalfheim
+    if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
+        arch_repos='arch-repos.txt'
+    elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
+        arch_repos='arch-repos-no_multilib.txt'
+        lib32_support='lib32-artix-archlinux-support'
+    fi
+    bak '/etc/doas.conf'
+    sudo sed -i -e "s/#ParallelDownloads = 5/ParallelDownloads = 20/" -e 's/#Color/Color/' /etc/pacman.conf
+    [ "$HOST_NAME" = 'Ljosalfheim' ] && sudo sed -i 's/#\[lib32\]/\[lib32\]/' /etc/pacman.conf && grep -A1 -n '\[lib32\]' /etc/pacman.conf | tail -1 | cut -d'-' -f1 | \
+        xargs -I% sudo sed -i '%s/#//' /etc/pacman.conf
+    sudo pacman -Syu artix-archlinux-support $lib32_support --noconfirm --needed && sudo pacman-key --populate archlinux
+    cat "$HOME/kai/$arch_repos" | sudo tee -a /etc/pacman.conf
+fi
 
 # install all my packages
 is_installed 'libxft-bgra' || yes | paru -Syu libxft-bgra # conflicts with libxft
@@ -33,7 +45,7 @@ readarray -t progs < "$HOME/kai/progs.txt" && paru -S "${progs[@]}" --noconfirm 
 git clone https://github.com/koalagang/suckless-koala.git
 # install device specific packages
 if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
-    sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat edk2-ovmf --noconfirm --needed
+    sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat edk2-ovmf signal-desktop --noconfirm --needed
     suckless=('dmenu' 'slock' 'st' 'sxiv' 'dwm' 'dwmblocks')
 elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
     suckless=('dmenu' 'slock' 'st' 'sxiv' 'think-dwm' 'think-dwmblocks')
@@ -71,9 +83,12 @@ if [ -z "$etc_profile_startx" ]; then
     [ "$HOST_NAME" = 'Svartalfheim' ] && root_append '# startx\n[ "$(tty)" = "/dev/tty1" ] && startx "$XDG_CONFIG_HOME/X11/xinitrc"' /etc/profile
 fi
 [ "$(wc -l /etc/hosts | cut -d' ' -f1)" -eq 3 ] && cat hosts | sudo tee -a /etc/hosts >/dev/null
-[ "$(>/etc/doas.conf)" != 'permit persist :wheel' ] && echo 'permit persist :wheel' > /etc/doas.conf && sudo chown -c root:root '/etc/doas.conf' && sudo chmod 0444 '/etc/doas.conf'
-sudo curl -sL 'https://raw.githubusercontent.com/koalagang/doasedit/main/doasedit' -o /usr/bin/doasedit && sudo chmod +x /usr/bin/doasedit
-sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo
+[ -f '/etc/doas.conf' ] && doas_conf=1
+[ -z "$doas_conf" ] && root_append 'permit persist :wheel\n' '/etc/doas.conf' && sudo chown -c root:root '/etc/doas.conf' && sudo chmod 0444 '/etc/doas.conf'
+sudo curl -sL 'https://raw.githubusercontent.com/koalagang/doasedit/main/doasedit' -o /usr/bin/doasedit && sudo chmod +x /usr/bin/doasedit # install doasedit
+# remove sudo and replace it with a symlink to doas to avoid issues with hardcoded software
+bak '/etc/sudoers' # backup sudoers file in case user ever wishes to revert back to using sudo
+sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo && doas rm /etc/sudoers.pacsave*
 
 # clear cache
 paru -c --noconfirm && doas paccache -r && doas paccache -ruk0
@@ -82,5 +97,3 @@ paru -c --noconfirm && doas paccache -r && doas paccache -ruk0
 doas ln -sfT /bin/dash /bin/sh && cp bash2dash.hook /usr/share/libalmpm/hooks/bash2dash.hook
 mkdir -p "$HOME/.cache/zsh" && touch "$HOME/.cache/zsh/history"
 printf '\nCould not interactively configure login shell. Please enter the following commands:\nsudo chsh -s /bin/zsh\nrm "$HOME"/.bash*\n'
-
-rm -rf go kai

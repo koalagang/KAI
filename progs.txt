@@ -65,7 +65,6 @@ recode
 redshift-minimal
 rsync
 shellcheck
-signal-desktop
 go-mtpfs-git
 so-git
 starship
@@ -75,7 +74,7 @@ task
 taskell
 testdisk
 texlive-core
-timeshift-bin
+timeshift
 timew
 translate-shell
 trash-cli

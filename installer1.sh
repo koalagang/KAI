@@ -84,10 +84,10 @@ echo 'Mounting /dev/sda1...' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 if [ "$HOST_NAME" = 'Svartalfheim' ]; then
     extra_pkg='iwd intel-ucode smartmontools'
 elif [ "$HOST_NAME" = 'Ljosalfheim' ]; then
-    extra_pkg='nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
+    extra_pkg='linux-headers nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
 fi
 
-basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit connman-runit $extra_pkg \
+basestrap /mnt base base-devel runit elogind-runit linux linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit connman-runit $extra_pkg \
     grub efibootmgr xorg xorg-xinit xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber man-db curl wget git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv kai/installer2.sh /mnt && artix-chroot /mnt ./installer2.sh
