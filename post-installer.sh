@@ -36,7 +36,7 @@ if [ -z "$pacman_conf" ]; then
     [ "$HOST_NAME" = 'Ljosalfheim' ] && sudo sed -i 's/#\[lib32\]/\[lib32\]/' /etc/pacman.conf && grep -A1 -n '\[lib32\]' /etc/pacman.conf | tail -1 | cut -d'-' -f1 | \
         xargs -I% sudo sed -i '%s/#//' /etc/pacman.conf
     sudo pacman -Syu artix-archlinux-support $lib32_support --noconfirm --needed && sudo pacman-key --populate archlinux
-    cat "$HOME/kai/$arch_repos" | sudo tee -a /etc/pacman.conf
+    cat "$HOME/kai/$arch_repos" | sudo tee -a /etc/pacman.conf >/dev/null
 fi
 
 # install all regular packages
@@ -90,7 +90,7 @@ startx_add (){
 grep -q 'startx' /etc/profile && etc_profile_startx=1
 if [ -z "$etc_profile_startx" ]; then
     [ "$HOST_NAME" = 'Ljosalfheim' ] && startx_add '# startx' '[ "$(tty)" = "/dev/tty1" ] && "$HOME/.config/X11/wmselect"' '/etc/profile'
-    [ "$HOST_NAME" = 'Svartalfheim' ] && startx_add '# startx' '[ "$(tty)" = "/dev/tty1" ] && export wm="wm" startx "$XDG_CONFIG_HOME/X11/xinitrc"' '/etc/profile'
+    [ "$HOST_NAME" = 'Svartalfheim' ] && startx_add '# startx' '[ "$(tty)" = "/dev/tty1" ] && export wm="dwm" && startx "$XDG_CONFIG_HOME/X11/xinitrc"' '/etc/profile'
 fi
 [ "$(wc -l /etc/hosts | cut -d' ' -f1)" -eq 3 ] && cat hosts | sudo tee -a /etc/hosts >/dev/null
 
