@@ -12,13 +12,13 @@ if [ -z "$paru_installed" ]; then
     ( cd yay && yes | makepkg -si )
     yay -S paru-bin --noconfirm
     yay -R yay --noconfirm
-    sudo rm -rf "$HOME/yay" "$HOME/.cache/yay" "$HOME/.cache/go-build"
+    sudo rm -rf 'yay' "$HOME/.cache/yay" "$HOME/.config/yay" "$HOME/.cache/go-build"
 fi
 
 HOST_NAME="$(</etc/hostname)"
 
 bak (){
-    sudo cp --backup=numbered "$1" "$1.bak" && echo "$1 has been safely backed up as $1.bak"
+    sudo cp --backup=numbered "$1" "$1.bak" && printf "\n$1 has been safely backed up as $1.bak\n"
 }
 
 # configure pacman to support arch repositories and have parallel downloads and pretty colours
@@ -58,21 +58,21 @@ done
 sudo rm -rf suckless-koala
 
 # create the file structures for the home
-[ -f "$HOME/Downloads" ] || xdg-user-dirs-update
+[ -d "$HOME/Downloads" ] || xdg-user-dirs-update
 rm -r "$HOME/Public" "$HOME/Templates"
 sed -i -e 's#XDG_TEMPLATES_DIR="$HOME/Templates"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' \
     -e 's#XDG_PUBLICSHARE_DIR="$HOME/Public"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' "$HOME/.config/user-dirs.dirs"
 mkdir -p "$HOME/.local/share" "$HOME/.local/bin"
 [ -f "$HOME/.zshenv" ] || git clone https://github.com/koalagang/dotfiles.git
-[ -f "$(pwd)/dotfiles" ] && rm -rf dotfiles/.git && cp -rv dotfiles/.* $HOME && rm -rf dotfiles
-[ -f "$HOME/Desktop/git/dotfiles" ] && dotfiles=1
+[ -d 'dotfiles' ] && rm -rf dotfiles/.git && cp -rv dotfiles/.* $HOME && rm -rf dotfiles
+[ -d "$HOME/Desktop/git/dotfiles" ] && dotfiles=1
 if [ -z "$dotfiles" ]; then
     mkdir -p "$HOME/Desktop/git/dotfiles"
     git clone --bare https://github.com/koalagang/dotfiles.git "$HOME/Desktop/git/dotfiles/dotfiles"
     git --git-dir=$HOME/Desktop/git/dotfiles/dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
 fi
-[ -f "$HOME/Desktop/git/suckless-koala" ] || git clone https://github.com/koalagang/suckless-koala.git "$HOME/Desktop/git/suckless-koala"
-[ -f "$HOME/Desktop/git/archive" ] || git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
+[ -d "$HOME/Desktop/git/suckless-koala" ] || git clone https://github.com/koalagang/suckless-koala.git "$HOME/Desktop/git/suckless-koala"
+[ -d "$HOME/Desktop/git/archive" ] || git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
 
 # configure shells
 command -v dash >/dev/null && doas ln -sfT /bin/dash /bin/sh && cp "$HOME/kai/bash2dash.hook" /usr/share/libalmpm/hooks/bash2dash.hook
@@ -89,8 +89,8 @@ startx_add (){
 # not sure why but directly appending these files without tee doesn't work
 grep -q 'startx' /etc/profile && etc_profile_startx=1
 if [ -z "$etc_profile_startx" ]; then
-    [ "$HOST_NAME" = 'Ljosalfheim' ] && startx_add '# startx' '[ "$(tty)" = '/dev/tty1' ] && "$HOME/.config/X11/wmselect"' '/etc/profile'
-    [ "$HOST_NAME" = 'Svartalfheim' ] && startx_add '# startx' '[ "$(tty)" = '/dev/tty1' ] && startx "$XDG_CONFIG_HOME/X11/xinitrc"' '/etc/profile'
+    [ "$HOST_NAME" = 'Ljosalfheim' ] && startx_add '# startx' '[ "$(tty)" = "/dev/tty1" ] && "$HOME/.config/X11/wmselect"' '/etc/profile'
+    [ "$HOST_NAME" = 'Svartalfheim' ] && startx_add '# startx' '[ "$(tty)" = "/dev/tty1" ] && export wm="wm" startx "$XDG_CONFIG_HOME/X11/xinitrc"' '/etc/profile'
 fi
 [ "$(wc -l /etc/hosts | cut -d' ' -f1)" -eq 3 ] && cat hosts | sudo tee -a /etc/hosts >/dev/null
 

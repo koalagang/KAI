@@ -7,8 +7,8 @@ select answer in 'Ljosalfheim (PC)' 'Svartalfheim (ThinkPad)'; do
     esac
 done
 export HOST_NAME
-
 echo
+
 read -p 'Enter username: ' USERNAME
 read -p 'Confirm username: ' CONFIRM_USERNAME
 until [ "$USERNAME" = "$CONFIRM_USERNAME" ]; do
@@ -17,8 +17,8 @@ until [ "$USERNAME" = "$CONFIRM_USERNAME" ]; do
     read -p 'Confirm username: ' CONFIRM_USERNAME
 done
 export USERNAME
-
 echo
+
 read -s -p 'Enter user password: ' USER_PASSWORD ; echo
 read -s -p 'Confirm user password: ' CONFIRM_USER_PASSWORD ; echo
 until [ "$PASSWORD" = "$CONFIRM_PASSWORD" ]; do
