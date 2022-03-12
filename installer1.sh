@@ -63,9 +63,9 @@ done
 echo
 
 if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
-    echo "Partitioning /dev/sda..." && printf 'g\nn\n\n\n+128M\nn\n\n\n\nw\n' | fdisk /dev/sda >/dev/null
+    echo "Partitioning /dev/sda..." && printf 'g\nn\n\n\n+128M\nn\n\n\n\nw\n' | fdisk -w always -W always /dev/sda >/dev/null
 elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
-    echo "Partitioning /dev/sda..." && printf 'o\nn\n\n\n+128M\nn\n\n\n\nw\n' | fdisk /dev/sda >/dev/null
+    echo "Partitioning /dev/sda..." && printf 'o\nn\n\n\n\n+128M\nn\n\n\n\n\nw\n' | fdisk -w always -W always /dev/sda >/dev/null
     echo "Encrypting /dev/sdb..."
     echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -q --force-password --type luks1 /dev/sdb
     echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sdb crypthome
