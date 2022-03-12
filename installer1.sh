@@ -62,32 +62,35 @@ while true; do
 done
 echo
 
-echo "Partitioning /dev/sda..." && printf 'g\nn\n\n\n+128M\nn\n\n\n\nw\n' | fdisk /dev/sda >/dev/null
-echo "Encrypting /dev/sda2..."
-echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -q --force-password --type luks1 /dev/sda2
-echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sda2 cryptroot
-
-if [ "$HOST_NAME" = 'Svartalfheim' ]; then
+if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
+    echo "Partitioning /dev/sda..." && printf 'g\nn\n\n\n+128M\nn\n\n\n\nw\n' | fdisk /dev/sda >/dev/null
+elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
+    echo "Partitioning /dev/sda..." && printf 'o\nn\n\n\n+128M\nn\n\n\n\nw\n' | fdisk /dev/sda >/dev/null
     echo "Encrypting /dev/sdb..."
     echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -q --force-password --type luks1 /dev/sdb
     echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sdb crypthome
 fi
 
-echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot -L root
-[ "$HOST_NAME" = 'Svartalfheim' ] && echo 'Formatting /dev/mapper/crypthome' && mkfs.ext4 -F /dev/mapper/crypthome -L home
-echo 'Formatting /dev/sda1...' && mkfs.fat -F32 /dev/sda1 -n BOOT
+echo "Encrypting /dev/sda2..."
+echo "$ENCRYPTION_PASS" | cryptsetup luksFormat -q --force-password --type luks1 /dev/sda2
+echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sda2 cryptroot
+
+if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
+    echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot -L root >/dev/null
+    echo 'Formatting /dev/sda1...' && mkfs.fat -F32 /dev/sda1 -n BOOT >/dev/null
+    extra_pkg='efibootmgr linux-headers nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
+elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
+    echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot -L root >/dev/null
+    echo 'Formatting /dev/mapper/crypthome' && mkfs.ext4 -F /dev/mapper/crypthome -L home >/dev/null
+    echo 'Formatting /dev/sda1...' && mkfs.ext4 -F /dev/sda1 -L BOOT >/dev/null
+    extra_pkg='iwd intel-ucode smartmontools'
+fi
 
 echo 'Mounting /dev/mapper/cryptroot...' && mount /dev/mapper/cryptroot /mnt
 [ "$HOST_NAME" = 'Svartalfheim' ] && echo 'Mounting /dev/mapper/crypthome...' && mkdir /mnt/home && mount /dev/mapper/crypthome /mnt/home
 echo 'Mounting /dev/sda1...' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 
-if [ "$HOST_NAME" = 'Svartalfheim' ]; then
-    extra_pkg='iwd intel-ucode smartmontools'
-elif [ "$HOST_NAME" = 'Ljosalfheim' ]; then
-    extra_pkg='linux-headers nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
-fi
-
 basestrap /mnt base base-devel runit elogind-runit linux linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit connman-runit $extra_pkg \
-    grub efibootmgr xorg xorg-xinit xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber man-db curl wget git --noconfirm
+    grub xorg xorg-xinit xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber man-db curl wget git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv kai/installer2.sh /mnt && artix-chroot /mnt ./installer2.sh

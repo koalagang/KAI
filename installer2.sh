@@ -4,14 +4,14 @@
 # set local time
 echo 'Setting local time to Europe/London...' && ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime && hwclock --systohc
 # install locales
-sed -i "s/#en_GB.UTF-8\ UTF-8/en_GB.UTF-8\ UTF-8/g" /etc/locale.gen
-sed -i "s/#en_GB\ ISO-8859-1/en_GB\ ISO-8859-1/g" /etc/locale.gen
-sed -i "s/#en_US.UTF-8\ UTF-8/en_US.UTF-8\ UTF-8/g" /etc/locale.gen
-sed -i "s/#en_US\ ISO-8859-1/en_US\ ISO-8859-1/g" /etc/locale.gen
-sed -i "s/#nb_NO.UTF-8\ UTF-8/nb_NO.UTF-8\ UTF-8/g" /etc/locale.gen
-sed -i "s/#nb_NO\ ISO-8859-1/nb_NO\ ISO-8859-1/g" /etc/locale.gen
-locale-gen
-echo 'LANG=en_GB.UTF-8' > /etc/locale.conf
+sed -i \
+    -e 's/#en_GB.UTF-8\ UTF-8/en_GB.UTF-8\ UTF-8/g' \
+    -e 's/#en_GB\ ISO-8859-1/en_GB\ ISO-8859-1/g' \
+    -e 's/#en_US.UTF-8\ UTF-8/en_US.UTF-8\ UTF-8/g' \
+    -e 's/#en_US\ ISO-8859-1/en_US\ ISO-8859-1/g' \
+    -e 's/#nb_NO.UTF-8\ UTF-8/nb_NO.UTF-8\ UTF-8/g' \
+    -e 's/#nb_NO\ ISO-8859-1/nb_NO\ ISO-8859-1/g' \
+    /etc/locale.gen && locale-gen && echo 'LANG=en_GB.UTF-8' > /etc/locale.conf
 
 # Enable encryption build hook
 echo 'Configuring mkinitcpio...'
@@ -22,30 +22,12 @@ mkinitcpio -p linux
 echo 'Configuring and installing grub...'
 sed -i -e "s@GRUB_CMDLINE_LINUX=\"\"@GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$(blkid -s UUID -o value /dev/sda2):cryptroot root=/dev/mapper/cryptroot\"@" \
     -e 's@#GRUB_ENABLE_CRYPTODISK=y@GRUB_ENABLE_CRYPTODISK=y@' /etc/default/grub
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg
-
-#---Enable services
-echo 'Enabling connman...'
-echo "$HOST_NAME" > /etc/hostname
-printf '127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t %s.localdomain \t %s' "$HOST_NAME" "$HOST_NAME" >> /etc/hosts
-ln -s /etc/runit/sv/connmand /etc/runit/runsvdir/default
-# enable cronjobs
-ln -s /etc/runit/sv/cronie /etc/runit/runsvdir/default
-
-#---Create users and file structure
-echo 'Creating users...'
-useradd -m -G wheel "$USERNAME"
-( echo "$USER_PASSWORD" ; echo "$USER_PASSWORD" ) | passwd -q "$USERNAME"
-sed -i -e 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' -e 's/# %sudo ALL=(ALL:ALL) ALL/%sudo ALL=(ALL:ALL) ALL/' /etc/sudoers
-( echo "$ROOT_PASSWORD" ; echo "$ROOT_PASSWORD" ) | passwd -q
-# clear these variables so that nobody can read the passwords after the script finishes
-export ROOT_PASSWORD=''
-export USER_PASSWORD=''
-export CONFIRM_ROOT_PASSWORD=''
-export CONFIRM_USER_PASSWORD=''
-
-#---Perform computer specific tasks
-if [ "$HOST_NAME" = 'Svartalfheim' ]; then
+if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
+    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg
+    SWAP_COUNT=15260 # 16GB
+    SWAP_DIR='/var/swapfile'
+elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
+    grub-install --target=i386-pc /dev/sda && grub-mkconfig -o /boot/grub/grub.cfg
     # generate keyfile
     echo 'Generating keyfile for home directory...'
     dd bs=512 count=4 if=/dev/random of=/etc/home-keyfile iflag=fullblock
@@ -60,15 +42,32 @@ if [ "$HOST_NAME" = 'Svartalfheim' ]; then
 
     SWAP_COUNT=7630 # 8GB
     SWAP_DIR="/home/$USERNAME/.local/share" # use the home for swap because the root is on an SSD
-elif [ "$HOST_NAME" = 'Ljosalfheim' ]; then
-    SWAP_COUNT=15260 # 16GB
-    SWAP_DIR='/var/swapfile'
 fi
 
 # generate a swapfile
 echo 'Generating swapfile...'
 dd if=/dev/zero of="$SWAP_DIR/swapfile" bs=1M count=$SWAP_COUNT status=progress && chmod 600 "$SWAP_DIR/swapfile"
 mkswap "$SWAP_DIR/swapfile" && swapon "$SWAP_DIR/swapfile" && printf '\n# swapfile\n%s none swap defaults 0 0' "$SWAP_DIR/swapfile" >> /etc/fstab
+
+#---Enable services
+echo 'Enabling connman...'
+echo "$HOST_NAME" > /etc/hostname
+printf '127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t %s.localdomain \t %s' "$HOST_NAME" "$HOST_NAME" >> /etc/hosts
+ln -s /etc/runit/sv/connmand /etc/runit/runsvdir/default
+# enable cronjobs
+ln -s /etc/runit/sv/cronie /etc/runit/runsvdir/default
+
+#---Create users and file structure
+echo 'Creating users...'
+useradd -m -G wheel "$USERNAME"
+( echo "$USER_PASSWORD" ; echo "$USER_PASSWORD" ) | passwd -q "$USERNAME"
+( echo "$ROOT_PASSWORD" ; echo "$ROOT_PASSWORD" ) | passwd -q
+sed -i -e 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' -e 's/# %sudo ALL=(ALL:ALL) ALL/%sudo ALL=(ALL:ALL) ALL/' /etc/sudoers
+# clear these variables so that nobody can read the passwords after the script finishes
+export ROOT_PASSWORD=''
+export USER_PASSWORD=''
+export CONFIRM_ROOT_PASSWORD=''
+export CONFIRM_USER_PASSWORD=''
 
 # clone this repo into the home directory as normal user (to create folder with normal user permissions instead of root permissions)
 sudo -u "$USERNAME" git clone https://github.com/koalagang/kai.git "/home/$USERNAME/kai"
