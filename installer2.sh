@@ -70,12 +70,13 @@ export CONFIRM_ROOT_PASSWORD=''
 export CONFIRM_USER_PASSWORD=''
 
 post_installation (){
+    echo
     sudo -u "$USERNAME" git clone https://github.com/koalagang/kai.git "/home/$USERNAME/kai"
     echo './kai/post-installer.sh' | su - "$USERNAME"
 }
 
 while true; do
-    printf '\nThe base installation is complete.\nYou may start the post-installation within this environment.\nIt will occasionally require typing in the root password.\n\n'
+    printf '\nThe base installation is complete.\nYou may start the post-installation within this environment.\nIt will occasionally require entering the root password.\n\n'
     read -p 'Do you wish to start the post-installation script? [Y/n] ' yn
     case "$yn" in
         [Yy]* ) post_installation ; break ;;
