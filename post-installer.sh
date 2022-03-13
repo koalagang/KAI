@@ -59,7 +59,7 @@ sudo rm -rf suckless-koala
 
 # create the file structures for the home
 [ -d "$HOME/Downloads" ] || xdg-user-dirs-update
-rm -r "$HOME/Public" "$HOME/Templates"
+rm -rf "$HOME/Public" "$HOME/Templates" "$HOME/.lesshst"
 sed -i -e 's#XDG_TEMPLATES_DIR="$HOME/Templates"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' \
     -e 's#XDG_PUBLICSHARE_DIR="$HOME/Public"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' "$HOME/.config/user-dirs.dirs"
 mkdir -p "$HOME/.local/share" "$HOME/.local/bin"
@@ -106,4 +106,6 @@ sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo && doa
 # clear cache
 paru -Syu --noconfirm && paru -c --noconfirm && doas paccache -ruk0
 
-rm -rf "$HOME/kai" dotfiles
+rm -rf "$HOME/kai" dotfiles /installer2.sh
+
+printf '\n\nInstallation complete! If you wish to reboot or shutdown, simply enter "loginctl reboot" or "loginctl poweroff" respectively.\n'
