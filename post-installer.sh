@@ -80,6 +80,9 @@ if [ -z "$dotfiles" ]; then
 fi
 [ -d "$HOME/Desktop/git/suckless-koala" ] || git clone https://github.com/koalagang/suckless-koala.git "$HOME/Desktop/git/suckless-koala"
 [ -d "$HOME/Desktop/git/archive" ] || git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
+echo 'Installing PhotoGIMP...' && \
+curl -L https://github.com/Diolinux/PhotoGIMP/releases/download/1.0/PhotoGIMP.by.Diolinux.v2020.for.Flatpak.zip -o ~/Downloads/PhotoGIMP.zip && \
+    unzip ~/Downloads/PhotoGIMP.zip -d ~/Downloads && mv ~/Downloads/PhotoGIMP\ by\ Diolinux\ v2020\ for\ Flatpak/.var/app/org.gimp.GIMP/config/GIMP ~/.config
 
 # configure shells
 command -v dash >/dev/null && \

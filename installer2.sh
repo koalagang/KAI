@@ -12,6 +12,7 @@ sed -i \
     -e 's/#nb_NO.UTF-8\ UTF-8/nb_NO.UTF-8\ UTF-8/g' \
     -e 's/#nb_NO\ ISO-8859-1/nb_NO\ ISO-8859-1/g' \
     /etc/locale.gen && locale-gen && echo 'LANG=en_GB.UTF-8' > /etc/locale.conf
+mv /10-keyboard.conf /etc/X11/xorg.conf.d/10-keyboard.conf
 
 # Enable encryption build hook
 echo 'Configuring mkinitcpio...'
@@ -24,10 +25,12 @@ sed -i -e "s@GRUB_CMDLINE_LINUX=\"\"@GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$(blk
     -e 's@#GRUB_ENABLE_CRYPTODISK=y@GRUB_ENABLE_CRYPTODISK=y@' /etc/default/grub
 if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
     grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg
+    sed -i 's/LAYOUT/us/' /etc/X11/xorg.conf.d/10-keyboard.conf
     SWAP_COUNT=15260 # 16GB
     SWAP_DIR='/var/swapfile'
 elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
     grub-install --target=i386-pc /dev/sda && grub-mkconfig -o /boot/grub/grub.cfg
+    sed -i 's/LAYOUT/gb/' /etc/X11/xorg.conf.d/10-keyboard.conf
     # generate keyfile
     echo 'Generating keyfile for home directory...'
     dd bs=512 count=4 if=/dev/random of=/etc/home-keyfile iflag=fullblock
