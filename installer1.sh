@@ -69,9 +69,6 @@ while true; do
 done
 echo
 
-echo 'hello world'
-exit
-
 while true; do
     read -p 'Do you wish to shred device(s)? [y/N] ' yn
     case "$yn" in
