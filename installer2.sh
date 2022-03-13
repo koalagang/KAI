@@ -69,11 +69,24 @@ export USER_PASSWORD=''
 export CONFIRM_ROOT_PASSWORD=''
 export CONFIRM_USER_PASSWORD=''
 
-# clone this repo into the home directory as normal user (to create folder with normal user permissions instead of root permissions)
-sudo -u "$USERNAME" git clone https://github.com/koalagang/kai.git "/home/$USERNAME/kai"
+post_installation (){
+    su - "$USERNAME"
+    git clone https://github.com/koalagang/kai.git
+    ./kai/post-installer.sh && exit
+}
+
+while true; do
+    printf 'The base installation is complete.\nYou may start the post-installation within this environment.\nIt will occasionally require typing in the root password.\n'
+    read -p 'Do you wish to start the post-installation script? [Y/n] ' yn
+    case "$yn" in
+        [Yy]* ) post_installation ; break ;;
+        [Nn]* ) break ;;
+        '') post_installation ; break ;;
+        * ) echo 'Please answer "yes" or "no".'
+    esac
+done
 
 printf '\n\nInstallation complete! If you wish to reboot or shutdown, simply enter "loginctl reboot" or "loginctl poweroff" respectively.\n'
-echo 'KAI has been cloned into your home directory so that you can install extra packages using paru without being root.'
 
 # delete this script from the root (as it was moved there before chrooting)
 rm /installer2.sh

@@ -104,4 +104,6 @@ bak '/etc/sudoers' # backup sudoers file in case user ever wishes to revert back
 sudo pacman -R sudo --noconfirm && doas ln -s /usr/bin/doas /usr/bin/sudo && doas rm /etc/sudoers.pacsave*
 
 # clear cache
-paru -Syu --noconfirm && paru -c --noconfirm && doas paccache -r && doas paccache -ruk0
+paru -Syu --noconfirm && paru -c --noconfirm && doas paccache -ruk0
+
+rm -rf "$HOME/kai" dotfiles

@@ -38,13 +38,7 @@ libxinerama
 lollypop
 lynx
 maim
-mopidy
-mopidy-mpd
-mopidy-youtube
-mpc
-mpd
 mpv
-ncmpcpp
 ncspot-bin
 neovim
 neovim-plug
@@ -55,12 +49,10 @@ opendoas
 otf-symbola
 pacman-contrib
 pamixer
-pandoc
 pipewire
 pipewire-alsa
 pipewire-pulse
 playerctl
-python-spotdl
 recode
 redshift-minimal
 rsync
@@ -72,7 +64,8 @@ streamlink
 sxhkd
 task
 testdisk
-texlive-core
+texlive-most
+biber
 timeshift
 timew
 translate-shell
