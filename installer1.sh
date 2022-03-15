@@ -99,7 +99,7 @@ echo "$ENCRYPTION_PASS" | cryptsetup open /dev/sda2 cryptroot
 if [ "$HOST_NAME" = 'Ljosalfheim' ]; then
     echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot -L root >/dev/null
     echo 'Formatting /dev/sda1...' && mkfs.fat -F32 /dev/sda1 -n BOOT >/dev/null
-    extra_pkg='efibootmgr linux-headers nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
+    extra_pkg='efibootmgr nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia'
 elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
     echo 'Formatting /dev/mapper/cryptroot...' && mkfs.ext4 -F /dev/mapper/cryptroot -L root >/dev/null
     echo 'Formatting /dev/mapper/crypthome' && mkfs.ext4 -F /dev/mapper/crypthome -L home >/dev/null
@@ -113,7 +113,7 @@ echo 'Mounting /dev/sda1...' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /etc/pacman.conf && echo 'ParallelDownloads set to 20.'
 
-basestrap /mnt base base-devel runit elogind-runit linux linux-firmware cronie-runit cryptsetup-runit connman-runit syncthing-runit $extra_pkg \
+basestrap /mnt base base-devel runit elogind-runit linux linux-headers linux-firmware cronie-runit cryptsetup-runit connman-runit syncthing-runit $extra_pkg \
     grub xorg xorg-xinit xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber man-db curl wget git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv kai/10-keyboard.conf /mnt # for configuring keyboard layout in the installer2.sh script

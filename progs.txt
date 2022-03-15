@@ -7,12 +7,10 @@ arch-wiki-docs
 axel
 bat
 bc
+biber
 btop
 capitaine-cursors
 colorpicker
-cronie
-cronie-runit
-cups
 cups-runit
 curl
 dash
@@ -29,6 +27,7 @@ git
 gnome-themes-extra
 gnu-free-fonts
 gnupg
+go-mtpfs-git
 imagemagick
 keepassxc
 libx11
@@ -57,7 +56,6 @@ recode
 redshift-minimal
 rsync
 shellcheck
-go-mtpfs-git
 so-git
 starship
 streamlink
@@ -65,7 +63,6 @@ sxhkd
 task
 testdisk
 texlive-most
-biber
 timeshift
 timew
 translate-shell
@@ -86,9 +83,9 @@ wmctrl
 xclip
 xcompmgr
 xdotool
+xorg-xinit
 xurls
 xwallpaper
-xorg-xinit
 youtube-dl
 yt-dlp
 ytfzf
