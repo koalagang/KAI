@@ -60,7 +60,7 @@ ln -s /etc/runit/sv/connmand /etc/runit/runsvdir/default
 # enable cronjobs
 ln -s /etc/runit/sv/cronie /etc/runit/runsvdir/default
 # enable syncthing
-ln -s /etc/runit/sv/syncthing /run/runit/service
+ln -s /etc/runit/sv/syncthing /etc/runit/runsvdir/default
 
 #---Create users and file structure
 echo 'Creating users...'
