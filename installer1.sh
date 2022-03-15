@@ -58,7 +58,7 @@ export ENCRYPTION_PASS
 echo
 
 while true; do
-    printf 'This is your FINAL chance to make sure all your important data is BACKED UP.\nThe following steps will involve DELETING ALL DATA from your devices.\n\n'
+    printf 'This is your FINAL chance to make sure all your important data is BACKED UP.\nThe following steps will involve DELETING ALL DATA from your device(s).\n\n'
     read -p 'Do you wish to continue and WIPE ALL devices? [y/N] ' yn
     case "$yn" in
         [Yy]* ) break ;;
@@ -113,7 +113,7 @@ echo 'Mounting /dev/sda1...' && mkdir /mnt/boot && mount /dev/sda1 /mnt/boot
 
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /etc/pacman.conf && echo 'ParallelDownloads set to 20.'
 
-basestrap /mnt base base-devel runit elogind-runit linux linux-firmware cronie cronie-runit cryptsetup cryptsetup-runit connman-runit $extra_pkg \
+basestrap /mnt base base-devel runit elogind-runit linux linux-firmware cronie-runit cryptsetup-runit connman-runit syncthing-runit $extra_pkg \
     grub xorg xorg-xinit xdg-utils xdg-user-dirs polkit pipewire pipewire-alsa pipewire-pulse wireplumber man-db curl wget git --noconfirm
 fstabgen -U /mnt >> /mnt/etc/fstab
 mv kai/10-keyboard.conf /mnt # for configuring keyboard layout in the installer2.sh script

@@ -59,6 +59,8 @@ printf '127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t %s.localdomain 
 ln -s /etc/runit/sv/connmand /etc/runit/runsvdir/default
 # enable cronjobs
 ln -s /etc/runit/sv/cronie /etc/runit/runsvdir/default
+# enable syncthing
+ln -s /etc/runit/sv/syncthing /run/runit/service
 
 #---Create users and file structure
 echo 'Creating users...'

@@ -47,8 +47,8 @@ echo "Installing packages from $progs_file..."
 is_installed 'libxft-bgra' || yes | paru -Syu libxft-bgra # conflicts with libxft
 readarray -t progs < "$progs_file" && paru -S "${progs[@]}" --noconfirm --needed
 # install device specific packages
-[ "$HOST_NAME" = 'Ljosalfheim' ] && echo 'Installing libvirt software and signal-desktop...' && \
-    sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat edk2-ovmf signal-desktop --noconfirm --needed
+[ "$HOST_NAME" = 'Ljosalfheim' ] && echo 'Installing libvirt software, discord and signal-desktop...' && \
+    sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat edk2-ovmf signal-desktop discord --noconfirm --needed
 # install suckless software
 echo 'Installing suckless software...'
 git clone https://github.com/koalagang/suckless-koala.git
@@ -102,7 +102,7 @@ startx_add (){
 grep -q 'startx' /etc/profile && etc_profile_startx=1
 if [ -z "$etc_profile_startx" ]; then
     [ "$HOST_NAME" = 'Ljosalfheim' ] && startx_add '# startx' '[ "$(tty)" = "/dev/tty1" ] && "$HOME/.config/X11/wmselect"' '/etc/profile'
-    [ "$HOST_NAME" = 'Svartalfheim' ] && startx_add '# startx' '[ "$(tty)" = "/dev/tty1" ] && export wm="dwm" && startx "$XDG_CONFIG_HOME/X11/xinitrc"' '/etc/profile'
+    [ "$HOST_NAME" = 'Svartalfheim' ] && startx_add '# startx' '[ "$(tty)" = "/dev/tty1" ] && export WM="dwm" && startx "$XDG_CONFIG_HOME/X11/xinitrc"' '/etc/profile'
 fi
 [ "$(wc -l /etc/hosts | cut -d' ' -f1)" -eq 3 ] && echo 'Editing hosts file...' && cat hosts | sudo tee -a /etc/hosts >/dev/null
 
@@ -120,3 +120,5 @@ echo 'Replacing sudo with doas...' && sudo pacman -R sudo --noconfirm && doas ln
 echo 'Performing post-installation cleanup...' && paru -Syu --noconfirm && paru -c --noconfirm && doas paccache -ruk0
 
 rm -rf "$HOME/kai" dotfiles
+
+git clone https://github.com/koalagang/firefox-config.git && echo 'To complete your setup, start an X server and then run the Firefox configuration script.'
