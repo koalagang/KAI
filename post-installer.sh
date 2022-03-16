@@ -47,8 +47,8 @@ echo "Installing packages from $progs_file..."
 is_installed 'libxft-bgra' || yes | paru -Syu libxft-bgra # conflicts with libxft
 readarray -t progs < "$progs_file" && paru -S "${progs[@]}" --noconfirm --needed
 # install device specific packages
-[ "$HOST_NAME" = 'Ljosalfheim' ] && echo 'Installing libvirt software, discord and signal-desktop...' && \
-    sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat edk2-ovmf signal-desktop discord --noconfirm --needed
+[ "$HOST_NAME" = 'Ljosalfheim' ] && echo 'Installing libvirt software and discord...' && \
+    sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat edk2-ovmf discord --noconfirm --needed
 # install suckless software
 echo 'Installing suckless software...'
 git clone https://github.com/koalagang/suckless-koala.git

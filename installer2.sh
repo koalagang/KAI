@@ -43,12 +43,13 @@ elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
     printf '#!/bin/sh\n# trim all mounted filesystems which support it\n/sbin/fstrim --all || true' > /etc/cron.weekly/fstrim
     chmod a+x /etc/cron.weekly/fstrim
 
+    SWAP_DIR="/home/$USERNAME/.cache" # use the home for swap because the root is on an SSD and that can decrease the SSD lifespan
     SWAP_COUNT=7630 # 8GB
-    SWAP_DIR="/home/$USERNAME/.local/share" # use the home for swap because the root is on an SSD
 fi
 
 # generate a swapfile
 echo 'Generating swapfile...'
+mkdir -p "$SWAP_DIR"
 dd if=/dev/zero of="$SWAP_DIR/swapfile" bs=1M count=$SWAP_COUNT status=progress && chmod 600 "$SWAP_DIR/swapfile"
 mkswap "$SWAP_DIR/swapfile" && swapon "$SWAP_DIR/swapfile" && printf '\n# swapfile\n%s none swap defaults 0 0' "$SWAP_DIR/swapfile" >> /etc/fstab
 
@@ -61,6 +62,8 @@ ln -s /etc/runit/sv/connmand /etc/runit/runsvdir/default
 ln -s /etc/runit/sv/cronie /etc/runit/runsvdir/default
 # enable syncthing
 ln -s /etc/runit/sv/syncthing /etc/runit/runsvdir/default
+# enable cupsd
+ln -s /etc/runit/sv/cupsd /etc/runit/runsvdir/default
 
 #---Create users and file structure
 echo 'Creating users...'

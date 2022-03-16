@@ -29,6 +29,7 @@ gnu-free-fonts
 gnupg
 go-mtpfs-git
 imagemagick
+imlib2
 keepassxc
 libx11
 libxcb
@@ -56,6 +57,7 @@ recode
 redshift-minimal
 rsync
 shellcheck
+signal-desktop
 so-git
 starship
 streamlink
