@@ -47,11 +47,17 @@ elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
     SWAP_COUNT=7630 # 8GB
 fi
 
-# generate a swapfile
-echo 'Generating swapfile...'
-mkdir -p "$SWAP_DIR"
-dd if=/dev/zero of="$SWAP_DIR/swapfile" bs=1M count=$SWAP_COUNT status=progress && chmod 600 "$SWAP_DIR/swapfile"
-mkswap "$SWAP_DIR/swapfile" && swapon "$SWAP_DIR/swapfile" && printf '\n# swapfile\n%s none swap defaults 0 0' "$SWAP_DIR/swapfile" >> /etc/fstab
+#---Create users and file structure
+echo 'Creating users...'
+useradd -m -G wheel "$USERNAME"
+( echo "$USER_PASSWORD" ; echo "$USER_PASSWORD" ) | passwd -q "$USERNAME"
+( echo "$ROOT_PASSWORD" ; echo "$ROOT_PASSWORD" ) | passwd -q
+sed -i -e 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' -e 's/# %sudo ALL=(ALL:ALL) ALL/%sudo ALL=(ALL:ALL) ALL/' /etc/sudoers
+# clear these variables so that nobody can read the passwords after the script finishes
+export ROOT_PASSWORD=''
+export USER_PASSWORD=''
+export CONFIRM_ROOT_PASSWORD=''
+export CONFIRM_USER_PASSWORD=''
 
 #---Enable services
 echo 'Enabling connman...'
@@ -65,17 +71,15 @@ ln -s /etc/runit/sv/syncthing /etc/runit/runsvdir/default
 # enable cupsd
 ln -s /etc/runit/sv/cupsd /etc/runit/runsvdir/default
 
-#---Create users and file structure
-echo 'Creating users...'
-useradd -m -G wheel "$USERNAME"
-( echo "$USER_PASSWORD" ; echo "$USER_PASSWORD" ) | passwd -q "$USERNAME"
-( echo "$ROOT_PASSWORD" ; echo "$ROOT_PASSWORD" ) | passwd -q
-sed -i -e 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' -e 's/# %sudo ALL=(ALL:ALL) ALL/%sudo ALL=(ALL:ALL) ALL/' /etc/sudoers
-# clear these variables so that nobody can read the passwords after the script finishes
-export ROOT_PASSWORD=''
-export USER_PASSWORD=''
-export CONFIRM_ROOT_PASSWORD=''
-export CONFIRM_USER_PASSWORD=''
+# generate a swapfile
+echo 'Generating swapfile...'
+if [ "$HOST_NAME" = 'Svaralfheim' ]; then
+    sudo -u "$USERNAME" mkdir -p "$SWAP_DIR"
+else
+    mkdir -p "$SWAP_DIR"
+fi
+dd if=/dev/zero of="$SWAP_DIR/swapfile" bs=1M count=$SWAP_COUNT status=progress && chmod 600 "$SWAP_DIR/swapfile"
+mkswap "$SWAP_DIR/swapfile" && swapon "$SWAP_DIR/swapfile" && printf '\n# swapfile\n%s none swap defaults 0 0' "$SWAP_DIR/swapfile" >> /etc/fstab
 
 post_installation (){
     echo
