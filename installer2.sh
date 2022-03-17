@@ -43,7 +43,7 @@ elif [ "$HOST_NAME" = 'Svartalfheim' ]; then
     printf '#!/bin/sh\n# trim all mounted filesystems which support it\n/sbin/fstrim --all || true' > /etc/cron.weekly/fstrim
     chmod a+x /etc/cron.weekly/fstrim
 
-    SWAP_DIR="/home/$USERNAME/.cache" # use the home for swap because the root is on an SSD and that can decrease the SSD lifespan
+    SWAP_DIR='/home' # use the home for swap because the root is on an SSD and that can decrease the SSD lifespan
     SWAP_COUNT=7630 # 8GB
 fi
 
@@ -73,11 +73,6 @@ ln -s /etc/runit/sv/cupsd /etc/runit/runsvdir/default
 
 # generate a swapfile
 echo 'Generating swapfile...'
-if [ "$HOST_NAME" = 'Svaralfheim' ]; then
-    sudo -u "$USERNAME" mkdir -p "$SWAP_DIR"
-else
-    mkdir -p "$SWAP_DIR"
-fi
 dd if=/dev/zero of="$SWAP_DIR/swapfile" bs=1M count=$SWAP_COUNT status=progress && chmod 600 "$SWAP_DIR/swapfile"
 mkswap "$SWAP_DIR/swapfile" && swapon "$SWAP_DIR/swapfile" && printf '\n# swapfile\n%s none swap defaults 0 0' "$SWAP_DIR/swapfile" >> /etc/fstab
 
