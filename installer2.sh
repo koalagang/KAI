@@ -60,7 +60,7 @@ export CONFIRM_ROOT_PASSWORD=''
 export CONFIRM_USER_PASSWORD=''
 
 #---Enable services
-echo 'Enabling connman...'
+echo 'Enabling services...'
 echo "$HOST_NAME" > /etc/hostname
 printf '127.0.0.1 \t localhost\n::1 \t\t localhost\n127.0.1.1 \t %s.localdomain \t %s' "$HOST_NAME" "$HOST_NAME" >> /etc/hosts
 ln -s /etc/runit/sv/connmand /etc/runit/runsvdir/default
