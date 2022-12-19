@@ -1,5 +1,6 @@
 adobe-source-han-sans-otc-fonts
 adobe-source-han-serif-otc-fonts
+alsa-utils
 anki-official-binary-bundle
 arch-wiki-docs
 axel
@@ -26,7 +27,6 @@ edk2-ovmf
 epson-inkjet-printer-escpr2
 ffmpeg
 ffmpeg4.4
-firefox-esr-bin
 fzf
 gimp
 git
@@ -39,7 +39,6 @@ imagemagick
 imlib2
 itch-bin
 keepassxc
-legendary
 lib32-artix-archlinux-support
 lib32-giflib
 lib32-gnutls
@@ -69,7 +68,6 @@ libxcb
 libxft-bgra
 libxinerama
 lm_sensors-runit
-ludusavi
 lutris
 maim
 mpv
@@ -96,18 +94,12 @@ pipewire
 pipewire-alsa
 pipewire-pulse
 playerctl
-polymc-bin
+prismlauncher-bin
 qpwgraph
 qt5ct
-qutebrowser
 recode
 redshift-minimal
-retroarch
-retroarch-assets-glui
-retroarch-assets-ozone
-retroarch-assets-xmb
 rsync
-sc-controller
 sc-im
 shellcheck
 signal-desktop
