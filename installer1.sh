@@ -23,7 +23,7 @@ while [[ "$USERNAME" =~ [0-9] ]]; do
     printf '\nUsername may not contain numbers!\n'
     select_username
 done
-[[ "$USERNAME" =~ ^[A-Z] ]] && USERNAME="$(echo $USERNAME | tr '[:upper:]' '[:lower:]')" && printf "\nUsername may not contain uppercase letters.\nUsername set to '%s'.\n" "$USERNAME"
+[[ "$USERNAME" =~ ^[A-Z] ]] && USERNAME="$(echo "$USERNAME" | tr '[:upper:]' '[:lower:]')" && printf "\nUsername may not contain uppercase letters.\nUsername set to '%s'.\n" "$USERNAME"
 export USERNAME
 echo
 

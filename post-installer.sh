@@ -8,7 +8,7 @@ is_installed (){
 }
 
 bak (){
-    sudo cp --backup=numbered "$1" "$1.bak" && printf "\n$1 has been safely backed up as $1.bak\n"
+    sudo cp --backup=numbered "$1" "$1.bak" && printf "\n$1 has been safely backed up as %s.bak\n" "$1"
 }
 
 # compile yay because it is written in go so it is fast to compile
@@ -44,8 +44,14 @@ fi
 
 # install all regular packages
 echo "Installing packages from $progs_file..."
+if [ "$HOST_NAME" = 'Svartalfheim' ]; then
+    paru -Syu tpacpi-bat --noconfirm --needed
+    # stop charging at 95% and start charging again at 80% to ensure that the ThinkPad does not over-charge
+    sudo tpacpi-bat -s SP 0 95 && sudo tpacpi-bat -s ST 0 80
+    # now we can continue with the installation while charging without worrying about over-charging
+fi
 is_installed 'libxft-bgra' || yes | paru -Syu libxft-bgra # conflicts with libxft
-readarray -t progs < "$progs_file" && paru -S "${progs[@]}" --noconfirm --needed
+paru -S --noconfirm --needed - < "$progs_file"
 # install device specific packages
 [ "$HOST_NAME" = 'Ljosalfheim' ] && echo 'Installing libvirt software and discord...' && \
     sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat edk2-ovmf discord --noconfirm --needed
@@ -71,12 +77,12 @@ sed -i -e 's#XDG_TEMPLATES_DIR="$HOME/Templates"#XDG_TEMPLATES_DIR="$HOME/Deskto
     -e 's#XDG_PUBLICSHARE_DIR="$HOME/Public"#XDG_TEMPLATES_DIR="$HOME/Desktop"#' "$HOME/.config/user-dirs.dirs"
 mkdir -p "$HOME/.local/share" "$HOME/.local/bin"
 [ -f "$HOME/.zshenv" ] || git clone https://github.com/koalagang/dotfiles.git
-[ -d 'dotfiles' ] && rm -rf dotfiles/.git && cp -rv dotfiles/.* $HOME && rm -rf dotfiles
+[ -d 'dotfiles' ] && rm -rf dotfiles/.git && cp -rv dotfiles/.* "$HOME" && rm -rf dotfiles
 [ -d "$HOME/Desktop/git/dotfiles" ] && dotfiles=1
 if [ -z "$dotfiles" ]; then
     mkdir -p "$HOME/Desktop/git/dotfiles"
     git clone --bare https://github.com/koalagang/dotfiles.git "$HOME/Desktop/git/dotfiles/dotfiles"
-    git --git-dir=$HOME/Desktop/git/dotfiles/dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
+    git --git-dir="$HOME/Desktop/git/dotfiles/dotfiles --work-tree="$HOME" config --local status.showUntrackedFiles no
 fi
 [ -d "$HOME/Desktop/git/suckless-koala" ] || git clone https://github.com/koalagang/suckless-koala.git "$HOME/Desktop/git/suckless-koala"
 [ -d "$HOME/Desktop/git/archive" ] || git clone https://github.com/koalagang/archive.git "$HOME/Desktop/git/archive"
